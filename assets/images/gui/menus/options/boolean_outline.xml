@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="boolean_outline.png">
+	<!-- Created with Adobe Animate version 23.0.0.407 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="off0000" x="0" y="0" width="116" height="64"/>
+	<SubTexture name="off0001" x="0" y="0" width="116" height="64"/>
+	<SubTexture name="off0002" x="116" y="0" width="116" height="64"/>
+	<SubTexture name="off0003" x="116" y="0" width="116" height="64"/>
+	<SubTexture name="off0004" x="0" y="64" width="116" height="64"/>
+	<SubTexture name="off0005" x="0" y="64" width="116" height="64"/>
+	<SubTexture name="off0006" x="116" y="64" width="116" height="64"/>
+	<SubTexture name="off0007" x="116" y="64" width="116" height="64"/>
+	<SubTexture name="off0008" x="0" y="64" width="116" height="64"/>
+	<SubTexture name="off0009" x="0" y="64" width="116" height="64"/>
+	<SubTexture name="on0000" x="0" y="64" width="116" height="64"/>
+	<SubTexture name="on0001" x="0" y="64" width="116" height="64"/>
+	<SubTexture name="on0002" x="0" y="128" width="116" height="64"/>
+	<SubTexture name="on0003" x="0" y="128" width="116" height="64"/>
+	<SubTexture name="on0004" x="0" y="0" width="116" height="64"/>
+	<SubTexture name="on0005" x="0" y="0" width="116" height="64"/>
+	<SubTexture name="on0006" x="116" y="128" width="116" height="64"/>
+	<SubTexture name="on0007" x="116" y="128" width="116" height="64"/>
+	<SubTexture name="on0008" x="0" y="0" width="116" height="64"/>
+	<SubTexture name="on0009" x="0" y="0" width="116" height="64"/>
+</TextureAtlas>

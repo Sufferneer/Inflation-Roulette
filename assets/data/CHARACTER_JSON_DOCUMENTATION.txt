@@ -1,0 +1,48 @@
+This document explains the function of each attribute for character JSON files.
+A grasp in basic variable types and JSON editing is recommended to understand
+the below documentation.
+
+Metadata ----- |
+These attributes defines the characteristics of a character.
+(e.g. name, description, etc.)
+----------------
+
+"name"
+String
+The displayed name of the character.
+
+"description"
+String
+The description of the character that is displayed in the player selection menu.
+
+Gameplay ----- |
+These attributes dictates the value of variables used in the game.
+-----------------
+
+"maxPressure"
+Integer
+How much pressure can the user take before being eliminated.
+The default pressure value is 4.
+
+Modifiers ----- |
+These attributes dictates the increase (positive number) or decrease (negative number)
+of a gameplay variable.
+For example, assigning the value as 2 increases the base value by 2, and assigning the
+value as -1 decreases the base value by 1.
+-----------------
+
+"blankConfidenceIncreaseModifier"
+Integer
+How much should the character's confidence change modified after firing a blank round
+at themselves.
+The default blank round confidence change value is 1.
+
+"liveConfidenceIncreaseModifier"
+Integer
+How much should the character's confidence change modified after firing a live round
+at themselves.
+The default live round confidence change value is 0.
+
+"skills"
+Array of Objects
+The list of skills that the character can use.

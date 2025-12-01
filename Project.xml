@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<!-- _________________________ Application Settings _________________________ -->
+
+	<app title="Inflation Roulette: Reloaded" file="Inflation-Roulette" packageName="com.malletindustries.inflationroulette" package="com.malletindustries.inflationroulette" main="Main" version="1.0.0" company="MalletIndustries" />
+
+	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
+		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
+	<!-- <app preloader="Preloader" resizable="true" /> -->
+	<app preloader="states.PreloadState" />
+
+	<!-- ____________________________ Window Settings ___________________________ -->
+
+	<!--These window settings apply to all targets-->
+	<window width="1280" height="720" fps="" background="#000000" hardware="true" vsync="false" />
+
+	<!--HTML5-specific-->
+	<window if="html5" resizable="true" />
+
+	<!--Desktop-specific-->
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="false" vsync="false"/>
+
+	<!--Mobile-specific-->
+	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
+
+	<!--Switch-specific-->
+	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
+
+	<!-- _____________________________ Path Settings ____________________________ -->
+
+	<set name="BUILD_DIR" value="export/debug" if="debug" />
+	<set name="BUILD_DIR" value="export/release" unless="debug" />
+	<set name="BUILD_DIR" value="export/32bit" if="32bits" />
+
+	<classpath name="source" />
+
+	<!-- __________________________ Game Assets & Etc. __________________________ -->
+	
+	<!-- Turn on Crash Handler -->
+	<define name="CRASH_HANDLER" if="desktop" />
+
+	<!-- Preload Assets -->
+
+	<assets path="assets/data" preload="true"/>
+	<assets path="assets/fonts"/>
+	<assets path="assets/sounds" exclude="*.ogg" if="web" preload="true"/>
+	<assets path="assets/sounds" exclude="*.mp3"  unless="web" preload="true"/>
+	<assets path="assets/music" preload="true"/>
+	<assets path="assets/images" preload="true"/>
+
+    <assets path='art/readme.txt' rename="readme.txt"/>
+
+	<!-- _______________________________ Libraries ______________________________ -->
+
+	<haxelib name="flixel" />
+	<haxelib name="flixel-ui" />
+	<haxelib name="flixel-addons" />
+
+	<haxelib name="tjson" />
+
+	<!-- Enables a terminal log prompt on debug builds -->
+	<haxelib name="hxcpp-debug-server" if="debug"/>
+	
+	<!-- ______________________________ Haxedefines _____________________________ -->
+
+	<!--Enable the Flixel core recording system-->
+	<!--<haxedef name="FLX_RECORD" />-->
+
+	<!--Disable the native cursor API on Flash-->
+	<!--<haxedef name="FLX_NO_NATIVE_CURSOR" />-->
+
+	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
+	<!-- <haxedef name="FLX_NO_MOUSE" if="mobile" /> -->
+	<!-- <haxedef name="FLX_NO_KEYBOARD" if="mobile" /> -->
+	<!-- <haxedef name="FLX_NO_TOUCH" if="desktop" /> -->
+	<!--<haxedef name="FLX_NO_GAMEPAD" />-->
+
+	<!--Disable the Flixel core sound tray-->
+	<!--<haxedef name="FLX_NO_SOUND_TRAY" />-->
+
+	<!--Disable the Flixel sound management code-->
+	<!--<haxedef name="FLX_NO_SOUND_SYSTEM" />-->
+
+	<!--Disable the Flixel core focus lost screen-->
+	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
+	
+	<!-- Show debug traces for hxCodec -->
+	<haxedef name="HXC_DEBUG_TRACE" if="debug" />
+	
+	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
+	<haxedef name="FLX_NO_DEBUG" unless="debug" />
+
+	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER" />
+	<haxedef name="HXCPP_STACK_LINE"/>
+	<haxedef name="HXCPP_STACK_TRACE"/>
+	<haxedef name='no-deprecation-warnings' />
+	
+	<!--Macro fixes-->
+	<haxeflag name="--macro" value="allowPackage('flash')" />
+	<haxeflag name="--macro" value="include('my.pack')" />
+
+	<!-- _________________________________ Custom _______________________________ -->
+
+	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+	
+	<icon path="art/icon16.png" size='16'/>
+	<icon path="art/icon32.png" size='32'/>
+	<icon path="art/icon64.png" size='64'/>
+	<icon path="art/icon128.png" size='128'/>
+	<icon path="art/icon256.png" size='256'/>
+	<icon path="art/iconOG.png" />
+</project>

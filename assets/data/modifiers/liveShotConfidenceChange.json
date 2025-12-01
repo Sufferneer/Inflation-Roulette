@@ -1,0 +1,6 @@
+{
+	"name": "confidence change on live shot",
+	"format": "number",
+	"sentence": "%s confidence on live shot",
+	"badWhenNegative": true
+}

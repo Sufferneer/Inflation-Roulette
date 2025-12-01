@@ -1,0 +1,7 @@
+{
+	"search.exclude": {
+		"export/*": true
+	},
+	"lime.executable": "lime",
+	"editor.tabSize": 4
+}

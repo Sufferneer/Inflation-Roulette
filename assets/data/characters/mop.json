@@ -1,0 +1,23 @@
+{
+	"name": "Mop",
+	"description": "Nicknamed \"The Wielder\", his high proficiency in dart-based weapons has blinded him with arrogance.",
+
+	"maxPressure": 3,
+	"maxConfidence": 4,
+	"modifiers": [
+		{
+			"id": "liveShotConfidenceChange",
+			"value": 1
+		}
+	],
+	"skills": [
+		{
+			"id": "reload",
+			"cost": 2
+		},
+		{
+			"id": "pressurize",
+			"cost": 3
+		}
+	]
+}
