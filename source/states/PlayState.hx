@@ -1,7 +1,7 @@
 package states;
 
 import substates.PauseSubState;
-import ui.SuffTransition.SuffTransitionStyle;
+import backend.enums.SuffTransitionStyle;
 
 class PlayState extends SuffState {
 	// graphics
@@ -483,6 +483,7 @@ class PlayState extends SuffState {
 			SuffState.playSound(Paths.sound('shoot_live'));
 			getPlayer(playerIndex).currentPressure += liveRoundDamage;
 			getPlayer(playerIndex).currentConfidence += getPlayer(playerIndex).confidenceChangeOnLiveShot;
+			liveRoundDamage = 1;
 
 			var percent = getPlayer(playerIndex).calculatePressurePercentage();
 			var fwoompSuffix:String = percent >= 0.5 ? 'large' : 'small';
@@ -595,10 +596,11 @@ class PlayState extends SuffState {
 	function changeTurn(change:Int = 0, slient:Bool = false) {
 		var PrevTurn:Int = currentTurnIndex;
 		var flipX:Bool = PrevTurn >= Std.int(characterList.length / 2) && PrevTurn != characterList.length - 1;
-		getPlayer(PrevTurn).playAnim('pass', true, true, flipX);
 		changeTurnNumber(change);
-		if (!(Preferences.data.ignoreEliminatedPlayers && getPlayer(PrevTurn).isEliminated()))
+		if (!(Preferences.data.ignoreEliminatedPlayers && getPlayer(PrevTurn).isEliminated())) {
 			focusCameraOnPlayer(PrevTurn);
+			getPlayer(PrevTurn).playAnim('pass', true, true, flipX);
+		}
 		if (!pumpGun.visible)
 			playGunContactSound();
 		if (change != 0) {
@@ -682,10 +684,11 @@ class PlayState extends SuffState {
 	}
 
 	function toggleLetterbox(moveIn:Bool = true) {
-		if (!Preferences.data.enableLetterbox && moveIn)
-			return;
-		letterboxDisplayed = moveIn;
-		if (moveIn) {
+		var reallyMoveIn:Bool = moveIn;
+		if (!Preferences.data.enableLetterbox)
+			reallyMoveIn = false;
+		letterboxDisplayed = reallyMoveIn;
+		if (reallyMoveIn) {
 			doTween('letterboxTopTween', FlxTween.tween(letterboxTop, {y: 0}, 1, {
 				ease: FlxEase.cubeOut,
 				onUpdate: function(_:FlxTween) {

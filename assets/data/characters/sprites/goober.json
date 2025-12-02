@@ -4,7 +4,7 @@
 			"name": "idle0",
 			"prefix": "idle0",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -12,7 +12,7 @@
 			"name": "idle1",
 			"prefix": "idle1",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -20,7 +20,7 @@
 			"name": "idle2",
 			"prefix": "idle2",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -28,7 +28,7 @@
 			"name": "idle3",
 			"prefix": "idle3",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -36,7 +36,7 @@
 			"name": "idle4",
 			"prefix": "idle4",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -44,7 +44,7 @@
 			"name": "idleOverinflated",
 			"prefix": "idleOverinflated",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -52,7 +52,7 @@
 			"name": "idleNull",
 			"prefix": "idleNull",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -60,7 +60,7 @@
 			"name": "popped",
 			"prefix": "popped",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -68,7 +68,7 @@
 			"name": "introPartOne",
 			"prefix": "introPartOne",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -76,7 +76,7 @@
 			"name": "introPartTwo",
 			"prefix": "introPartTwo",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -84,7 +84,7 @@
 			"name": "prepareShoot0",
 			"prefix": "prepareShoot0",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -92,7 +92,7 @@
 			"name": "prepareShoot1",
 			"prefix": "prepareShoot1",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -100,7 +100,7 @@
 			"name": "prepareShoot2",
 			"prefix": "prepareShoot2",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -108,7 +108,7 @@
 			"name": "prepareShoot3",
 			"prefix": "prepareShoot3",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -116,7 +116,7 @@
 			"name": "prepareShoot4",
 			"prefix": "prepareShoot4",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": true
 		},
@@ -124,7 +124,7 @@
 			"name": "pass0",
 			"prefix": "pass0",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -132,7 +132,7 @@
 			"name": "pass1",
 			"prefix": "pass1",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -140,7 +140,7 @@
 			"name": "pass2",
 			"prefix": "pass2",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -148,7 +148,7 @@
 			"name": "pass3",
 			"prefix": "pass3",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -156,7 +156,7 @@
 			"name": "pass4",
 			"prefix": "pass4",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -164,7 +164,7 @@
 			"name": "shootBlank0",
 			"prefix": "shootBlank0",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -172,7 +172,7 @@
 			"name": "shootBlank1",
 			"prefix": "shootBlank1",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -180,7 +180,7 @@
 			"name": "shootBlank2",
 			"prefix": "shootBlank2",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -188,7 +188,7 @@
 			"name": "shootBlank3",
 			"prefix": "shootBlank3",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -196,7 +196,7 @@
 			"name": "shootBlank4",
 			"prefix": "shootBlank4",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -204,7 +204,7 @@
 			"name": "shootLive0",
 			"prefix": "shootLive0",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -212,7 +212,7 @@
 			"name": "shootLive1",
 			"prefix": "shootLive1",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -220,7 +220,7 @@
 			"name": "shootLive2",
 			"prefix": "shootLive2",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -228,7 +228,7 @@
 			"name": "shootLive3",
 			"prefix": "shootLive3",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -236,7 +236,7 @@
 			"name": "shootLive4",
 			"prefix": "shootLive4",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -244,7 +244,7 @@
 			"name": "helplessOverinflated",
 			"prefix": "helplessOverinflated",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -252,7 +252,7 @@
 			"name": "helplessNull",
 			"prefix": "helplessNull",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -260,7 +260,7 @@
 			"name": "skill0",
 			"prefix": "skill0",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -268,7 +268,7 @@
 			"name": "skill1",
 			"prefix": "skill1",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -276,7 +276,7 @@
 			"name": "skill2",
 			"prefix": "skill2",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -284,7 +284,7 @@
 			"name": "skill3",
 			"prefix": "skill3",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -292,7 +292,7 @@
 			"name": "skill4",
 			"prefix": "skill4",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -300,7 +300,7 @@
 			"name": "preWin0",
 			"prefix": "preWin0",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -308,7 +308,7 @@
 			"name": "preWin1",
 			"prefix": "preWin1",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -316,7 +316,7 @@
 			"name": "preWin2",
 			"prefix": "preWin2",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -324,7 +324,7 @@
 			"name": "preWin3",
 			"prefix": "preWin3",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -332,7 +332,7 @@
 			"name": "preWin4",
 			"prefix": "preWin4",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -340,7 +340,7 @@
 			"name": "win0",
 			"prefix": "win0",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -348,7 +348,7 @@
 			"name": "win1",
 			"prefix": "win1",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -356,7 +356,7 @@
 			"name": "win2",
 			"prefix": "win2",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -364,7 +364,7 @@
 			"name": "win3",
 			"prefix": "win3",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
@@ -372,7 +372,7 @@
 			"name": "win4",
 			"prefix": "win4",
 			"fps": 24,
-			"offsets": [0, 0],
+			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		}

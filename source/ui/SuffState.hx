@@ -1,5 +1,6 @@
 package ui;
 
+import backend.enums.SuffTransitionStyle;
 import flixel.addons.ui.FlxUIState;
 import flixel.FlxSubState;
 import flixel.FlxState;
@@ -9,7 +10,6 @@ import flixel.system.scaleModes.RatioScaleMode;
 import openfl.filters.ColorMatrixFilter;
 import tjson.TJSON as Json;
 import flash.media.Sound;
-import ui.SuffTransition.SuffTransitionStyle;
 
 class SuffState extends FlxUIState {
 	public static var currentMusicName:String = '';

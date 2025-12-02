@@ -42,6 +42,7 @@ class Character extends FlxSprite {
 
 	// Cosmetic Variables //
 	public var idleAfterAnimation:Bool = true;
+
 	var gurgleTimer:Float = 0;
 	var creakTimer:Float = 0;
 
@@ -93,15 +94,15 @@ class Character extends FlxSprite {
 				} else {
 					animation.addByPrefix(animName, animPrefix, animFps, animLoop);
 				}
-				if (anim.offsets != null && anim.offsets.length > 1) {
-					addOffset(animName, anim.offsets[0], anim.offsets[1]);
+				if (anim.offset != null && anim.offset.length > 1) {
+					addOffset(animName, anim.offset[0], anim.offset[1]);
 				} else {
-					trace('Character $name has no offsets for animation ${animName}. Using default offsets.');
+					trace('Character $id has no offsets for animation ${animName}. Using default offsets.');
 				}
 				addSoundPath(animName, anim.soundPaths);
 			}
 		} else {
-			trace('Character $name has no animations');
+			trace('Character $id has no animations');
 			animation.addByPrefix('idle0', 'idle0', 24);
 		}
 		animation.finishCallback = function(animName:String) {
@@ -123,19 +124,21 @@ class Character extends FlxSprite {
 		var skillsArray:Array<SkillData> = json.skills;
 		if (skillsArray != null && skillsArray.length > 0) {
 			for (skill in skillsArray) {
-				var skillID:String = '' + skill.id;
-				var skillCost:Int = skill.cost;
-				skills.push(new Skill(skillID, skillCost));
+				if (skills.length < 3) {
+					var skillID:String = '' + skill.id;
+					var skillCost:Int = skill.cost;
+					skills.push(new Skill(skillID, skillCost));
+				}
 			}
 		}
 
-		trace('$name MODIFIERS: ' + modifiers);
-		trace('$name SKILLS: ' + skills);
+		trace('$id MODIFIERS: ' + modifiers);
+		trace('$id SKILLS: ' + skills);
 	}
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		if (currentPressure <= maxPressure) {
+		if (currentPressure <= maxPressure || !PlayState.currentSessionAllowPopping) {
 			if (Preferences.data.allowBellyGurgles) {
 				if (currentPressure >= gurgleThreshold) {
 					gurgleTimer -= elapsed;
@@ -240,7 +243,7 @@ class Character extends FlxSprite {
 			Frame:Int = 0):Void {
 		var usedAnimName:String = joinAnimationName(AnimName);
 		if (!animExists(usedAnimName)) {
-			trace('Animation [${AnimName + parseAnimationSuffix()}] for $name does not exist');
+			trace('Animation [${AnimName + parseAnimationSuffix()}] for $id does not exist');
 			return;
 		}
 		animation.getByName(usedAnimName).flipX = flipX;

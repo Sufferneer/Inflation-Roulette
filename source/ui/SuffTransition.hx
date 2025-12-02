@@ -1,9 +1,6 @@
 package ui;
 
-enum SuffTransitionStyle {
-	DEFAULT;
-	BLOCKY;
-}
+import backend.enums.SuffTransitionStyle;
 
 class SuffTransition extends SuffSubState {
 	public static var finishCallback:Void->Void;

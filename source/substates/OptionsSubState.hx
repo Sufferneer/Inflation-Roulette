@@ -295,7 +295,7 @@ class OptionsSubState extends SuffSubState {
 			exitOptionsMenu();
 		}
 		if (FlxG.mouse.wheel != 0) {
-			optionsGroup.y += FlxG.mouse.wheel * 32;
+			optionsGroup.y += FlxG.mouse.wheel * 128;
 			boundOptionMenuScroll();
 			updateScrollBar();
 		}
