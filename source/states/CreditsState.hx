@@ -4,6 +4,8 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.util.FlxGradient;
 import states.MainMenuState;
+import ui.objects.CreditsSketch;
+import ui.objects.GameLogo;
 
 class CreditsState extends SuffState {
 	var creditsTxt:Array<Array<Dynamic>> = [
@@ -97,7 +99,7 @@ class CreditsState extends SuffState {
 			if (line[1] != '' || line[2] == 'GAME_LOGO' || line[2] == 'MALLET_INDUSTRIES') {
 				var texturePath:String = 'gui/menus/credits/logos/${line[1]}';
 				if (line[2] == 'MALLET_INDUSTRIES') {
-					texturePath = 'gui/menus/mallet_industries_logo';
+					texturePath = 'gui/menus/malletIndustriesLogo';
 					leLogo.scale.set(6, 6);
 				}
 				if (line[2] == 'GAME_LOGO') {
@@ -138,7 +140,7 @@ class CreditsState extends SuffState {
 		creditScrollValue = creditScrollValueUpperLimit;
 		add(creditsTxtGroup);
 
-		var exitButton = new SuffButton(20, 20, null, Paths.image('gui/exit'), null, 100, 100);
+		var exitButton = new SuffButton(20, 20, null, Paths.image('gui/icons/buttons/exit'), null, 100, 100);
 		exitButton.x = FlxG.width - exitButton.width - 10;
 		exitButton.onClick = exitMenu;
 		add(exitButton);
@@ -147,7 +149,7 @@ class CreditsState extends SuffState {
 		#if sys
 		fileList = FileSystem.readDirectory(Paths.getPath('images/gui/menus/credits/sketches'));
 		#else
-		fileList = Util.textFileToArray(Paths.getPath('images/gui/menus/credits/sketches/sketchesList.txt'));
+		fileList = Utils.textFileToArray(Paths.getPath('images/gui/menus/credits/sketches/sketchesList.txt'));
 		#end
 
 		for (folder in fileList) {
@@ -158,7 +160,7 @@ class CreditsState extends SuffState {
 	}
 
 	function exitMenu() {
-		SuffState.playMusic('main_menu');
+		SuffState.playMusic('mainMenu');
 		SuffState.switchState(new MainMenuState());
 	}
 

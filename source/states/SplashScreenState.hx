@@ -27,7 +27,7 @@ class SplashScreenState extends SuffState {
 
 	function startIntro() {
 		trace("STARTING INTRO");
-		logo = new FlxSprite().loadGraphic(Paths.image('gui/menus/mallet_industries_logo'));
+		logo = new FlxSprite().loadGraphic(Paths.image('gui/menus/malletIndustriesLogo'));
 		blockCount = Std.int(logo.height);
 		logo.scale.set(scale, scale);
 		logo.updateHitbox();
@@ -44,7 +44,7 @@ class SplashScreenState extends SuffState {
 			tileGroup.add(tile);
 		}
 
-		introSound = new FlxSound().loadEmbedded(Paths.sound('sufferneer_intro'));
+		introSound = new FlxSound().loadEmbedded(Paths.sound('sufferneerIntro'));
 		introSound.volume = 0.7;
 		introSound.play();
 

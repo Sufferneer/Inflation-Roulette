@@ -1,35 +1,82 @@
 package backend;
 
+import backend.types.MusicMetadata;
+import backend.Addons;
+import flash.media.Sound;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
+import lime.utils.Assets;
 import openfl.display.BitmapData;
 import openfl.display3D.textures.RectangleTexture;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.system.System;
 import openfl.geom.Rectangle;
-import lime.utils.Assets;
-import flash.media.Sound;
 import tjson.TJSON as Json;
 
-import backend.types.MusicMetadata;
-
+/**
+ * List of functions for getting assets.
+ */
 class Paths {
+	/**
+	 * The current used extension for sounds.
+	 */
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 
+	/**
+	 * List of directories to be ignored during memory clearing.
+	 */
 	public static var dumpExclusions:Array<String> = [];
 
+	/**
+	 * Preload belly sounds to memory to prevent crashes and lag spikes.
+	 */
+	public static function precacheBellySounds() {
+		for (i in 1...Constants.CREAKS_SAMPLE_COUNT + 1) {
+			var key:String = 'belly/creaks/creak_' + i;
+			if (Preferences.data.allowBellyCreaks && !localTrackedAssets.contains(key)) {
+				Paths.sound(key);
+			}
+		}
+		for (i in 1...Constants.GURGLES_SAMPLE_COUNT + 1) {
+			var key:String = 'belly/gurgles/gurgle_' + i;
+			if (Preferences.data.allowBellyGurgles && !localTrackedAssets.contains(key)) {
+				Paths.sound(key);
+			}
+		}
+		for (i in 1...Constants.BELCHES_SAMPLE_COUNT + 1) {
+			var key:String = 'belly/belches/belch_' + i;
+			if (!localTrackedAssets.contains(key)) {
+				Paths.sound(key);
+			}
+		}
+		for (i in 1...Constants.FWOOMPS_SAMPLE_COUNT + 1) {
+			var key:String = 'belly/fwoomps/fwoompLarge_' + i;
+			if (!localTrackedAssets.contains(key)) {
+				Paths.sound(key);
+			}
+			key = 'belly/fwoomps/fwoompSmall_' + i;
+			if (!localTrackedAssets.contains(key)) {
+				Paths.sound(key);
+			}
+		}
+		trace('All belly sounds precached!');
+	}
+
+	/**
+	 * Clear stored assets in memory that is currently not used.
+	 */
 	public static function clearUnusedMemory() {
 		// clear non local assets in the tracked assets list
-		for (key in currentTrackedAssets.keys()) {
+		for (key in currentTrackedTextures.keys()) {
 			// if it is not currently contained within the used local assets
 			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key)) {
-				var obj = currentTrackedAssets.get(key);
+				var obj = currentTrackedTextures.get(key);
 				@:privateAccess
 				if (obj != null) {
 					// remove the key from all cache maps
 					FlxG.bitmap._cache.remove(key);
 					openfl.Assets.cache.removeBitmapData(key);
-					currentTrackedAssets.remove(key);
+					currentTrackedTextures.remove(key);
 
 					// and get rid of the object
 					obj.persist = false; // make sure the garbage collector actually clears it up
@@ -43,15 +90,19 @@ class Paths {
 		System.gc();
 	}
 
-	// define the locally tracked assets
+	/**
+	 * List of locally tracked assets.
+	 */
 	public static var localTrackedAssets:Array<String> = [];
 
+	/**
+	 * Clear all assets not in the tracked assets list.
+	 */
 	public static function clearStoredMemory() {
-		// clear anything not in the tracked assets list
 		@:privateAccess
 		for (key in FlxG.bitmap._cache.keys()) {
 			var obj = FlxG.bitmap._cache.get(key);
-			if (obj != null && !currentTrackedAssets.exists(key)) {
+			if (obj != null && !currentTrackedTextures.exists(key)) {
 				openfl.Assets.cache.removeBitmapData(key);
 				FlxG.bitmap._cache.remove(key);
 				obj.destroy();
@@ -69,7 +120,12 @@ class Paths {
 		localTrackedAssets = [];
 	}
 
-
+	/**
+	 * Convert a relative directory to a directory in the `assets` folder.
+	 * 
+	 * @param file
+	 * @param library
+	 */
 	public static function getPath(file:String, ?library:Null<String> = null):String {
 		if (library != null)
 			return 'assets/$library/$file';
@@ -77,32 +133,84 @@ class Paths {
 		return 'assets/$file';
 	}
 
+	/**
+	 * Convert a relative image directory to a directory in the `assets/images` folder.
+	 * 
+	 * @param file
+	 * @param library
+	 */
 	public static function getImagePath(file:String, ?library:Null<String> = null):String {
+		#if ADDONS_ALLOWED
+		var key = addonFolders('images/' + file + '.png');
+		if (key != null)
+			return key;
+		#end
 		return getPath('images/' + file + '.png', library);
 	}
 
+	/**
+	 * Add the sound extention string to the end of a directory.
+	 * 
+	 * @param file
+	 */
 	public static function appendSoundExt(file:String):String {
 		return file + '.$SOUND_EXT';
 	}
 
+	/**
+	 * Find the XML file for a Sparrow v2 spritesheet.
+	 * 
+	 * @param file
+	 * @param library
+	 */
 	public static function getSparrowXmlPath(file:String, ?library:Null<String> = null):String {
+		#if ADDONS_ALLOWED
+		var key = addonFolders('images/' + file + '.xml');
+		if (key != null)
+			return key;
+		#end
 		return getPath('images/' + file + '.xml', library);
 	}
 
+	/**
+	 * Return a Sound in the `sounds/` folder.
+	 * 
+	 * @param key The filename of the sound.
+	 * @param library
+	 */
 	static public function sound(key:String, ?library:String):Sound {
 		var sound:Sound = returnSound('sounds', key, library);
 		return sound;
 	}
 
+	/**
+	 * Return a Sound with variations in the `sounds/` folder.
+	 * 
+	 * @param key The base filename of the sound.
+	 * @param min The minimum suffix value.
+	 * @param max The maximum suffix value.
+	 * @param library
+	 */
 	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String) {
-		return sound(key + FlxG.random.int(min, max), library);
+		return sound(key + '_' + FlxG.random.int(min, max), library);
 	}
 
+	/**
+	 * Return a Sound in the `music/` folder.
+	 * 
+	 * @param key The filename of the music.
+	 * @param library
+	 */
 	inline static public function music(key:String, ?library:String):Sound {
 		var file:Sound = returnSound('music', key, library);
 		return file;
 	}
 
+	/**
+	 * Return a MusicMetadata of a song in the `music/` folder by accessing its JSON metadata file.
+	 * 
+	 * @param tag The filename of the music.
+	 */
 	inline static public function musicMetadata(tag:String):MusicMetadata {
 		var usedTag:String = tag;
 		if (Preferences.data.useClassicMusic && Paths.fileExists(Paths.appendSoundExt('music/classic/' + tag), SOUND)) {
@@ -117,15 +225,31 @@ class Paths {
 		return json;
 	}
 
-	public static function json(file:String, ?library:Null<String> = null):String {
-		return getPath('data/' + file + '.json', library);
-	}
+	/**
+	 * The list of textures stored in memory for quick access.
+	 */
+	public static var currentTrackedTextures:Map<String, FlxGraphic> = [];
 
-	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
-
+	/**
+	 * Returns a FlxGraphic in the `images/` folder.
+	 * 
+	 * @param key The directory of the image in the `images/` folder.
+	 * @param library
+	 * @param allowGPU Whether to allow VRAM to store this image or not.
+	 */
 	static public function image(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxGraphic {
 		var bitmap:BitmapData = null;
 		var file:String = null;
+
+		#if ADDONS_ALLOWED
+		file = addonsImages(key);
+		if (currentTrackedTextures.exists(file)) {
+			localTrackedAssets.push(file);
+			return currentTrackedTextures.get(file);
+		} else if (FileSystem.exists(file))
+			bitmap = BitmapData.fromFile(file);
+		else
+		#end
 
 		file = getPath('images/$key.png', library);
 		#if sys
@@ -134,9 +258,9 @@ class Paths {
 		else
 		#end
 		{
-			if (currentTrackedAssets.exists(file)) {
+			if (currentTrackedTextures.exists(file)) {
 				localTrackedAssets.push(file);
-				return currentTrackedAssets.get(file);
+				return currentTrackedTextures.get(file);
 			} else if (OpenFlAssets.exists(file, IMAGE))
 				bitmap = OpenFlAssets.getBitmapData(file);
 		}
@@ -151,6 +275,13 @@ class Paths {
 		return null;
 	}
 
+	/**
+	 * Stores a texture into memory.
+	 * 
+	 * @param file The directory of the image in the `images/` folder.
+	 * @param bitmap The bitmap data to be stored.
+	 * @param allowGPU Whether to allow VRAM to be used or not.
+	 */
 	static public function cacheBitmap(file:String, ?bitmap:BitmapData = null, ?allowGPU:Bool = true) {
 		if (bitmap == null) {
 			#if sys
@@ -178,13 +309,22 @@ class Paths {
 		var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
 		newGraphic.persist = true;
 		newGraphic.destroyOnNoUse = false;
-		currentTrackedAssets.set(file, newGraphic);
+		currentTrackedTextures.set(file, newGraphic);
 		return newGraphic;
 	}
 
+	/**
+	 * Reads a text file's contents, then converts it to a String.
+	 * 
+	 * @param key The directory of the text file.
+	 */
 	static public function getTextFromFile(key:String):String {
-		var path = getPath(key);
 		#if sys
+		#if ADDONS_ALLOWED
+		if (FileSystem.exists(addonFolders(key)))
+			return File.getContent(addonFolders(key));
+		#end
+		var path = getPath(key);
 		if (FileSystem.exists(path))
 			return File.getContent(path);
 		#end
@@ -210,14 +350,49 @@ class Paths {
 		return false;
 	}
 
+	/**
+	 * Returns a Sparrow v2 Altas to be used for animations for sprites.
+	 * 
+	 * @param key The directory of both the image and XML file.
+	 * @param library
+	 * @param allowGPU Whether to allow VRAM to store the texture altas or not.
+	 */
 	inline static public function sparrowAtlas(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
 		return FlxAtlasFrames.fromSparrow(image(key, library, allowGPU), getSparrowXmlPath(key, library));
 	}
 
+	/**
+	 * Map of Sounds that is stored in memory.
+	 */
 	public static var currentTrackedSounds:Map<String, Sound> = [];
 
+	/**
+	 * Returns a Sound by its directory.
+	 * 
+	 * @param path The directory.
+	 * @param key The name to be assigned for the sound for quick access.
+	 * @param library
+	 */
 	public static function returnSound(path:String, key:String, ?library:String) {
 		var gottenPath:String = appendSoundExt(getPath('$path/$key', library));
+
+		#if ADDONS_ALLOWED
+		var addonLibPath:String = '';
+		if (library != null)
+			addonLibPath = '$library/';
+		if (path != null)
+			addonLibPath += '$path';
+
+		var file:String = addonsSounds(addonLibPath, key);
+		if (FileSystem.exists(file)) {
+			if (!currentTrackedSounds.exists(file)) {
+				currentTrackedSounds.set(file, Sound.fromFile(file));
+			}
+			localTrackedAssets.push(file);
+			return currentTrackedSounds.get(file);
+		}
+		#end
+
 		#if sys
 		if (FileSystem.exists(gottenPath)) {
 			if (!currentTrackedSounds.exists(gottenPath)) {
@@ -239,4 +414,27 @@ class Paths {
 			localTrackedAssets.push(gottenPath);
 		return currentTrackedSounds.get(gottenPath);
 	}
+
+	#if ADDONS_ALLOWED
+	inline static public function addons(key:String = '') {
+		return 'addons/' + key;
+	}
+
+	inline static public function addonsSounds(path:String, key:String) {
+		return addonFolders(path + '/' + key + '.' + SOUND_EXT);
+	}
+
+	inline static public function addonsImages(key:String) {
+		return addonFolders('images/' + key + '.png');
+	}
+
+	static public function addonFolders(key:String) {
+		for (addon in Addons.getGlobalAddons()) {
+			var fileToCheck:String = addons(addon + '/' + key);
+			if (FileSystem.exists(fileToCheck))
+				return fileToCheck;
+		}
+		return null;
+	}
+	#end
 }

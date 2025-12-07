@@ -4,6 +4,9 @@ import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.addons.ui.FlxUI9SliceSprite;
 
+/**
+ * Custon button object used in UIs.
+ */
 class SuffButton extends FlxSpriteGroup {
 	public var disabled(default, set):Bool = false;
 	public var hovered:Bool = false;
@@ -46,6 +49,16 @@ class SuffButton extends FlxSpriteGroup {
 	static final iconPadding:Int = 0;
 	static final bgScale:Int = 2;
 
+	/**
+	 * @param x The X position of the button.
+	 * @param y The Y position of the button.
+	 * @param text The text displayed on the button. Set to `null` to hide.
+	 * @param img The image displayed on the button. Set to `null` to hide.
+	 * @param imgHovered The image displayed on the button when hovered. Set to `null` to use `img`.
+	 * @param width The hitbox width of the button.
+	 * @param height The hitbox height of the button.
+	 * @param visibleBG Whether the default button background is visible or not.
+	 */
 	public function new(x:Float, y:Float, ?text:String = null, ?img:FlxGraphic = null, ?imgHovered:FlxGraphic = null, ?width:Int = 300, ?height:Int = 100,
 			visibleBG:Bool = true) {
 		super(x, y);
@@ -53,7 +66,7 @@ class SuffButton extends FlxSpriteGroup {
 		var btnBGRect = new Rectangle(0, 0, width / bgScale, height / bgScale);
 		var nineSlice = [20, 10, 44, 22];
 
-		btnBG = new FlxUI9SliceSprite(0, 0, Paths.getImagePath('gui/button_base'), btnBGRect, nineSlice, 0x11);
+		btnBG = new FlxUI9SliceSprite(0, 0, Paths.getImagePath('gui/buttonBase'), btnBGRect, nineSlice, 0x11);
 		btnBG.setGraphicSize(Std.int(width), Std.int(height));
 		btnBG.updateHitbox();
 		btnBG.color = btnBGColor;
@@ -61,7 +74,7 @@ class SuffButton extends FlxSpriteGroup {
 		btnBG.visible = visibleBG;
 		add(btnBG);
 
-		btnBGOutline = new FlxUI9SliceSprite(0, 0, Paths.getImagePath('gui/button_outline'), btnBGRect, nineSlice, 0x11);
+		btnBGOutline = new FlxUI9SliceSprite(0, 0, Paths.getImagePath('gui/buttonOutline'), btnBGRect, nineSlice, 0x11);
 		btnBGOutline.setGraphicSize(Std.int(width), Std.int(height));
 		btnBGOutline.updateHitbox();
 		btnBGOutline.color = btnBGOutlineColor;
@@ -185,7 +198,8 @@ class SuffButton extends FlxSpriteGroup {
 			if (FlxG.mouse.justReleased && clicked) {
 				if (!disabled && onClick != null)
 					onClick();
-				SuffState.playUISound(Paths.sound(releaseSound));
+				if (releaseSound != '')
+					SuffState.playUISound(Paths.sound(releaseSound));
 				idleButton();
 				clicked = false;
 			}
@@ -210,7 +224,8 @@ class SuffButton extends FlxSpriteGroup {
 			btnText.color = btnTextColorHovered;
 		if (btnIcon != null && !disabled)
 			switchIconImage(btnIconImageHovered);
-		SuffState.playUISound(Paths.sound(hoverSound));
+		if (hoverSound != '')
+			SuffState.playUISound(Paths.sound(hoverSound));
 	}
 
 	function switchIconImage(img:FlxGraphic) {
@@ -229,7 +244,8 @@ class SuffButton extends FlxSpriteGroup {
 			btnText.color = btnTextColorClicked;
 		if (btnIcon != null && !disabled)
 			btnIcon.color = btnTextColorClicked;
-		SuffState.playUISound(Paths.sound(clickSound));
+		if (clickSound != '')
+			SuffState.playUISound(Paths.sound(clickSound));
 	}
 
 	function idleButton() {

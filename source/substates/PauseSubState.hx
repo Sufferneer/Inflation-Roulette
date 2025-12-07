@@ -1,8 +1,9 @@
 package substates;
 
-import states.MainMenuState;
-import flixel.addons.transition.FlxTransitionableState;
 import backend.enums.SuffTransitionStyle;
+import flixel.addons.transition.FlxTransitionableState;
+import states.MainMenuState;
+import states.PlayState;
 
 class PauseSubState extends SuffSubState {
 	var menuItems:Array<String> = ['RESUME', 'RESTART', 'OPTIONS', 'EXIT'];

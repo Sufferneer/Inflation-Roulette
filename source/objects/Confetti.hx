@@ -5,6 +5,7 @@ import flixel.effects.particles.FlxParticle;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxEmitter.FlxEmitterMode;
 import flixel.util.FlxDirectionFlags;
+import states.PlayState;
 
 class Confetti extends FlxTypedEmitter<ConfettiPiece> {
 	public function new(x:Float, y:Float, angle:Float) {

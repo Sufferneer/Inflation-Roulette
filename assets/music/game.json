@@ -1,5 +1,6 @@
 {
 	"name": "Rokkun",
 	"author": "Sufferneer",
-	"bpm": 165
+	"bpm": 165,
+	"toast": true
 }

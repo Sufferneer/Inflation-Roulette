@@ -1,0 +1,18 @@
+{
+	"name": "Template Character",
+	"description": "Not good with firearms, but can depressurize itself to an extent.",
+
+	"maxPressure": 3,
+	"maxConfidence": 5,
+	"modifiers": {},
+	"skills": [
+		{
+			"id": "reload",
+			"cost": 3
+		},
+		{
+			"id": "deflate",
+			"cost": 5
+		}
+	]
+}

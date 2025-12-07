@@ -1,6 +1,7 @@
 package ui;
 
 import backend.enums.SuffTransitionStyle;
+import backend.types.MusicMetadata;
 import flixel.addons.ui.FlxUIState;
 import flixel.FlxSubState;
 import flixel.FlxState;
@@ -13,7 +14,9 @@ import flash.media.Sound;
 
 class SuffState extends FlxUIState {
 	public static var currentMusicName:String = '';
-	public static var camToast:FlxCamera;
+	public static var hardcodedMouseChanges:Bool = true;
+	public static var timePassedOnState:Float = 0;
+	public static var musicBPM:Float = 0;
 
 	override function create() {
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
@@ -27,7 +30,7 @@ class SuffState extends FlxUIState {
 		timePassedOnState = 0;
 	}
 
-	public static function playMusic(tag:String, volume:Float = 1, forceRestart:Bool = false, forceModernIfNoClassic:Bool = false, playMusicToast:Bool = true) {
+	public static function playMusic(tag:String, volume:Float = 1, forceRestart:Bool = false, forceModernIfNoClassic:Bool = false, looped:Bool = true) {
 		var usedTag:String = tag;
 		if (usedTag == '' || usedTag == 'null') {
 			currentMusicName = 'null';
@@ -49,8 +52,11 @@ class SuffState extends FlxUIState {
 		}
 		currentMusicName = usedTag;
 		FlxG.sound.playMusic(Paths.music(usedTag), volume * Preferences.data.musicVolume);
-		if (playMusicToast)
-			MusicToast.play(Paths.musicMetadata(usedTag));
+		FlxG.sound.music.looped = looped;
+		var metadata:MusicMetadata = Paths.musicMetadata(usedTag);
+		if (metadata.toast)
+			MusicToast.play(metadata);
+		musicBPM = metadata.bpm;
 	}
 
 	public static function playSound(tag:Sound, volume:Float = 1, pitch:Float = 1) {
@@ -63,13 +69,14 @@ class SuffState extends FlxUIState {
 		sound.pitch = pitch;
 	}
 
-	public static var timePassedOnState:Float = 0;
-
 	override function update(elapsed:Float) {
 		timePassedOnState += elapsed;
 
 		if (FlxG.save.data != null)
 			FlxG.save.data.fullscreen = FlxG.fullscreen;
+
+		if (hardcodedMouseChanges)
+			Utils.cursorChange('default', FlxG.mouse.pressed);
 
 		super.update(elapsed);
 	}

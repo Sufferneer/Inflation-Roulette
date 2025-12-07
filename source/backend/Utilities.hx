@@ -1,31 +1,24 @@
 package backend;
 
+import flixel.graphics.FlxGraphic;
 import flixel.util.FlxSort;
+import flixel.util.FlxSpriteUtil;
 import openfl.display.BitmapData;
 import openfl.utils.Assets;
 import openfl.Lib;
 
+/**
+ * Utilities for various functions.
+ */
 class Utilities {
-	inline public static function insideOfSprite(target:FlxSprite, boundary:FlxSprite):Bool {
-		return (target.x - boundary.x >= 0
-			&& target.x - boundary.x + target.width <= boundary.width
-			&& target.y - boundary.y >= 0
-			&& target.y - boundary.y + target.height <= boundary.height);
-	}
-
-	public static function angleBetweenPoints(SpriteA:Array<Float>, SpriteB:Array<Float>, AsDegrees:Bool = true):Float {
-		var dx:Float = (SpriteB[0]) - (SpriteA[0]);
-		var dy:Float = (SpriteB[1]) - (SpriteA[1]);
-
-		if (AsDegrees)
-			return Math.atan2(dy, dx) * Constants.TO_DEGREES;
-		else
-			return Math.atan2(dy, dx);
-	}
-
+	/**
+	 * Reads a text file, separates each line, and returns them as an Array.
+	 * 
+	 * @param path The directory relative to the asset folder of the game.
+	 */
 	inline public static function textFileToArray(path:String):Array<String> {
 		var daList:String = null;
-		#if (sys && MODS_ALLOWED)
+		#if (sys)
 		var formatted:Array<String> = path.split(':');
 		path = formatted[formatted.length - 1];
 		if (FileSystem.exists(path))
@@ -41,6 +34,11 @@ class Utilities {
 		return leList;
 	}
 
+	/**
+	 * Splits a String into an Array of substrings, then remove any leading and trailing whitespaces from each item.
+	 * 
+	 * @param string The String to be split.
+	 */
 	inline public static function listFromString(string:String):Array<String> {
 		var daList:Array<String> = [];
 		daList = string.trim().split('\n');
@@ -51,33 +49,57 @@ class Utilities {
 		return daList;
 	}
 
+	/**
+	 * Find the shortest distance between two points (represented by an Array) via Pythagorean theorem.
+	 * 
+	 * @param SpriteA 1st value: X Position, 2nd value: Y Position
+	 * @param SpriteB 1st value: X Position, 2nd value: Y Position
+	 */
 	public static function distanceBetweenPoints(SpriteA:Array<Float>, SpriteB:Array<Float>):Float {
 		return Math.sqrt(Math.pow(SpriteB[0] - SpriteA[0], 2) + Math.pow(SpriteB[1] - SpriteA[1], 2));
 	}
 
+	/**
+	 * Change the appearance of the mouse cursor.
+	 * 
+	 * @param tag The cursor used.
+	 * @param pressed Whether to use the pressed version of the cursor.
+	 */
+	public static function cursorChange(tag:String, pressed:Bool = false):Void {
+		var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('gui/cursor/${tag}' + (pressed ? '_pressed' : '')));
+		FlxG.mouse.load(spr.pixels, 1, -11, -9);
+	}
+
+	/**
+	 * Generates a rectangular border.
+	 * 
+	 * @param tag The cursor used.
+	 * @param pressed Whether to use the pressed version of the cursor.
+	 */
+	public static function makeBorder(width:Int, height:Int, thickness:Int = 5, color:FlxColor = 0xFFFFFFFF):FlxGraphic {
+		var spr:FlxSprite = new FlxSprite().makeGraphic(width, height, 0x0);
+		FlxSpriteUtil.drawRect(spr, 0, 0, width, height, 0x0, {color: color, thickness: thickness * 2}, {smoothing: false});
+		return spr.graphic;
+	}
+
+	/**
+	 * Inverse linear interpolation function.
+	 * Calculates the percentage along a range of two values, based on the given lerped value.
+	 * 
+	 * @param a Starting range.
+	 * @param b Ending range.
+	 * @param v Lerped value.
+	 */
 	inline public static function invLerp(a:Float, b:Float, v:Float):Float {
 		return (v - a) / (b - a);
 	}
 
-	inline public static function capitalize(text:String)
-		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
-
-	inline public static function boundTo(value:Float, min:Float, max:Float):Float {
-		return Math.max(min, Math.min(max, value));
-	}
-
-	public static function floorDecimal(value:Float, decimals:Int):Float {
-		if (decimals < 1)
-			return Math.floor(value);
-
-		var tempMult:Float = 1;
-		for (i in 0...decimals)
-			tempMult *= 10;
-
-		var newValue:Float = Math.floor(value * tempMult);
-		return newValue / tempMult;
-	}
-
+	/**
+	 * Custom (and unnecessary) function that converts bytes into a human-readable String with appropriate units.
+	 * 
+	 * @param Bytes The number of bytes to be converted.
+	 * @param Precision The number of decimal places to round off to.
+	 */
 	public static function formatBytes(Bytes:Float, Precision:Int = 2):String {
 		var units:Array<String> = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB", "RiB", "QiB"];
 		var curUnit = 0;
@@ -88,6 +110,11 @@ class Utilities {
 		return FlxMath.roundDecimal(Bytes, Precision) + ' ' + units[curUnit];
 	}
 
+	/**
+	 * Opens a hyperlink using your default browser.
+	 * 
+	 * @param site The URL of the website to be browsed.
+	 */
 	inline public static function browserLoad(site:String) {
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);
@@ -95,34 +122,53 @@ class Utilities {
 		FlxG.openURL(site);
 		#end
 	}
-	
+
+	/**
+	 * Returns the directory of the game's save file. Useful for save file access.
+	 */
 	inline public static function getSavePath():String {
 		@:privateAccess
 		return FlxG.stage.application.meta.get('company') + '/' + FlxG.stage.application.meta.get('file');
 	}
 
+	/**
+	 * Replaces hyphens (-) from a String with whitespaces and returns it.
+	 */
 	public static function dashToSpace(string:String):String {
 		return string.replace("-", " ");
 	}
 
+	/**
+	 * Replaces whitespaces from a String with hyphens (-) and returns it.
+	 */
 	public static function spaceToDash(string:String):String {
 		return string.replace(" ", "-");
 	}
 
-    public static inline function centerWindowOnPoint(?point:FlxPoint) {
+	/**
+	 * Positions the center of the game window to a point relative to the top-left of your monitor.
+	 * 
+	 * @param point The center point where the game window will be placed.
+	 */
+	public static inline function centerWindowOnPoint(?point:FlxPoint) {
 		Lib.application.window.x = Std.int(point.x - (Lib.application.window.width / 2));
 		Lib.application.window.y = Std.int(point.y - (Lib.application.window.height / 2));
 	}
-
-	static final whitespace = ~/(?<=\r|\s|^)([a-z])/g;
-	public static function capitalizeFirstLetters(str:String):String {
-		return whitespace.map(str, (r) -> r.matched(0).toUpperCase());
+	
+	/**
+	 * Gets the center coordinates of your screen relative to the top-left of your monitor, and returns it as a FlxPoint.
+	 */
+	public static inline function getCenterWindowPoint():FlxPoint {
+		return FlxPoint.get(Lib.application.window.x + (Lib.application.window.width / 2), Lib.application.window.y + (Lib.application.window.height / 2));
 	}
 
-    public static inline function getCenterWindowPoint():FlxPoint {
-		return FlxPoint.get(
-			Lib.application.window.x + (Lib.application.window.width / 2),
-			Lib.application.window.y + (Lib.application.window.height / 2)
-		);
+	/**
+	 * Capitalizes the first letters of each word in a String and returns it.
+	 * 
+	 * @param str The string to be formatted.
+	 */
+	public static function capitalize(str:String):String {
+		var whitespace = ~/(?<=\r|\s|^)([a-z])/g;
+		return whitespace.map(str, (r) -> r.matched(0).toUpperCase());
 	}
 }

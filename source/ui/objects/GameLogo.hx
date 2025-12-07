@@ -4,7 +4,7 @@ class GameLogo extends FlxSprite {
 	static final logoScale:Float = 0.35;
     public function new(x, y) {
         super(x, y);
-		loadGraphic(Paths.image('gui/menus/game_logo'));
+		loadGraphic(Paths.image('gui/menus/gameLogo'));
 		scale.set(logoScale, logoScale);
 		updateHitbox();
     }

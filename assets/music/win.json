@@ -1,5 +1,6 @@
 {
 	"name": "Yippers",
 	"author": "Sufferneer",
-	"bpm": 120
+	"bpm": 120,
+	"toast": false
 }

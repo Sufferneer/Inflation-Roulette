@@ -1,20 +1,25 @@
 package ui.objects;
 
-import openfl.filters.ColorMatrixFilter;
+import objects.Skill;
 
 class SkillCard extends SuffButton {
 	public var skill:Skill;
 	public var skillTitle:FlxText;
 	public var skillDescription:FlxText;
 	public var skillCost:FlxText;
+	public var skillIcon:GameIcon;
 
 	public var notEnoughConfidence(default, set):Bool = true;
 
 	public function new(x:Float, y:Float, skill:Skill) {
 		this.skill = skill;
-		var usedImage = Paths.image('gui/skill_card');
-		var usedImageHovered = Paths.image('gui/skill_card_highlighted');
+		var usedImage = Paths.image('gui/skillCard');
+		var usedImageHovered = Paths.image('gui/skillCardHighlighted');
 		super(x, y, null, usedImage, usedImageHovered, usedImage.width, usedImage.height, false);
+
+		skillIcon = new GameIcon(5, 5, 'skills/${skill.id}', 110);
+		skillIcon.alpha = 0.75;
+		add(skillIcon);
 
 		skillTitle = new FlxText(usedImage.height, 8, usedImage.width - usedImage.height - 6, skill.name);
 		skillTitle.setFormat(Paths.font('default'), 32, FlxColor.WHITE);

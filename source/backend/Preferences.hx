@@ -7,7 +7,9 @@ import openfl.text.TextFormat;
 import lime.ui.Window;
 import lime.system.DisplayMode;
 
-// Add a variable here and it will get automatically saved
+/**
+ * Default list of settings to be used in-game.
+ */
 class SaveVariables {
 	public var framerate:Int = 60;
 	public var pauseOnUnfocus:Bool = false;
@@ -33,28 +35,43 @@ class SaveVariables {
 	}
 }
 
+/**
+ * Handles the player's game settings.
+ */
 class Preferences {
+	/**
+	 * The current list of setting variables and its values that the game is currently using.
+	 */
 	public static var data:SaveVariables = null;
+	/**
+	 * List of setting variables and its default values.
+	 */
 	public static var defaultData:SaveVariables = null;
 
+	/**
+	 * Saves the player's game settings and flushes them into the save directory.
+	 */
 	public static function savePrefs() {
-		FlxG.save.bind('options', Util.getSavePath());
+		FlxG.save.bind('preferences', Utils.getSavePath());
 
 		for (key in Reflect.fields(data)) {
 			Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
 		}
 		FlxG.save.flush();
 
-		trace("Options saved!");
+		trace("Preferences saved!");
 	}
 
+	/**
+	 * Loads the player's game settings from the save directory to the game.
+	 */
 	public static function loadPrefs() {
 		if (data == null)
 			data = new SaveVariables();
 		if (defaultData == null)
 			defaultData = new SaveVariables();
 
-		FlxG.save.bind('options', Util.getSavePath());
+		FlxG.save.bind('preferences', Utils.getSavePath());
 
 		for (key in Reflect.fields(data)) {
 			if (Reflect.hasField(FlxG.save.data, key)) {
@@ -79,7 +96,6 @@ class Preferences {
 			FlxG.updateFramerate = data.framerate;
 		}
 
-		// flixel automatically saves your volume!
 		if (FlxG.save.data.volume != null)
 			FlxG.sound.volume = FlxG.save.data.volume;
 		if (FlxG.save.data.mute != null)

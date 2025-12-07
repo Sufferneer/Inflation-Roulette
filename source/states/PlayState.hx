@@ -1,7 +1,14 @@
 package states;
 
-import substates.PauseSubState;
+import backend.CharacterManager;
 import backend.enums.SuffTransitionStyle;
+import objects.Character;
+import objects.Confetti;
+import objects.Scraps;
+import objects.Skill;
+import substates.PauseSubState;
+import ui.objects.SuffBar;
+import ui.objects.SkillCard;
 
 class PlayState extends SuffState {
 	// graphics
@@ -46,11 +53,6 @@ class PlayState extends SuffState {
 
 	var pauseButton:SuffButton;
 
-	// game variables
-	final liveRounds:Int = 1;
-
-	public static var characterList:Array<String> = ['goober', 'goober', 'goober', 'goober'];
-	public static var playerTurnIndices:Array<Int> = [0];
 	public static final playerWidthOffset:Float = 140;
 
 	var currentTurnIndex:Int = 0;
@@ -95,26 +97,26 @@ class PlayState extends SuffState {
 
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
+		Paths.precacheBellySounds();
+
 		super.create();
 
 		currentSessionAllowPopping = Preferences.data.allowPopping;
 
 		currentTurnIndex = 0;
-		if (playerTurnIndices.length > 0)
-			currentTurnIndex = playerTurnIndices[0];
 
 		camFollow = new FlxObject(FlxG.width / 2, FlxG.height / 2, 1, 1);
 		FlxG.camera.follow(camFollow, LOCKON);
 		FlxG.camera.followLerp = Constants.DEFAULT_CAMERA_FOLLOW_LERP;
 
-		reloadCylinder(liveRounds);
+		reloadCylinder(Constants.LIVE_ROUND_COUNT);
 
 		bg = new FlxSprite().loadGraphic(Paths.image('game/background/background'));
 		bg.screenCenter();
 		bg.scrollFactor.set(0.3, 0.5);
 		add(bg);
 
-		pumpRack = new FlxSprite().loadGraphic(Paths.image('game/background/pump_rack'));
+		pumpRack = new FlxSprite().loadGraphic(Paths.image('game/background/pumpRack'));
 		pumpRack.x = bg.x + (bg.width - pumpRack.width) / 2;
 		pumpRack.y = -50;
 		pumpRack.scrollFactor.set(0.4, 0.6);
@@ -133,29 +135,31 @@ class PlayState extends SuffState {
 
 		FlxG.camera.setScrollBoundsRect(boundX, boundY, floorBoundXRight - floorBoundXLeft, floor.height + floor.height * floor.scrollFactor.y * (2 / 3));
 
-		tableTop = new FlxSprite().loadGraphic(Paths.image('game/background/table_top'));
+		tableTop = new FlxSprite().loadGraphic(Paths.image('game/background/tableTop'));
 		tableTop.x = floor.x + (floor.width - tableTop.width) / 2;
 		tableTop.y = 500;
 		tableTop.scrollFactor.set(1.2, 1.1);
 		tableTop.alpha = 0.75;
 
-		tableStand = new FlxSprite().loadGraphic(Paths.image('game/background/table_stand'));
+		tableStand = new FlxSprite().loadGraphic(Paths.image('game/background/tableStand'));
 		tableStand.x = tableTop.x;
 		tableStand.y = tableTop.y;
 		tableStand.scrollFactor.set(1.2, 1.1);
 
-		pumpGun = new FlxSprite().loadGraphic(Paths.image('game/pump_gun'));
+		pumpGun = new FlxSprite().loadGraphic(Paths.image('game/pumpGun'));
 
 		add(characterGroup);
-		for (i in 0...characterList.length) {
-			var leX:Int = Std.int(tableTop.x + playerWidthOffset + i * (tableTop.width - playerWidthOffset * 2) / (characterList.length - 1));
-			var char:Character = new Character(characterList[i], leX, floorY);
-			if (i >= Std.int(characterList.length / 2)) {
+		for (i in 0...CharacterManager.selectedCharacterList.length) {
+			var leX:Int = Std.int(tableTop.x
+				+ playerWidthOffset
+				+ i * (tableTop.width - playerWidthOffset * 2) / (CharacterManager.selectedCharacterList.length - 1));
+			var char:Character = new Character(CharacterManager.selectedCharacterList[i], leX, floorY);
+			if (i >= Std.int(CharacterManager.selectedCharacterList.length / 2)) {
 				char.flipX = true;
 			}
 			char.playAnim('idle' + char.currentPressure);
 
-			char.cpuControlled = !playerTurnIndices.contains(i);
+			char.cpuControlled = !CharacterManager.playerControlled[i];
 
 			pumpGunDestinations.push(char.x - pumpGun.width / 2);
 
@@ -223,9 +227,9 @@ class PlayState extends SuffState {
 		skillCardsGroup.camera = camHUD;
 		add(skillCardsGroup);
 
-		var shootButtonImage = Paths.image('gui/shoot');
-		shootButton = new SuffButton(0, 0, null, shootButtonImage, Paths.image('gui/shoot_highlighted'), shootButtonImage.width, shootButtonImage.height,
-			false);
+		var shootButtonImage = Paths.image('gui/icons/buttons/shoot');
+		var shootButtonHighlightedImage = Paths.image('gui/icons/buttons/shootHighlighted');
+		shootButton = new SuffButton(0, 0, null, shootButtonImage, shootButtonHighlightedImage, shootButtonImage.width, shootButtonImage.height, false);
 		shootButton.y = FlxG.height - shootButton.height;
 		shootButton.camera = camHUD;
 		shootButton.onClick = function() {
@@ -233,7 +237,7 @@ class PlayState extends SuffState {
 		}
 		add(shootButton);
 
-		pauseButton = new SuffButton(20, 20, null, Paths.image('gui/pause'), null, 100, 100);
+		pauseButton = new SuffButton(20, 20, null, Paths.image('gui/icons/buttons/pause'), null, 100, 100);
 		pauseButton.x = FlxG.width - pauseButton.width - 20;
 		pauseButton.camera = camHUD;
 		pauseButton.onClick = function() {
@@ -344,7 +348,7 @@ class PlayState extends SuffState {
 	}
 
 	function playGunContactSound(volume:Float = 1) {
-		SuffState.playSound(Paths.soundRandom('gun_collide', 1, 3));
+		SuffState.playSound(Paths.soundRandom('weapon', 1, 3));
 	}
 
 	function playStartCutscene() {
@@ -402,6 +406,9 @@ class PlayState extends SuffState {
 		doTween('camHUD', FlxTween.tween(camHUD, {alpha: 1}, 0.5));
 
 		changeTurn();
+		if (getPlayer(currentTurnIndex).cpuControlled) {
+			cpuAction();
+		}
 	}
 
 	function reloadCylinder(liveRounds:Int = 1) {
@@ -428,9 +435,17 @@ class PlayState extends SuffState {
 			return;
 		}
 		getPlayer(playerIndex).currentConfidence -= skill.cost;
+
+		var animName:String = 'skill' + Utils.capitalize(skill.id);
+		var soundName:String = animName;
+		if (!getPlayer(playerIndex).animExists(animName)) {
+			animName = 'skill';
+		}
+		getPlayer(playerIndex).playAnim(animName);
+
 		switch (skill.id) {
 			case 'reload':
-				reloadCylinder(liveRounds);
+				reloadCylinder(Constants.LIVE_ROUND_COUNT);
 			case 'sabotage':
 				cylinderContent[0] = false;
 				if (cylinderContent.length > 1) {
@@ -442,22 +457,24 @@ class PlayState extends SuffState {
 				liveRoundDamage *= 2;
 			case 'polarize':
 				cylinderContent[0] = !cylinderContent[0];
+			case 'deflate':
+				getPlayer(playerIndex).currentPressure -= 1;
+				if (getPlayer(playerIndex).currentPressure < 0) {
+					getPlayer(playerIndex).currentPressure = 0;
+				}
 		}
 
 		toggleLetterbox(true);
-		togglePlayerUI((currentTurnIndex == playerIndex && !playerTurnIndices.contains(currentTurnIndex)));
-		var animName:String = 'skill' + Util.capitalizeFirstLetters(skill.id);
-		var soundName:String = animName;
-		if (!getPlayer(playerIndex).animExists(animName)) {
-			animName = 'skill';
-		}
-		getPlayer(playerIndex).playAnim(animName);
+		togglePlayerUI(false);
 		// trace(getPlayer(playerIndex).animSoundPaths[soundName]);
-		if (getPlayer(playerIndex).animSoundPaths[soundName] == null || getPlayer(playerIndex).animSoundPaths[soundName].length <= 0)
-			SuffState.playSound(Paths.sound('characters/GLOBAL/' + soundName));
+		if (getPlayer(playerIndex).animSoundPaths[soundName] == null || getPlayer(playerIndex).animSoundPaths[soundName].length <= 0) {
+			if (Paths.fileExists(Paths.appendSoundExt('sounds/characters/GLOBAL/' + soundName), SOUND)) {
+				SuffState.playSound(Paths.sound('characters/GLOBAL/' + soundName));
+			}
+		}
 		doTimer('reenablePlayerUI', new FlxTimer().start(getPlayer(playerIndex).getLengthOfCurAnim(), function(_:FlxTimer) {
 			getPlayer(playerIndex).playAnim('prepareShoot', false);
-			togglePlayerUI((currentTurnIndex == playerIndex && playerTurnIndices.contains(currentTurnIndex)));
+			togglePlayerUI((currentTurnIndex == playerIndex && CharacterManager.playerControlled[currentTurnIndex]));
 			if (currentTurnIndex == playerIndex) {
 				updateSkillAvailability(playerIndex);
 			}
@@ -479,22 +496,23 @@ class PlayState extends SuffState {
 		if (getPlayer(playerIndex).currentPressure >= getPlayer(playerIndex).maxPressure) {
 			FlxG.sound.music.pause();
 		}
+		if (dealDamage || cylinderContent.length > 1) {
+			reloadCylinder(Constants.LIVE_ROUND_COUNT);
+		}
 		if (dealDamage) {
-			SuffState.playSound(Paths.sound('shoot_live'));
+			SuffState.playSound(Paths.sound('shootLive'));
 			getPlayer(playerIndex).currentPressure += liveRoundDamage;
 			getPlayer(playerIndex).currentConfidence += getPlayer(playerIndex).confidenceChangeOnLiveShot;
 			liveRoundDamage = 1;
 
 			var percent = getPlayer(playerIndex).calculatePressurePercentage();
-			var fwoompSuffix:String = percent >= 0.5 ? 'large' : 'small';
-			SuffState.playSound(Paths.soundRandom('belly/fwoomp_' + fwoompSuffix, 1, Constants.FWOOMPS_SAMPLE_COUNT), 0.75, 0.5);
+			var fwoompSuffix:String = percent >= 0.5 ? 'Large' : 'Small';
+			SuffState.playSound(Paths.soundRandom('belly/fwoomps/fwoomp' + fwoompSuffix, 1, Constants.FWOOMPS_SAMPLE_COUNT), 0.75, 0.5);
 			if (Preferences.data.allowBellyCreaks) {
 				SuffState.playSound(Paths.soundRandom('belly/creaks/creak', 1, Constants.CREAKS_SAMPLE_COUNT), percent, percent * 1.5 + 1);
 			}
 
 			screenShake(0.01, 0.1);
-
-			reloadCylinder(liveRounds);
 		} else {
 			getPlayer(playerIndex).currentConfidence += getPlayer(playerIndex).confidenceChangeOnBlankShot;
 		}
@@ -536,7 +554,8 @@ class PlayState extends SuffState {
 			screenShake(0.03, 0.5);
 			screenFlash();
 			getPlayer(playerIndex).acceleration.y = 4800 * getPlayer(playerIndex).poppingGravityMultiplier;
-			getPlayer(playerIndex).velocity.x += 320 * (playerIndex >= characterList.length / 2 ? 1 : -1) * getPlayer(playerIndex).poppingVelocityMultiplier[0];
+			getPlayer(playerIndex).velocity.x += 320 * (playerIndex >= characterGroup.members.length / 2 ? 1 : -1) * getPlayer(playerIndex)
+				.poppingVelocityMultiplier[0];
 			getPlayer(playerIndex).velocity.y = -1600 * getPlayer(playerIndex).poppingVelocityMultiplier[1];
 		} else {
 			getPlayer(playerIndex).playAnim('idle');
@@ -575,7 +594,7 @@ class PlayState extends SuffState {
 			members.insert(members.indexOf(tableTop) - 1,
 				new Confetti(getPlayer(winnerIndex).x + FlxG.width / 2.5, getPlayer(winnerIndex).y - getPlayer(winnerIndex).height, 150));
 			doTimer('winAnim', new FlxTimer().start(1.0, function(_:FlxTimer) {
-				SuffState.playMusic('win', 1, true, true, false);
+				SuffState.playMusic('win', 1);
 				getPlayer(winnerIndex).playAnim('win', false);
 				doTimer('finishCutscene', new FlxTimer().start(Math.max(4, getPlayer(currentTurnIndex).getLengthOfCurAnim()), function(_:FlxTimer) {
 					finishEndCutscene();
@@ -590,12 +609,13 @@ class PlayState extends SuffState {
 	}
 
 	function changeTurnNumber(change:Int = 0) {
-		currentTurnIndex = (currentTurnIndex + change) % characterList.length;
+		currentTurnIndex = (currentTurnIndex + change) % CharacterManager.selectedCharacterList.length;
 	}
 
 	function changeTurn(change:Int = 0, slient:Bool = false) {
 		var PrevTurn:Int = currentTurnIndex;
-		var flipX:Bool = PrevTurn >= Std.int(characterList.length / 2) && PrevTurn != characterList.length - 1;
+		var flipX:Bool = PrevTurn >= Std.int(CharacterManager.selectedCharacterList.length / 2)
+			&& PrevTurn != CharacterManager.selectedCharacterList.length - 1;
 		changeTurnNumber(change);
 		if (!(Preferences.data.ignoreEliminatedPlayers && getPlayer(PrevTurn).isEliminated())) {
 			focusCameraOnPlayer(PrevTurn);
@@ -610,7 +630,7 @@ class PlayState extends SuffState {
 				ease: FlxEase.quadOut,
 				onStart: function(_:FlxTween) {
 					if (!slient)
-						SuffState.playSound(Paths.sound('gun_slide'));
+						SuffState.playSound(Paths.sound('weaponSlide'));
 					if (!(Preferences.data.ignoreEliminatedPlayers && getPlayer(currentTurnIndex).isEliminated()))
 						focusCameraOnPlayer(currentTurnIndex);
 					else
@@ -621,8 +641,8 @@ class PlayState extends SuffState {
 						getPlayer(currentTurnIndex).playAnim('prepareShoot', false);
 						playGunContactSound();
 						pumpGun.visible = false;
-						togglePlayerUI(playerTurnIndices.contains(currentTurnIndex));
-						toggleLetterbox(!playerTurnIndices.contains(currentTurnIndex));
+						togglePlayerUI(CharacterManager.playerControlled[currentTurnIndex]);
+						toggleLetterbox(!CharacterManager.playerControlled[currentTurnIndex]);
 						if (getPlayer(currentTurnIndex).cpuControlled) {
 							cpuAction();
 						}
@@ -639,7 +659,7 @@ class PlayState extends SuffState {
 		} else {
 			getPlayer(currentTurnIndex).playAnim('prepareShoot', false);
 			pumpGun.visible = false;
-			togglePlayerUI(playerTurnIndices.contains(currentTurnIndex));
+			togglePlayerUI(CharacterManager.playerControlled[currentTurnIndex]);
 		}
 		reloadPlayerUI(currentTurnIndex);
 	}
@@ -785,7 +805,7 @@ class PlayState extends SuffState {
 		if (!isPaused) {
 			FlxG.camera.zoom = FlxMath.lerp(FlxG.camera.zoom, camFollowZoom, FlxMath.bound(elapsed * 5, 0, 1));
 
-			if (FlxG.keys.justPressed.ENTER && playerTurnIndices.contains(currentTurnIndex) && !shootButton.disabled) {
+			if (FlxG.keys.justPressed.ENTER && CharacterManager.playerControlled[currentTurnIndex] && !shootButton.disabled) {
 				deployGun(currentTurnIndex, function() return getPlayer(currentTurnIndex).calculatePressurePercentage());
 			}
 

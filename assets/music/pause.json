@@ -1,5 +1,6 @@
 {
 	"name": "Shotgunne",
 	"author": "Sufferneer",
-	"bpm": 140
+	"bpm": 140,
+	"toast": true
 }

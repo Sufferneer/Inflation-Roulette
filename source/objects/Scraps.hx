@@ -5,6 +5,7 @@ import flixel.effects.particles.FlxParticle;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxEmitter.FlxEmitterMode;
 import flixel.util.FlxDirectionFlags;
+import states.PlayState;
 
 class Scraps extends FlxTypedEmitter<Scrap> {
 	var characterID:String = 'goober';

@@ -59,13 +59,13 @@ class MusicToast extends FlxTypedContainer<FlxBasic> {
 
 		musicToast.add(record);
 
-		recordBG = new FlxSprite().loadGraphic(Paths.image('gui/music_toast/record'));
+		recordBG = new FlxSprite().loadGraphic(Paths.image('gui/musicToast/record'));
 
 		bg.makeGraphic(Std.int(songTitleText.width + recordBG.width / 2 + paddingX), 50, FlxColor.BLACK);
 		recordBG.scrollFactor.set();
 		record.add(recordBG);
 
-		recordCover = new FlxSprite().loadGraphic(Paths.image('gui/music_toast/covers/sufferneer'));
+		recordCover = new FlxSprite().loadGraphic(Paths.image('gui/musicToast/covers/sufferneer'));
 		recordCover.scrollFactor.set();
 		record.add(recordCover);
 
@@ -90,8 +90,8 @@ class MusicToast extends FlxTypedContainer<FlxBasic> {
 
 		instance.songTitleText.text = '$songTitle - $songAuthor';
 
-		instance.recordBG.loadGraphic(Paths.image('gui/music_toast/record'));
-		instance.recordCover.loadGraphic(Paths.image('gui/music_toast/covers/${songAuthor.toLowerCase().replace(' ', '_')}'));
+		instance.recordBG.loadGraphic(Paths.image('gui/musicToast/record'));
+		instance.recordCover.loadGraphic(Paths.image('gui/musicToast/covers/${songAuthor.toLowerCase().replace(' ', '_')}'));
 
 		instance.bg.makeGraphic(Std.int(instance.songTitleText.width + paddingX + instance.recordBG.width / 2 + paddingX), 50, FlxColor.BLACK);
 
@@ -131,7 +131,7 @@ class MusicToast extends FlxTypedContainer<FlxBasic> {
 		}
 		if (FlxG.mouse.overlaps(instance.record, instance.musicToast.camera) && FlxG.mouse.justPressed) {
 			instance.leScale += 0.2;
-			SuffState.playUISound(Paths.sound('music_toast_click'));
+			SuffState.playUISound(Paths.sound('musicToastClick'));
 			instance.totalElasped = startDelay + moveInDuration + holdDuration / 2;
 		}
 		instance.record.scale.set(instance.leScale, instance.leScale);

@@ -35,7 +35,7 @@ class SuffSliderOption extends FlxSpriteGroup {
 			this.range[1] = rangeMax;
 		// trace(range);
 
-		outline = new FlxSprite().loadGraphic(Paths.image('gui/menus/options/slider_bg'));
+		outline = new FlxSprite().loadGraphic(Paths.image('gui/menus/options/sliderBG'));
 		add(outline);
 
 		parent = new FlxSprite();
@@ -50,7 +50,7 @@ class SuffSliderOption extends FlxSpriteGroup {
 
 		minX = outline.x;
 		maxX = outline.x + outline.width - parent.width;
-		parent.x = FlxMath.lerp(minX, maxX, Util.invLerp(range[0], range[1], defaultValue));
+		parent.x = FlxMath.lerp(minX, maxX, Utils.invLerp(range[0], range[1], defaultValue));
 		parentActualX = parent.x;
 
 		recalculateValue(false);
@@ -63,7 +63,7 @@ class SuffSliderOption extends FlxSpriteGroup {
 	}
 
 	function recalculateValue(callback:Bool = true) {
-		currentValue = FlxMath.lerp(range[0], range[1], Util.invLerp(minX, maxX, parent.x));
+		currentValue = FlxMath.lerp(range[0], range[1], Utils.invLerp(minX, maxX, parent.x));
 		if (callback)
 			onChangeCallback(currentValue);
 		setDisplayTextText(currentValue);
@@ -71,11 +71,11 @@ class SuffSliderOption extends FlxSpriteGroup {
 	}
 
 	function snapSlider() {
-		var leActualPercent = Util.invLerp(minX, maxX, parentActualX);
+		var leActualPercent = Utils.invLerp(minX, maxX, parentActualX);
 		var leActualValue = FlxMath.lerp(range[0], range[1], leActualPercent);
 		var leStep = step;
 		var leSnappedValue = Math.round(leActualValue / leStep) * leStep;
-		var leSnappedPercent = Util.invLerp(range[0], range[1], leSnappedValue);
+		var leSnappedPercent = Utils.invLerp(range[0], range[1], leSnappedValue);
 		parent.x = FlxMath.lerp(minX, maxX, leSnappedPercent);
 
 		setDisplayTextText(leSnappedValue);

@@ -18,7 +18,7 @@
 	<window if="html5" resizable="true" />
 
 	<!--Desktop-specific-->
-	<window if="desktop" orientation="landscape" fullscreen="false" resizable="false" vsync="false"/>
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
 
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
@@ -38,6 +38,7 @@
 	
 	<!-- Turn on Crash Handler -->
 	<define name="CRASH_HANDLER" if="desktop" />
+	<define name="ADDONS_ALLOWED" if="desktop" />
 
 	<!-- Preload Assets -->
 
@@ -47,6 +48,9 @@
 	<assets path="assets/sounds" exclude="*.mp3"  unless="web" preload="true"/>
 	<assets path="assets/music" preload="true"/>
 	<assets path="assets/images" preload="true"/>
+	<section if="ADDONS_ALLOWED">
+		<assets path='addons' embed='false'/>
+	</section>
 
     <assets path='art/readme.txt' rename="readme.txt"/>
 
@@ -108,5 +112,5 @@
 	<icon path="art/icon64.png" size='64'/>
 	<icon path="art/icon128.png" size='128'/>
 	<icon path="art/icon256.png" size='256'/>
-	<icon path="art/iconOG.png" />
+	<icon path="art/icon512.png" size='512'/>
 </project>

@@ -1,5 +1,6 @@
 {
 	"name": "Mechsimp",
 	"author": "Sufferneer",
-	"bpm": 130
+	"bpm": 130,
+	"toast": true
 }

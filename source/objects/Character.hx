@@ -1,12 +1,15 @@
 package objects;
 
-import tjson.TJSON as Json;
+import flash.media.Sound;
 import backend.types.CharacterData;
 import backend.types.CharacterSpriteData;
 import backend.types.ModifierData;
 import backend.types.SkillData;
 import backend.types.AnimationData;
-import flash.media.Sound;
+import objects.Modifier;
+import objects.Skill;
+import states.PlayState;
+import tjson.TJSON as Json;
 
 class Character extends FlxSprite {
 	// Metadata //

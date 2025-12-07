@@ -80,10 +80,9 @@ class FPS extends TextField {
 		if (currentCount != cacheCount) {
 			text = "FPS: " + currentFPS
 			#if (openfl && !html5)
-			+ (Preferences.data.showMemoryUsage ? '\nMemory: ' + Util.formatBytes(System.totalMemory, 1) : '')
-			+ (Preferences.data.showCurrentState ? '\nState: ' + Main.mainClassState : '')
-			#end
-			;
+			+ (Preferences.data.showMemoryUsage ? '\nMemory: ' + Utils.formatBytes(System.totalMemory,
+				1) : '') + (Preferences.data.showCurrentState ? '\nState: ' + Main.mainClassState : '')
+			#end;
 
 			textColor = 0xFFFFFFFF;
 			if (currentFPS <= Preferences.data.framerate * 0.8) {

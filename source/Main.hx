@@ -1,5 +1,6 @@
 package;
 
+import backend.Addons;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxGame;
 import flixel.FlxState;
@@ -71,13 +72,12 @@ class Main extends Sprite {
 			game.height = Math.ceil(stageHeight / game.zoom);
 		}
 
-		#if LUA_ALLOWED Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		FlxTransitionableState.skipNextTransOut = true;
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen));
 
 		#if !mobile
-		FlxG.save.bind('gamedata', Util.getSavePath());
+		FlxG.save.bind('gamedata', Utils.getSavePath());
 		Preferences.loadPrefs();
 		fpsVar = new FPS(0, 0, 0xFFFFFF);
 		addChild(fpsVar);
@@ -87,6 +87,9 @@ class Main extends Sprite {
 		#end
 
 		MusicToast.initialize();
+		#if ADDONS_ALLOWED
+		Addons.pushGlobalAddons();
+		#end
 
 		#if html5
 		FlxG.autoPause = false;

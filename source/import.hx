@@ -1,12 +1,10 @@
 import ui.*;
-import ui.objects.*;
+import ui.objects.SuffButton;
 import ui.plugins.*;
-import objects.*;
 import backend.Paths;
-import backend.Utilities as Util;
+import backend.Utilities as Utils;
 import backend.Constants;
 import backend.Preferences;
-import states.PlayState;
 // Flixel
 #if (flixel >= "5.3.0")
 import flixel.sound.FlxSound;

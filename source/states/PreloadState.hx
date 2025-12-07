@@ -12,7 +12,7 @@ import flash.text.TextFormatAlign;
 import flash.Lib;
 import flixel.FlxG;
 
-@:bitmap("assets/images/gui/menus/loading/cri_de_sad_gold.png") class LogoImage extends BitmapData {
+@:bitmap("assets/images/gui/menus/loading/criDeSadGold.png") class LogoImage extends BitmapData {
 }
 
 @:font("assets/fonts/default.ttf") class CustomFont extends Font {
@@ -28,6 +28,7 @@ class PreloadState extends FlxBasePreloader {
 	}
 
 	var logo:Sprite;
+	var textTitle:TextField;
 	var text:TextField;
 
 	override function create():Void {
@@ -50,6 +51,17 @@ class PreloadState extends FlxBasePreloader {
 		text.y = 5 * _height / 6;
 		text.width = _width;
 		text.text = '0%';
+		addChild(text);
+
+		text = new TextField();
+		text.defaultTextFormat = new TextFormat("Suffirat Regular", 48, 0xffffff, false, false, false, "", "", TextFormatAlign.CENTER);
+		text.embedFonts = true;
+		text.selectable = false;
+		text.multiline = true;
+		text.x = 0;
+		text.y = 5 * _height / 4;
+		text.width = _width;
+		text.text = 'Running The Hell Machine';
 		addChild(text);
 	}
 

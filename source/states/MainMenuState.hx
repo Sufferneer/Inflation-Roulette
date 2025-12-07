@@ -2,13 +2,17 @@ package states;
 
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
+import states.CharacterSelectState;
+import states.CreditsState;
 import substates.OptionsSubState;
+import ui.objects.GameLogo;
 
 class MainMenuState extends SuffState {
 	public static var initialized:Bool = false;
 
 	var bg:FlxBackdrop;
 	var logo:GameLogo;
+
 	static final buttonSpacing:Int = 10;
 
 	var buttonGroup:FlxTypedContainer<SuffButton> = new FlxTypedContainer<SuffButton>();
@@ -44,8 +48,8 @@ class MainMenuState extends SuffState {
 			initialized = true;
 		}
 
-		if (FlxG.sound.music == null || SuffState.currentMusicName == 'null') { //idk lmao
-			SuffState.playMusic('main_menu');
+		if (FlxG.sound.music == null || SuffState.currentMusicName == 'null') { // idk lmao
+			SuffState.playMusic('mainMenu');
 		}
 
 		logo = new GameLogo(0, 20);
@@ -57,8 +61,8 @@ class MainMenuState extends SuffState {
 			buttonGroup.add(galleryButton);
 		 */
 
-		var creditImage = Paths.image('gui/menus/mallet_industries_logo');
-		var creditImageHovered = Paths.image('gui/menus/mallet_industries_logo_highlighted');
+		var creditImage = Paths.image('gui/menus/malletIndustriesLogo');
+		var creditImageHovered = Paths.image('gui/menus/malletIndustriesLogoHighlighted');
 
 		creditsButton = new SuffButton(10, 0, '', creditImage, creditImageHovered, creditImage.width * 2, creditImage.height * 2, false);
 		creditsButton.btnTextColorHovered = 0xFFFFFF00;
@@ -100,8 +104,7 @@ class MainMenuState extends SuffState {
 	function menuButtonFunctions(menu:String) {
 		switch (menu) {
 			case 'PLAY':
-				PlayState.hasSeenCutscene = false;
-				SuffState.switchState(new PlayState());
+				SuffState.switchState(new CharacterSelectState());
 			case 'OPTIONS':
 				OptionsSubState.notInGame = true;
 				openSubState(new OptionsSubState());

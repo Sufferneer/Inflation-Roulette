@@ -1,6 +1,7 @@
 package substates;
 
 import ui.objects.SuffBooleanOption;
+import ui.objects.SuffSliderOption;
 
 class OptionsSubState extends SuffSubState {
 	public static var notInGame:Bool = true;
@@ -64,7 +65,7 @@ class OptionsSubState extends SuffSubState {
 		descText.alpha = 0.7;
 		add(descText);
 
-		exitButton = new SuffButton(20, 20, null, Paths.image('gui/exit'), null, 100, 100);
+		exitButton = new SuffButton(20, 20, null, Paths.image('gui/icons/buttons/exit'), null, 100, 100);
 		exitButton.x = FlxG.width - exitButton.width - 10;
 		exitButton.onClick = exitOptionsMenu;
 		add(exitButton);
@@ -176,8 +177,8 @@ class OptionsSubState extends SuffSubState {
 		createSubheading('Technical');
 
 		#if (openfl && !html5)
-		createBooleanOption('GPU Caching',
-			"Allows the GPU to be used for storing textures for lower RAM usage.\nMay not work correctly with lower-end graphics cards.",
+		createBooleanOption('VRAM Caching',
+			"Allows the GPU to be used for storing textures using VRAM for lower RAM usage.\nMay not work correctly with lower-end graphics cards.",
 			function(value:Bool) {
 				Preferences.data.cacheOnGPU = value;
 			}, Preferences.data.cacheOnGPU);
@@ -274,7 +275,7 @@ class OptionsSubState extends SuffSubState {
 		}
 		close();
 		if (notInGame) {
-			SuffState.playMusic('main_menu');
+			SuffState.playMusic('mainMenu');
 		}
 	}
 

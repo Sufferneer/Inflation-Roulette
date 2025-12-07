@@ -1,6 +1,7 @@
 package ui;
 
 import backend.enums.SuffTransitionStyle;
+import ui.objects.SuffTransitionBlock;
 
 class SuffTransition extends SuffSubState {
 	public static var finishCallback:Void->Void;
@@ -13,6 +14,7 @@ class SuffTransition extends SuffSubState {
 	var loadingTxt:FlxText;
 
 	var duration:Float = 0;
+
 	static final widthHeightGCF:Int = 80;
 
 	// Blocky
@@ -20,6 +22,7 @@ class SuffTransition extends SuffSubState {
 	var transitionProgess:Float = 0;
 	var durationPerBlock:Float = 0;
 	var curBlock:Int = 0;
+
 	static final blockSize:Int = 160;
 
 	static final randomLoadingLines:Array<String> = [
@@ -45,7 +48,7 @@ class SuffTransition extends SuffSubState {
 		'Preparing for the DSE',
 		'Wasting time',
 		'Creating more bugs',
-		'Fixing modding support',
+		'Fixing addon support',
 		'Dark was the night',
 		'Cold was the ground',
 		'This game is 10 days overdue'
@@ -72,7 +75,7 @@ class SuffTransition extends SuffSubState {
 				#if sys
 				fileList = FileSystem.readDirectory(Paths.getPath('images/gui/transitions/blocky'));
 				#else
-				fileList = Util.textFileToArray(Paths.getPath('images/gui/transitions/blocky/blockList.txt'));
+				fileList = Utils.textFileToArray(Paths.getPath('images/gui/transitions/blocky/blockList.txt'));
 				#end
 				for (folder in fileList) {
 					if (!folder.toLowerCase().endsWith('.txt')) {
@@ -82,8 +85,9 @@ class SuffTransition extends SuffSubState {
 
 				for (h in 0...Math.ceil(FlxG.height / blockSize)) {
 					for (w in 0...Math.ceil(FlxG.width / blockSize)) {
-						var tran:TransitionBlock = new TransitionBlock(w * blockSize - (FlxG.width % blockSize) / 2,
-							h * blockSize - (FlxG.height % blockSize) / 2, imageList[FlxG.random.int(0, imageList.length - 1)], blockSize, (w + h) % 2 == 0 ? 0xFF000000 : 0xFF202020);
+						var tran:SuffTransitionBlock = new SuffTransitionBlock(w * blockSize - (FlxG.width % blockSize) / 2,
+							h * blockSize - (FlxG.height % blockSize) / 2, imageList[FlxG.random.int(0, imageList.length - 1)], blockSize,
+							(w + h) % 2 == 0 ? 0xFF000000 : 0xFF202020);
 						tran.visible = isTransIn;
 						trans.add(tran);
 					}
