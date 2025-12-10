@@ -12,17 +12,17 @@ class Addons {
 	inline public static function pushGlobalAddons() {
 		globalAddons = [];
 		for (addon in updateAddonList()) {
-			var pack:Dynamic = getPack(addon);
+			var pack:Dynamic = getAddonData(addon);
 			if (pack != null)
 				globalAddons.push(addon);
-			trace(addon);
+			trace('Loaded addons: ' + addon);
 		}
 		return globalAddons;
 	}
 
 	inline public static function getAddonDirectories():Array<String> {
 		var list:Array<String> = [];
-		#if ADDONS_ALLOWED
+		#if ALLOW_ADDONS
 		var addonsFolder:String = Paths.addons();
 		if (FileSystem.exists(addonsFolder)) {
 			for (folder in FileSystem.readDirectory(addonsFolder)) {
@@ -35,8 +35,8 @@ class Addons {
 		return list;
 	}
 
-	public static function getPack(?folder:String = null):AddonData {
-		#if ADDONS_ALLOWED
+	public static function getAddonData(?folder:String = null):AddonData {
+		#if ALLOW_ADDONS
 		var path = Paths.addons(folder + '/metadata.json');
 		if (FileSystem.exists(path)) {
 			try {
@@ -58,7 +58,7 @@ class Addons {
 	}
 
 	private static function updateAddonList() {
-		#if ADDONS_ALLOWED
+		#if ALLOW_ADDONS
 		var list:Array<String> = [];
 
 		// Scan for folders

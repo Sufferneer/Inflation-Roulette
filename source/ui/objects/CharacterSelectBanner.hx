@@ -4,7 +4,6 @@ import backend.CharacterManager;
 import backend.types.CharacterData;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxGradient;
-import flixel.util.FlxSignal;
 import states.CharacterSelectState;
 
 class CharacterSelectBanner extends SuffButton {

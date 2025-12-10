@@ -1,0 +1,24 @@
+{
+	"name": "Asimo",
+	"description": "This wolf isn't supposed to be here, but he just wants to have some fun. His experience in occult allows him to overload gadgets.",
+
+	"maxPressure": 3,
+	"maxConfidence": 5,
+	"modifiers": {},
+	"skills": [
+		{
+			"id": "reload",
+			"cost": 2
+		},
+		{
+			"id": "pressurize",
+			"cost": 3
+		}
+	],
+	"altSkins": [
+		{
+			"name": "Female",
+			"suffix": "_f"
+		}
+	]
+}

@@ -1,9 +1,13 @@
 package states;
 
+#if ALLOW_VERSION_HANDLING
+import backend.VersionMetadata;
+#end
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import states.CharacterSelectState;
 import states.CreditsState;
+import states.AddonMenuState;
 import substates.OptionsSubState;
 import ui.objects.GameLogo;
 
@@ -21,7 +25,7 @@ class MainMenuState extends SuffState {
 	var galleryButton:SuffButton;
 	var creditsButton:SuffButton;
 
-	static final menuItems:Array<String> = ['PLAY', 'OPTIONS'];
+	static final menuItems:Array<String> = ['PLAY', 'OPTIONS', 'ADDONS'];
 
 	override public function create():Void {
 		// Paths.clearStoredMemory();
@@ -56,14 +60,24 @@ class MainMenuState extends SuffState {
 		logo.screenCenter(X);
 		add(logo);
 
-		/*
-			galleryButton = new SuffButton(0, 0, 'GALLERY', null, null, 300, 80);
-			buttonGroup.add(galleryButton);
-		 */
+		final infoTextList:Array<String> = [
+			#if ALLOW_VERSION_HANDLING
+			'Version ' + FlxG.stage.application.meta.get('version'),
+			VersionMetadata.getVersionName(FlxG.stage.application.meta.get('version'))
+			#else
+			'Modded Version ' + FlxG.stage.application.meta.get('version')
+			#end
+		];
+		for (i in 0...infoTextList.length) {
+			var infoText = new FlxText(0, 0, 0, infoTextList[i]);
+			infoText.setFormat(Paths.font('default'), 16, FlxColor.WHITE);
+			infoText.x = FlxG.width - infoText.width;
+			infoText.y = FlxG.height - infoText.height * (infoTextList.length - i);
+			add(infoText);
+		}
 
 		var creditImage = Paths.image('gui/menus/malletIndustriesLogo');
 		var creditImageHovered = Paths.image('gui/menus/malletIndustriesLogoHighlighted');
-
 		creditsButton = new SuffButton(10, 0, '', creditImage, creditImageHovered, creditImage.width * 2, creditImage.height * 2, false);
 		creditsButton.btnTextColorHovered = 0xFFFFFF00;
 		creditsButton.y = FlxG.height - creditsButton.height - 10;
@@ -108,6 +122,8 @@ class MainMenuState extends SuffState {
 			case 'OPTIONS':
 				OptionsSubState.notInGame = true;
 				openSubState(new OptionsSubState());
+			case 'ADDONS':
+				SuffState.switchState(new AddonMenuState());
 			case 'CREDITS':
 				SuffState.switchState(new CreditsState());
 		}

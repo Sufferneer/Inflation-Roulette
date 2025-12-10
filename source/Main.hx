@@ -13,7 +13,7 @@ import openfl.display.StageScaleMode;
 import lime.app.Application;
 import states.SplashScreenState;
 // crash handler stuff
-#if CRASH_HANDLER
+#if ALLOW_CRASH_HANDLER
 import openfl.events.UncaughtErrorEvent;
 import haxe.CallStack;
 import haxe.io.Path;
@@ -87,7 +87,7 @@ class Main extends Sprite {
 		#end
 
 		MusicToast.initialize();
-		#if ADDONS_ALLOWED
+		#if ALLOW_ADDONS
 		Addons.pushGlobalAddons();
 		#end
 
@@ -96,7 +96,7 @@ class Main extends Sprite {
 		#end
 		FlxG.mouse.visible = false;
 
-		#if CRASH_HANDLER
+		#if ALLOW_CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
 
@@ -124,7 +124,7 @@ class Main extends Sprite {
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
 	// very cool person for real they don't get enough credit for their work
-	#if CRASH_HANDLER
+	#if ALLOW_CRASH_HANDLER
 	function onCrash(e:UncaughtErrorEvent):Void {
 		var errMsg:String = "";
 		var path:String;

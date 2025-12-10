@@ -33,33 +33,30 @@ class Paths {
 	public static function precacheBellySounds() {
 		for (i in 1...Constants.CREAKS_SAMPLE_COUNT + 1) {
 			var key:String = 'belly/creaks/creak_' + i;
-			if (Preferences.data.allowBellyCreaks && !localTrackedAssets.contains(key)) {
-				Paths.sound(key);
-			}
+			precacheSound(key);
 		}
 		for (i in 1...Constants.GURGLES_SAMPLE_COUNT + 1) {
 			var key:String = 'belly/gurgles/gurgle_' + i;
-			if (Preferences.data.allowBellyGurgles && !localTrackedAssets.contains(key)) {
-				Paths.sound(key);
-			}
+			precacheSound(key);
 		}
 		for (i in 1...Constants.BELCHES_SAMPLE_COUNT + 1) {
 			var key:String = 'belly/belches/belch_' + i;
-			if (!localTrackedAssets.contains(key)) {
-				Paths.sound(key);
-			}
+			precacheSound(key);
 		}
 		for (i in 1...Constants.FWOOMPS_SAMPLE_COUNT + 1) {
 			var key:String = 'belly/fwoomps/fwoompLarge_' + i;
-			if (!localTrackedAssets.contains(key)) {
-				Paths.sound(key);
-			}
+			precacheSound(key);
 			key = 'belly/fwoomps/fwoompSmall_' + i;
-			if (!localTrackedAssets.contains(key)) {
-				Paths.sound(key);
-			}
+			precacheSound(key);
 		}
+		precacheSound('belly/burst');
 		trace('All belly sounds precached!');
+	}
+
+	public static function precacheSound(key:String) {
+		if (!localTrackedAssets.contains(key)) {
+			Paths.sound(key);
+		}
 	}
 
 	/**
@@ -140,7 +137,7 @@ class Paths {
 	 * @param library
 	 */
 	public static function getImagePath(file:String, ?library:Null<String> = null):String {
-		#if ADDONS_ALLOWED
+		#if ALLOW_ADDONS
 		var key = addonFolders('images/' + file + '.png');
 		if (key != null)
 			return key;
@@ -164,7 +161,7 @@ class Paths {
 	 * @param library
 	 */
 	public static function getSparrowXmlPath(file:String, ?library:Null<String> = null):String {
-		#if ADDONS_ALLOWED
+		#if ALLOW_ADDONS
 		var key = addonFolders('images/' + file + '.xml');
 		if (key != null)
 			return key;
@@ -241,7 +238,7 @@ class Paths {
 		var bitmap:BitmapData = null;
 		var file:String = null;
 
-		#if ADDONS_ALLOWED
+		#if ALLOW_ADDONS
 		file = addonsImages(key);
 		if (currentTrackedTextures.exists(file)) {
 			localTrackedAssets.push(file);
@@ -320,7 +317,7 @@ class Paths {
 	 */
 	static public function getTextFromFile(key:String):String {
 		#if sys
-		#if ADDONS_ALLOWED
+		#if ALLOW_ADDONS
 		if (FileSystem.exists(addonFolders(key)))
 			return File.getContent(addonFolders(key));
 		#end
@@ -376,7 +373,7 @@ class Paths {
 	public static function returnSound(path:String, key:String, ?library:String) {
 		var gottenPath:String = appendSoundExt(getPath('$path/$key', library));
 
-		#if ADDONS_ALLOWED
+		#if ALLOW_ADDONS
 		var addonLibPath:String = '';
 		if (library != null)
 			addonLibPath = '$library/';
@@ -415,7 +412,7 @@ class Paths {
 		return currentTrackedSounds.get(gottenPath);
 	}
 
-	#if ADDONS_ALLOWED
+	#if ALLOW_ADDONS
 	inline static public function addons(key:String = '') {
 		return 'addons/' + key;
 	}

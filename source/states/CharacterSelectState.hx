@@ -74,7 +74,8 @@ class CharacterSelectState extends SuffState {
 		for (i in 0...CharacterManager.selectedCharacterList.length) {
 			var banner = new CharacterSelectBanner(i);
 			banner.onClick = function() {
-				setPlayer(i);
+				if (!leftButton.disabled)
+					setPlayer(i);
 			}
 			bannerGroup.add(banner);
 
@@ -90,7 +91,7 @@ class CharacterSelectState extends SuffState {
 		grid.velocity.set(160, 160);
 		add(grid);
 
-		selectYourDipshit = new FlxText(0, 0, 0, 'SELECT YOUR DIPSHITS');
+		selectYourDipshit = new FlxText(0, 0, 0, 'CHOOSE YOUR VESSELS');
 		selectYourDipshit.setFormat(Paths.font('default'), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.SHADOW, 0x80000000);
 		selectYourDipshit.borderSize = 4;
 		selectYourDipshit.screenCenter();
@@ -288,12 +289,13 @@ class CharacterSelectState extends SuffState {
 	}
 
 	function changeDescription(char:CharacterData) {
-		if (cardTweens.get('description') != null)
-			cardTweens.get('description').cancel();
+		if (cardTweens.get('NOSKIP_description') != null)
+			cardTweens.get('NOSKIP_description').cancel();
 		
 		description.reloadText(char);
 		description.x = marginRight.x + marginRight.width / 2;
 		description.y = initialDescriptionY;
+		description.alpha = 1;
 
 		allowMoveDescription = description.width > (FlxG.width - marginLeft.width - marginRight.width);
 		resetDescriptionX(allowMoveDescription);
@@ -317,11 +319,11 @@ class CharacterSelectState extends SuffState {
 			if (direction == 1) {
 				descriptionVel = 32 * 4 * -1;
 			} else {
-				cardTweens.set('description', FlxTween.tween(description, {y: FlxG.height + 16}, 0.5, {
+				cardTweens.set('NOSKIP_description', FlxTween.tween(description, {y: FlxG.height + 16}, 0.5, {
 					ease: FlxEase.quadIn,
 					onComplete: function(_) {
 						resetDescriptionX(true);
-						cardTweens.set('description', FlxTween.tween(description, {y: initialDescriptionY}, 0.5, {
+						cardTweens.set('NOSKIP_description', FlxTween.tween(description, {y: initialDescriptionY}, 0.5, {
 							startDelay: 0.25,
 							ease: FlxEase.quadOut,
 							onComplete: function(_) {
@@ -368,8 +370,6 @@ class CharacterSelectState extends SuffState {
 				changePage(-1);
 			} else if (FlxG.keys.justPressed.D || FlxG.keys.justPressed.RIGHT) {
 				changePage(1);
-			} else if (FlxG.keys.justPressed.ENTER) {
-				proceedToPlayState();
 			}
 			if (FlxG.keys.justPressed.ESCAPE) {
 				if (inPlayerSettings)
@@ -402,7 +402,7 @@ class CharacterSelectState extends SuffState {
 
 	function cancelAllTweens() {
 		for (tag => twn in cardTweens) {
-			if (cardTweens.get(tag) != null && !tag.startsWith('playerOutline')) {
+			if (cardTweens.get(tag) != null && !tag.startsWith('NOSKIP_')) {
 				cardTweens.get(tag).cancel();
 				cardTweens.remove(tag);
 			}
@@ -491,11 +491,11 @@ class CharacterSelectState extends SuffState {
 		cancelAllTweens();
 		cardTweens.set('leftButton', FlxTween.tween(leftButton, {alpha: 1}, 0.25));
 		cardTweens.set('rightButton', FlxTween.tween(rightButton, {alpha: 1}, 0.25));
-		cardTweens.set('description', FlxTween.tween(description, {alpha: 1}, 0.5));
-		cardTweens.set('playerOutline', FlxTween.tween(playerOutline, {x: bannerGroup.members[curPlayer].x}, 0.5, {ease: FlxEase.quintOut}));
+		cardTweens.set('NOSKIP_description', FlxTween.tween(description, {alpha: 1}, 0.5));
+		cardTweens.set('NOSKIP_playerOutline', FlxTween.tween(playerOutline, {x: bannerGroup.members[curPlayer].x}, 0.5, {ease: FlxEase.quintOut}));
 		for (item in playerOutlineShadows) {
 			var leIndex:Int = playerOutlineShadows.members.indexOf(item);
-			cardTweens.set('playerOutline' + leIndex,
+			cardTweens.set('NOSKIP_playerOutline' + leIndex,
 				FlxTween.tween(item, {x: bannerGroup.members[curPlayer].x}, 0.5, {startDelay: leIndex * 0.05, ease: FlxEase.quintOut}));
 		}
 		cardTweens.set('gridVel', FlxTween.tween(grid.velocity, {x: 160, y: 160}, 0.5, {ease: FlxEase.quadInOut}));

@@ -27,6 +27,7 @@ class Character extends FlxSprite {
 	public var pointerOffset:Array<Int> = [0, 0];
 	public var poppingGravityMultiplier:Float = 1.0;
 	public var poppingVelocityMultiplier:Array<Float> = [1, 1];
+	public var disablePopping:Bool = false;
 
 	// Gameplay Variables //
 	public var currentPressure:Int = 0;
@@ -45,6 +46,7 @@ class Character extends FlxSprite {
 
 	// Cosmetic Variables //
 	public var idleAfterAnimation:Bool = true;
+	public var disableBellySounds:Bool = false;
 
 	var gurgleTimer:Float = 0;
 	var creakTimer:Float = 0;
@@ -77,6 +79,7 @@ class Character extends FlxSprite {
 			pointerOffset = spriteJson.pointerOffset;
 		if (spriteJson.poppingVelocityMultiplier != null)
 			poppingVelocityMultiplier = spriteJson.poppingVelocityMultiplier;
+		disablePopping = !!spriteJson.disablePopping;
 		poppingGravityMultiplier = spriteJson.poppingGravityMultiplier;
 
 		frames = Paths.sparrowAtlas('game/characters/' + id);
@@ -141,7 +144,7 @@ class Character extends FlxSprite {
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		if (currentPressure <= maxPressure || !PlayState.currentSessionAllowPopping) {
+		if (currentPressure <= maxPressure || !disableBellySounds) {
 			if (Preferences.data.allowBellyGurgles) {
 				if (currentPressure >= gurgleThreshold) {
 					gurgleTimer -= elapsed;
@@ -306,14 +309,14 @@ class Character extends FlxSprite {
 		return usedAnimName;
 	}
 
-	public function getLengthOfCurAnim():Float {
-		return getLengthOfAnim(animation.curAnim.name);
+	public function getCurAnimLength():Float {
+		return getAnimLength(animation.curAnim.name);
 	}
 
-	public function getLengthOfAnim(AnimName:String):Float {
+	public function getAnimLength(AnimName:String):Float {
 		var usedAnimName:String = joinAnimationName(AnimName);
 		var leAnim = animation.getByName(usedAnimName);
-		return leAnim != null ? leAnim.frames.length / leAnim.frameRate : 0;
+		return leAnim != null ? (leAnim.frames.length - 1) / leAnim.frameRate : 0;
 	}
 
 	public function isEliminated() {

@@ -5,6 +5,7 @@ typedef CharacterSpriteData = {
 	belchThreshold:Int,
 	gurgleThreshold:Int,
 	creakThreshold:Int,
+	disablePopping:Bool,
 	positionOffset:Array<Int>,
 	poppedCameraOffsetChange:Array<Int>,
 	cameraOffset:Array<Int>,

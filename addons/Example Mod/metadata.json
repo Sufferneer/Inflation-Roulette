@@ -1,5 +1,9 @@
 {
-	"name": "Embroidery",
+	"name": "Asimo",
 	"description": "This is an addon made in order to test the modding capabilities of the game.",
-	"color": [170, 0, 255]
+	"authors": [
+		["Sufferneer", "Artist/Animator"],
+		["WolfKylis", "Character Design"]
+	],
+	"color": [0, 192, 255]
 }

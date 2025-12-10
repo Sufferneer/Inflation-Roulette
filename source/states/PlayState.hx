@@ -7,8 +7,9 @@ import objects.Confetti;
 import objects.Scraps;
 import objects.Skill;
 import substates.PauseSubState;
-import ui.objects.SuffBar;
 import ui.objects.SkillCard;
+import ui.objects.SuffBar;
+import ui.objects.SuffIconButton;
 
 class PlayState extends SuffState {
 	// graphics
@@ -51,7 +52,7 @@ class PlayState extends SuffState {
 	final confidenceBarColors:Array<FlxColor> = [0xFF4A4399, 0xFF7970FF];
 	var confidenceText:FlxText;
 
-	var pauseButton:SuffButton;
+	var pauseButton:SuffIconButton;
 
 	public static final playerWidthOffset:Float = 140;
 
@@ -237,12 +238,11 @@ class PlayState extends SuffState {
 		}
 		add(shootButton);
 
-		pauseButton = new SuffButton(20, 20, null, Paths.image('gui/icons/buttons/pause'), null, 100, 100);
+		pauseButton = new SuffIconButton(20, 20, 'buttons/pause', null, 2);
 		pauseButton.x = FlxG.width - pauseButton.width - 20;
-		pauseButton.camera = camHUD;
 		pauseButton.onClick = function() {
 			pauseGame();
-		}
+		};
 		add(pauseButton);
 
 		focusCameraOnPlayer(currentTurnIndex);
@@ -263,7 +263,8 @@ class PlayState extends SuffState {
 			usedDelay = function() return 0;
 		togglePlayerUI(false);
 		toggleLetterbox(true);
-		doTimer('playerShoot', new FlxTimer().start(usedDelay(), function(_:FlxTimer) {
+		getPlayer(playerIndex).playAnim('preShoot', false);
+		doTimer('playerShoot', new FlxTimer().start(getPlayer(playerIndex).getAnimLength('preShoot') + usedDelay(), function(_:FlxTimer) {
 			shoot(playerIndex);
 		}));
 	}
@@ -339,7 +340,7 @@ class PlayState extends SuffState {
 	function getMaximumAnimLength(animName:String) {
 		var maxLength:Float = 0;
 		for (character in characterGroup) {
-			var length:Float = character.getLengthOfAnim(animName);
+			var length:Float = character.getAnimLength(animName);
 			if (length > maxLength) {
 				maxLength = length;
 			}
@@ -422,7 +423,7 @@ class PlayState extends SuffState {
 				cylinderContent.push(false);
 			}
 		}
-		// trace(cylinderContent);
+		trace(cylinderContent);
 	}
 
 	function getPlayer(index:Int) {
@@ -472,7 +473,7 @@ class PlayState extends SuffState {
 				SuffState.playSound(Paths.sound('characters/GLOBAL/' + soundName));
 			}
 		}
-		doTimer('reenablePlayerUI', new FlxTimer().start(getPlayer(playerIndex).getLengthOfCurAnim(), function(_:FlxTimer) {
+		doTimer('reenablePlayerUI', new FlxTimer().start(getPlayer(playerIndex).getCurAnimLength(), function(_:FlxTimer) {
 			getPlayer(playerIndex).playAnim('prepareShoot', false);
 			togglePlayerUI((currentTurnIndex == playerIndex && CharacterManager.playerControlled[currentTurnIndex]));
 			if (currentTurnIndex == playerIndex) {
@@ -485,7 +486,7 @@ class PlayState extends SuffState {
 	function shoot(playerIndex:Int) {
 		var dealDamage:Bool = cylinderContent.shift();
 		var playerAnimName:String = 'idle';
-		// trace(cylinderContent);
+		trace(cylinderContent);
 		SuffState.playSound(Paths.sound('shoot'));
 		if (dealDamage) {
 			playerAnimName = 'shootLive';
@@ -496,14 +497,29 @@ class PlayState extends SuffState {
 		if (getPlayer(playerIndex).currentPressure >= getPlayer(playerIndex).maxPressure) {
 			FlxG.sound.music.pause();
 		}
-		if (dealDamage || cylinderContent.length > 1) {
-			reloadCylinder(Constants.LIVE_ROUND_COUNT);
-		}
 		if (dealDamage) {
 			SuffState.playSound(Paths.sound('shootLive'));
-			getPlayer(playerIndex).currentPressure += liveRoundDamage;
+			getPlayer(playerIndex).currentPressure += 1;
 			getPlayer(playerIndex).currentConfidence += getPlayer(playerIndex).confidenceChangeOnLiveShot;
-			liveRoundDamage = 1;
+			if (liveRoundDamage > 1) {
+				liveRoundDamage -= 1;
+				cylinderContent.unshift(true);
+				if (!getPlayer(playerIndex).isEliminated()) {
+					doTimer('morePressure', new FlxTimer().start(0.75, function(_) {
+						shoot(playerIndex);
+					}));
+				} else {
+					liveRoundDamage = 1;
+					cylinderContent.shift();
+					if (!cylinderContent.contains(true) || cylinderContent.length <= 0) {
+						reloadCylinder(Constants.LIVE_ROUND_COUNT);
+					}
+				}
+			} else {
+				if (!cylinderContent.contains(true) || cylinderContent.length <= 0) {
+					reloadCylinder(Constants.LIVE_ROUND_COUNT);
+				}
+			}
 
 			var percent = getPlayer(playerIndex).calculatePressurePercentage();
 			var fwoompSuffix:String = percent >= 0.5 ? 'Large' : 'Small';
@@ -519,7 +535,7 @@ class PlayState extends SuffState {
 
 		getPlayer(playerIndex).currentConfidence = Std.int(FlxMath.bound(getPlayer(playerIndex).currentConfidence, 0, getPlayer(playerIndex).maxConfidence));
 
-		doTimer('playerChangeTurn', new FlxTimer().start(getPlayer(playerIndex).getLengthOfCurAnim(), function(_:FlxTimer) {
+		doTimer('playerChangeTurn', new FlxTimer().start(getPlayer(playerIndex).getCurAnimLength(), function(_:FlxTimer) {
 			if (getPlayer(playerIndex).currentPressure > getPlayer(playerIndex).maxPressure) {
 				eliminatePlayer(playerIndex, 1);
 			} else {
@@ -547,10 +563,11 @@ class PlayState extends SuffState {
 		isEnding = evaluateEnding(); // Check if remaining players are eliminated
 		playGunContactSound();
 		pumpGun.visible = true;
-		if (currentSessionAllowPopping) { // Pop player instead
+		if (currentSessionAllowPopping && !getPlayer(playerIndex).disablePopping) { // Pop player instead
 			getPlayer(playerIndex).playAnim('popped', false);
 			members.insert(members.indexOf(tableTop) - 1, new Scraps(getPlayer(playerIndex)));
 			SuffState.playSound(Paths.sound('belly/burst'));
+			getPlayer(playerIndex).disableBellySounds = true;
 			screenShake(0.03, 0.5);
 			screenFlash();
 			getPlayer(playerIndex).acceleration.y = 4800 * getPlayer(playerIndex).poppingGravityMultiplier;
@@ -596,7 +613,7 @@ class PlayState extends SuffState {
 			doTimer('winAnim', new FlxTimer().start(1.0, function(_:FlxTimer) {
 				SuffState.playMusic('win', 1);
 				getPlayer(winnerIndex).playAnim('win', false);
-				doTimer('finishCutscene', new FlxTimer().start(Math.max(4, getPlayer(currentTurnIndex).getLengthOfCurAnim()), function(_:FlxTimer) {
+				doTimer('finishCutscene', new FlxTimer().start(Math.max(4, getPlayer(currentTurnIndex).getCurAnimLength()), function(_:FlxTimer) {
 					finishEndCutscene();
 				}));
 			}));
@@ -649,7 +666,7 @@ class PlayState extends SuffState {
 					} else {
 						doTimer('helplessPreAnim', new FlxTimer().start(0.5, function(_:FlxTimer) {
 							getPlayer(currentTurnIndex).playAnim('helpless', false);
-							doTimer('helplessAnim', new FlxTimer().start(getPlayer(currentTurnIndex).getLengthOfCurAnim(), function(_:FlxTimer) {
+							doTimer('helplessAnim', new FlxTimer().start(getPlayer(currentTurnIndex).getCurAnimLength(), function(_:FlxTimer) {
 								changeTurn(change);
 							}));
 						}));

@@ -311,6 +311,11 @@
 	<SubTexture name="popped0005" x="5760" y="1280" width="640" height="640"/>
 	<SubTexture name="popped0006" x="6400" y="1280" width="640" height="640"/>
 	<SubTexture name="popped0007" x="6400" y="1280" width="640" height="640"/>
+	<SubTexture name="preShoot00000" x="5760" y="1920" width="640" height="640"/>
+	<SubTexture name="preShoot10000" x="6400" y="1920" width="640" height="640"/>
+	<SubTexture name="preShoot20000" x="7040" y="1920" width="640" height="640"/>
+	<SubTexture name="preShoot30000" x="640" y="2560" width="640" height="640"/>
+	<SubTexture name="preShoot40000" x="1920" y="2560" width="640" height="640"/>
 	<SubTexture name="preWin00000" x="7040" y="1280" width="640" height="640"/>
 	<SubTexture name="preWin00001" x="7040" y="1280" width="640" height="640"/>
 	<SubTexture name="preWin00002" x="7040" y="1280" width="640" height="640"/>

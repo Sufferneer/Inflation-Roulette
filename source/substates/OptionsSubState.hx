@@ -1,6 +1,7 @@
 package substates;
 
 import ui.objects.SuffBooleanOption;
+import ui.objects.SuffIconButton;
 import ui.objects.SuffSliderOption;
 
 class OptionsSubState extends SuffSubState {
@@ -10,7 +11,7 @@ class OptionsSubState extends SuffSubState {
 	var bg2:FlxSprite;
 	var scrollBar:FlxSprite;
 	var headingText:FlxText;
-	var exitButton:SuffButton;
+	var exitButton:SuffIconButton;
 	var descText:FlxText;
 
 	var optionsGroup:FlxSpriteGroup = new FlxSpriteGroup();
@@ -18,7 +19,7 @@ class OptionsSubState extends SuffSubState {
 
 	static final optionsXPadding:Float = 32;
 	static final optionsYPadding:Float = 32;
-	static final scrollBarWidth:Int = 20;
+	static final scrollBarWidth:Int = 30;
 
 	var optionsMaxWidth:Float = 0;
 	var optionsY:Float = 0;
@@ -65,9 +66,11 @@ class OptionsSubState extends SuffSubState {
 		descText.alpha = 0.7;
 		add(descText);
 
-		exitButton = new SuffButton(20, 20, null, Paths.image('gui/icons/buttons/exit'), null, 100, 100);
-		exitButton.x = FlxG.width - exitButton.width - 10;
-		exitButton.onClick = exitOptionsMenu;
+		exitButton = new SuffIconButton(20, 20, 'buttons/exit', null, 2);
+		exitButton.x = FlxG.width - exitButton.width - 20;
+		exitButton.onClick = function() {
+			exitOptionsMenu();
+		};
 		add(exitButton);
 
 		camera = FlxG.cameras.list[FlxG.cameras.list.length - 1];

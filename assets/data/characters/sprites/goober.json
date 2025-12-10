@@ -121,6 +121,46 @@
 			"loop": true
 		},
 		{
+			"name": "preShoot0",
+			"prefix": "preShoot0",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "preShoot1",
+			"prefix": "preShoot1",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "preShoot2",
+			"prefix": "preShoot2",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "preShoot3",
+			"prefix": "preShoot3",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "preShoot4",
+			"prefix": "preShoot4",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
 			"name": "pass0",
 			"prefix": "pass0",
 			"fps": 24,

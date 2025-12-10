@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Inflation Roulette: Reloaded" file="Inflation-Roulette" packageName="com.malletindustries.inflationroulette" package="com.malletindustries.inflationroulette" main="Main" version="0.0.1" company="MalletIndustries" />
+	<app title="Inflation Roulette: Reloaded" file="Inflation-Roulette" packageName="com.malletindustries.inflationroulette" package="com.malletindustries.inflationroulette" main="Main" version="1.0.0" company="MalletIndustries" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -36,9 +36,12 @@
 
 	<!-- __________________________ Game Assets & Etc. __________________________ -->
 	
-	<!-- Turn on Crash Handler -->
-	<define name="CRASH_HANDLER" if="desktop" />
-	<define name="ADDONS_ALLOWED" if="desktop" />
+	<define name="ALLOW_CRASH_HANDLER" if="desktop" />
+	<define name="ALLOW_ADDONS" if="desktop" />
+
+	<section if="OFFICIAL_BUILD">
+		<define name="ALLOW_VERSION_HANDLING"/>
+	</section>
 
 	<!-- Preload Assets -->
 
@@ -48,7 +51,7 @@
 	<assets path="assets/sounds" exclude="*.mp3"  unless="web" preload="true"/>
 	<assets path="assets/music" preload="true"/>
 	<assets path="assets/images" preload="true"/>
-	<section if="ADDONS_ALLOWED">
+	<section if="ALLOW_ADDONS">
 		<assets path='addons' embed='false'/>
 	</section>
 
@@ -94,7 +97,7 @@
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 
-	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER" />
+	<haxedef name="HXCPP_CHECK_POINTER" if="ALLOW_CRASH_HANDLER" />
 	<haxedef name="HXCPP_STACK_LINE"/>
 	<haxedef name="HXCPP_STACK_TRACE"/>
 	<haxedef name='no-deprecation-warnings' />

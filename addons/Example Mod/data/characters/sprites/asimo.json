@@ -33,14 +33,6 @@
 			"loop": true
 		},
 		{
-			"name": "idle4",
-			"prefix": "idle4",
-			"fps": 24,
-			"offset": [0, 0],
-			"indices": [],
-			"loop": true
-		},
-		{
 			"name": "idleOverinflated",
 			"prefix": "idleOverinflated",
 			"fps": 24,
@@ -113,12 +105,36 @@
 			"loop": true
 		},
 		{
-			"name": "prepareShoot4",
-			"prefix": "prepareShoot4",
+			"name": "preShoot0",
+			"prefix": "preShoot0",
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
-			"loop": true
+			"loop": false
+		},
+		{
+			"name": "preShoot1",
+			"prefix": "preShoot1",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "preShoot2",
+			"prefix": "preShoot2",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "preShoot3",
+			"prefix": "preShoot3",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
 		},
 		{
 			"name": "pass0",
@@ -147,14 +163,6 @@
 		{
 			"name": "pass3",
 			"prefix": "pass3",
-			"fps": 24,
-			"offset": [0, 0],
-			"indices": [],
-			"loop": false
-		},
-		{
-			"name": "pass4",
-			"prefix": "pass4",
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
@@ -193,14 +201,6 @@
 			"loop": false
 		},
 		{
-			"name": "shootBlank4",
-			"prefix": "shootBlank4",
-			"fps": 24,
-			"offset": [0, 0],
-			"indices": [],
-			"loop": false
-		},
-		{
 			"name": "shootLive0",
 			"prefix": "shootLive0",
 			"fps": 24,
@@ -227,14 +227,6 @@
 		{
 			"name": "shootLive3",
 			"prefix": "shootLive3",
-			"fps": 24,
-			"offset": [0, 0],
-			"indices": [],
-			"loop": false
-		},
-		{
-			"name": "shootLive4",
-			"prefix": "shootLive4",
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
@@ -289,14 +281,6 @@
 			"loop": false
 		},
 		{
-			"name": "skill4",
-			"prefix": "skill4",
-			"fps": 24,
-			"offset": [0, 0],
-			"indices": [],
-			"loop": false
-		},
-		{
 			"name": "preWin0",
 			"prefix": "preWin0",
 			"fps": 24,
@@ -323,14 +307,6 @@
 		{
 			"name": "preWin3",
 			"prefix": "preWin3",
-			"fps": 24,
-			"offset": [0, 0],
-			"indices": [],
-			"loop": false
-		},
-		{
-			"name": "preWin4",
-			"prefix": "preWin4",
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
@@ -367,19 +343,11 @@
 			"offset": [0, 0],
 			"indices": [],
 			"loop": false
-		},
-		{
-			"name": "win4",
-			"prefix": "win4",
-			"fps": 24,
-			"offset": [0, 0],
-			"indices": [],
-			"loop": false
 		}
 	],
 
 	"belchThreshold": 3,
-	"gurgleThreshold": 2,
+	"gurgleThreshold": 1,
 	"creakThreshold": 3,
 	"poppingVelocityMultiplier": [1.0, 1.0],
 	"poppingGravityMultiplier": 1.0,

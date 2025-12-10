@@ -16,7 +16,7 @@ class SuffState extends FlxUIState {
 	public static var currentMusicName:String = '';
 	public static var hardcodedMouseChanges:Bool = true;
 	public static var timePassedOnState:Float = 0;
-	public static var musicBPM:Float = 0;
+	public static var currentMusicBPM:Float = 0;
 
 	override function create() {
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
@@ -56,7 +56,7 @@ class SuffState extends FlxUIState {
 		var metadata:MusicMetadata = Paths.musicMetadata(usedTag);
 		if (metadata.toast)
 			MusicToast.play(metadata);
-		musicBPM = metadata.bpm;
+		currentMusicBPM = metadata.bpm;
 	}
 
 	public static function playSound(tag:Sound, volume:Float = 1, pitch:Float = 1) {

@@ -177,6 +177,7 @@ class SuffTransition extends SuffSubState {
 	}
 
 	function startLoading() {
+		FlxG.mouse.visible = false;
 		if (finishCallback != null) {
 			loadingTxt.visible = true;
 			finishCallback();
@@ -184,6 +185,7 @@ class SuffTransition extends SuffSubState {
 	}
 
 	function endLoading() {
+		FlxG.mouse.visible = true;
 		loadingTxt.visible = false;
 	}
 

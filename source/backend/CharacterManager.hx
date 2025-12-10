@@ -28,7 +28,7 @@ class CharacterManager {
 			}
 		}
 
-		#if ADDONS_ALLOWED
+		#if ALLOW_ADDONS
 		var addonPath = Paths.addons();
 		for (addonFolder in Addons.getGlobalAddons()) {
 			var addonCharacterFolder = haxe.io.Path.join([addonPath, addonFolder, 'data/characters']);

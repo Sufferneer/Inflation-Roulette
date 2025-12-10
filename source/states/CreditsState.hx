@@ -6,6 +6,7 @@ import flixel.util.FlxGradient;
 import states.MainMenuState;
 import ui.objects.CreditsSketch;
 import ui.objects.GameLogo;
+import ui.objects.SuffIconButton;
 
 class CreditsState extends SuffState {
 	var creditsTxt:Array<Array<Dynamic>> = [
@@ -140,9 +141,11 @@ class CreditsState extends SuffState {
 		creditScrollValue = creditScrollValueUpperLimit;
 		add(creditsTxtGroup);
 
-		var exitButton = new SuffButton(20, 20, null, Paths.image('gui/icons/buttons/exit'), null, 100, 100);
-		exitButton.x = FlxG.width - exitButton.width - 10;
-		exitButton.onClick = exitMenu;
+		var exitButton = new SuffIconButton(20, 20, 'buttons/exit', null, 2);
+		exitButton.x = FlxG.width - exitButton.width - 20;
+		exitButton.onClick = function() {
+			exitMenu();
+		};
 		add(exitButton);
 
 		var fileList = [];

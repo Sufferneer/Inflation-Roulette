@@ -132,7 +132,7 @@ class MusicToast extends FlxTypedContainer<FlxBasic> {
 		if (FlxG.mouse.overlaps(instance.record, instance.musicToast.camera) && FlxG.mouse.justPressed) {
 			instance.leScale += 0.2;
 			SuffState.playUISound(Paths.sound('musicToastClick'));
-			instance.totalElasped = startDelay + moveInDuration + holdDuration / 2;
+			instance.totalElasped = Math.max(startDelay, instance.totalElasped - 0.25);
 		}
 		instance.record.scale.set(instance.leScale, instance.leScale);
 		instance.leScale = FlxMath.lerp(leScale, 1, elapsed * 14);

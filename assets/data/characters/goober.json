@@ -1,6 +1,6 @@
 {
 	"name": "Goober",
-	"description": "A sentient species commonly found in urban areas. Not really elastic, but generally good at tinkering with guns.",
+	"description": "A sentient species commonly found in urban areas. Generally good at tinkering with guns.",
 
 	"maxPressure": 4,
 	"maxConfidence": 4,
@@ -13,6 +13,12 @@
 		{
 			"id": "sabotage",
 			"cost": 4
+		}
+	],
+	"altSkins": [
+		{
+			"name": "Female",
+			"suffix": "_f"
 		}
 	]
 }

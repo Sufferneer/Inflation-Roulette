@@ -25,6 +25,8 @@ class SplashScreenState extends SuffState {
 
 	var introSound:FlxSound;
 
+	var skipIntroTimer:FlxTimer;
+
 	function startIntro() {
 		trace("STARTING INTRO");
 		logo = new FlxSprite().loadGraphic(Paths.image('gui/menus/malletIndustriesLogo'));
@@ -52,7 +54,7 @@ class SplashScreenState extends SuffState {
 
 		allowToSkip = true;
 
-		new FlxTimer().start(1.5, function(tmr:FlxTimer) {
+		skipIntroTimer = new FlxTimer().start(1.5, function(tmr:FlxTimer) {
 			skipIntro();
 		});
 	}
@@ -60,6 +62,8 @@ class SplashScreenState extends SuffState {
 	function skipIntro() {
 		if (removingBlocks || !allowToSkip)
 			return;
+
+		allowToSkip = false;
 
 		if (introSound != null)
 			introSound.stop();
@@ -73,7 +77,9 @@ class SplashScreenState extends SuffState {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.ENTER) {
+		if (FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.ENTER || FlxG.mouse.justPressed) {
+			if (skipIntroTimer != null)
+				skipIntroTimer.cancel();
 			skipIntro();
 		}
 
