@@ -1,11 +1,12 @@
 package objects;
 
-import flash.media.Sound;
 import backend.types.CharacterData;
 import backend.types.CharacterSpriteData;
 import backend.types.ModifierData;
 import backend.types.SkillData;
 import backend.types.AnimationData;
+import flash.media.Sound;
+import flixel.graphics.frames.FlxAtlasFrames;
 import objects.Modifier;
 import objects.Skill;
 import states.PlayState;
@@ -17,7 +18,7 @@ class Character extends FlxSprite {
 	public var name:String = 'Unnamed';
 	public var description:String = 'No description.';
 	public var animOffsets:Map<String, Array<Dynamic>>;
-	public var animSoundPaths:Map<String, Array<Sound>>;
+	public var animSoundPaths:Map<String, Array<String>>;
 	public var belchThreshold:Int = 3;
 	public var gurgleThreshold:Int = 2;
 	public var creakThreshold:Int = 4;
@@ -82,16 +83,22 @@ class Character extends FlxSprite {
 		disablePopping = !!spriteJson.disablePopping;
 		poppingGravityMultiplier = spriteJson.poppingGravityMultiplier;
 
-		frames = Paths.sparrowAtlas('game/characters/' + id);
+		var combinedAtlas:FlxAtlasFrames = Paths.sparrowAtlas('game/characters/$id/${spriteJson.spriteSheets[0]}');
+		for (i in 1...spriteJson.spriteSheets.length) {
+			var atlas:FlxAtlasFrames = Paths.sparrowAtlas('game/characters/$id/${spriteJson.spriteSheets[i]}');
+			combinedAtlas.addAtlas(atlas, false);
+		}
+		frames = combinedAtlas;
+		antialiasing = (!Preferences.data.forceAliasing) ? !!spriteJson.antialiasing : false;
 
 		animOffsets = new Map<String, Array<Dynamic>>();
-		animSoundPaths = new Map<String, Array<Sound>>();
+		animSoundPaths = new Map<String, Array<String>>();
 
 		var animationsArray = spriteJson.animations;
 		if (animationsArray != null && animationsArray.length > 0) {
 			for (anim in animationsArray) {
 				var animName:String = '' + anim.name;
-				var animPrefix:String = '' + anim.prefix;
+				var animPrefix:String = '' + anim.prefix + '0'; //Prevent wocky shit from happening
 				var animFps:Int = anim.fps;
 				var animLoop:Bool = !!anim.loop;
 				var animIndices:Array<Int> = anim.indices;
@@ -105,7 +112,8 @@ class Character extends FlxSprite {
 				} else {
 					trace('Character $id has no offsets for animation ${animName}. Using default offsets.');
 				}
-				addSoundPath(animName, anim.soundPaths);
+				if (anim.soundPaths != null)
+					addSoundPath(animName, anim.soundPaths);
 			}
 		} else {
 			trace('Character $id has no animations');
@@ -114,6 +122,8 @@ class Character extends FlxSprite {
 		animation.finishCallback = function(animName:String) {
 			if (idleAfterAnimation && !animName.startsWith('idle'))
 				playAnim('idle' + parseAnimationSuffix());
+			else if (animExists(animName + '-loop') && !idleAfterAnimation)
+				playAnim(animName + '-loop', false, false);
 		}
 
 		var modifiersArray:Array<ModifierData> = json.modifiers;
@@ -195,49 +205,11 @@ class Character extends FlxSprite {
 		return leAnim;
 	}
 
-	public function addSoundPath(name:String, pathArray:Array<String> = null) {
-		var usedName:String = name;
-		var trimmedName:String = trimAnimationName(usedName);
-		if (!animSoundPaths.exists(usedName))
-			animSoundPaths[usedName] = [];
-		if (!animSoundPaths.exists(trimmedName))
-			animSoundPaths[trimmedName] = [];
-		if (animSoundPaths[usedName].length > 0 || animSoundPaths[trimmedName].length > 0)
-			return;
-		if (pathArray != null && pathArray.length > 0) {
-			for (path in pathArray)
-				animSoundPaths[usedName].push(Paths.sound(path));
-			return;
-		}
-
-		// I am so sorry for this amalgamation
-		final checkFolders:Array<String> = [id, 'GLOBAL'];
-		for (folder in checkFolders) {
-			var leFolder = 'characters/$folder/$trimmedName';
-			var leFolderDep = 'characters/$folder/$usedName';
-			if (Paths.fileExists(Paths.appendSoundExt('sounds/' + leFolder), SOUND)) { // animation-independent single sound path
-				animSoundPaths[trimmedName].push(Paths.sound(leFolder));
-				return;
-			} else if (Paths.fileExists(Paths.appendSoundExt('sounds/' + leFolderDep), SOUND)) { // animation-dependent single sound path
-				animSoundPaths[usedName].push(Paths.sound(leFolderDep));
-				return;
-			}
-			leFolder = leFolder + '_';
-			leFolderDep = leFolderDep + '_';
-			var i = 1;
-			if (Paths.fileExists(Paths.appendSoundExt('sounds/' + leFolder + i), SOUND)) { // animation-independent varied sound path
-				while (Paths.fileExists(Paths.appendSoundExt('sounds/' + leFolder + i), SOUND)) {
-					animSoundPaths[trimmedName].push(Paths.sound(leFolder + i));
-					i++;
-				}
-				return;
-			} else if (Paths.fileExists(Paths.appendSoundExt('sounds/' + leFolderDep + i), SOUND)) { // animation-dependent varied sound path
-				while (Paths.fileExists(Paths.appendSoundExt('sounds/' + leFolderDep + i), SOUND)) {
-					animSoundPaths[usedName].push(Paths.sound(leFolderDep + i));
-					i++;
-				}
-				return;
-			}
+	public function addSoundPath(name:String, pathArray:Array<String>) {
+		if (!animSoundPaths.exists(name))
+			animSoundPaths[name] = [];
+		for (path in pathArray) {
+			animSoundPaths[name].push(path);
 		}
 	}
 
@@ -249,7 +221,7 @@ class Character extends FlxSprite {
 			Frame:Int = 0):Void {
 		var usedAnimName:String = joinAnimationName(AnimName);
 		if (!animExists(usedAnimName)) {
-			trace('Animation [${AnimName + parseAnimationSuffix()}] for $id does not exist');
+			trace('Animation [${usedAnimName}] for $id does not exist');
 			return;
 		}
 		animation.getByName(usedAnimName).flipX = flipX;
@@ -266,17 +238,15 @@ class Character extends FlxSprite {
 		}
 
 		if (playSound) {
-			var daSoundList:Array<Sound> = animSoundPaths.get(joinSoundName(AnimName));
-			if (daSoundList.length > 0) {
+			var daSoundList:Array<String> = animSoundPaths.get(usedAnimName);
+			if (animSoundPaths.exists(usedAnimName)) {
 				var daSound = daSoundList[FlxG.random.int(0, daSoundList.length - 1)];
-				if (daSound != null) {
-					SuffState.playSound(daSound);
-				}
+				SuffState.playSound(Paths.sound(daSound));
 			}
 		}
 	}
 
-	function parseAnimationSuffix() {
+	public function parseAnimationSuffix() {
 		return switch (currentPressure) {
 			case(_ > maxPressure) => true:
 				if (PlayState.currentSessionAllowPopping) 'Null'; else 'Overinflated';
@@ -294,9 +264,9 @@ class Character extends FlxSprite {
 			animOffsets[i] = [animOffsets[i][0] * scale.x, animOffsets[i][1] * scale.y];
 	}
 
-	function joinAnimationName(AnimName:String):String {
+	function joinAnimationName(AnimName:String, checkForExistance:Bool = true):String {
 		var usedAnimName:String = AnimName;
-		if (animExists(AnimName + parseAnimationSuffix()))
+		if (checkForExistance && animExists(AnimName + parseAnimationSuffix()))
 			usedAnimName = AnimName + parseAnimationSuffix();
 		return usedAnimName;
 	}

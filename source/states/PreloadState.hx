@@ -41,18 +41,6 @@ class PreloadState extends FlxBasePreloader {
 		logo.addChild(new Bitmap(new LogoImage(0, 0))); // Sets the graphic of the sprite to a Bitmap object, which uses our embedded BitmapData class.
 		addChild(logo);
 
-		Font.registerFont(CustomFont);
-		text = new TextField();
-		text.defaultTextFormat = new TextFormat("Suffirat Regular", 96, 0xffffff, false, false, false, "", "", TextFormatAlign.CENTER);
-		text.embedFonts = true;
-		text.selectable = false;
-		text.multiline = true;
-		text.x = 0;
-		text.y = 5 * _height / 6;
-		text.width = _width;
-		text.text = '0%';
-		addChild(text);
-
 		text = new TextField();
 		text.defaultTextFormat = new TextFormat("Suffirat Regular", 48, 0xffffff, false, false, false, "", "", TextFormatAlign.CENTER);
 		text.embedFonts = true;
@@ -69,8 +57,6 @@ class PreloadState extends FlxBasePreloader {
 		logo.scaleX = 1 + Percent;
 		logo.x = (this._width - logo.width) * 0.5;
 		logo.y = (this._height - logo.height) * 0.5;
-
-		text.text = '${Std.int(Percent * 100)}%';
 
 		super.update(Percent);
 	}

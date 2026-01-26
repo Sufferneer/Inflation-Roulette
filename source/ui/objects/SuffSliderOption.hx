@@ -12,6 +12,7 @@ class SuffSliderOption extends FlxSpriteGroup {
 
 	var outline:FlxSprite;
 	var parent:FlxSprite;
+	public var tooltipText:String = '';
 	var displayText:FlxText;
 	var minX:Float = 0;
 	var maxX:Float = 0;
@@ -35,11 +36,11 @@ class SuffSliderOption extends FlxSpriteGroup {
 			this.range[1] = rangeMax;
 		// trace(range);
 
-		outline = new FlxSprite().loadGraphic(Paths.image('gui/menus/options/sliderBG'));
+		outline = new FlxSprite().loadGraphic(Paths.image('gui/menus/options/slider/bar'));
 		add(outline);
 
 		parent = new FlxSprite();
-		parent.frames = Paths.sparrowAtlas('gui/menus/options/slider');
+		parent.frames = Paths.sparrowAtlas('gui/menus/options/slider/switch');
 		parent.animation.addByPrefix('idle', 'idle', 24, true);
 		parent.animation.addByPrefix('hovered', 'hovered', 24, true);
 		add(parent);
@@ -97,6 +98,7 @@ class SuffSliderOption extends FlxSpriteGroup {
 			if (!hovered) {
 				SuffState.playUISound(Paths.sound('ui/hover'));
 				parent.animation.play('hovered');
+				Tooltip.text = tooltipText;
 				hovered = true;
 			}
 			if (FlxG.mouse.pressed) {
@@ -104,6 +106,8 @@ class SuffSliderOption extends FlxSpriteGroup {
 			}
 		} else {
 			parent.animation.play('idle');
+			if (hovered)
+				Tooltip.text = '';
 			hovered = false;
 		}
 		if (pressed) {

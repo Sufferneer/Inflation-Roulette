@@ -1,31 +1,44 @@
 package states;
 
-#if ALLOW_VERSION_HANDLING
+import backend.SplashManager;
+#if _ALLOW_VERSION_HANDLING
 import backend.VersionMetadata;
 #end
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import states.CharacterSelectState;
 import states.CreditsState;
+#if _ALLOW_ADDONS
 import states.AddonMenuState;
+#end
 import substates.OptionsSubState;
 import ui.objects.GameLogo;
 
 class MainMenuState extends SuffState {
 	public static var initialized:Bool = false;
 
-	var bg:FlxBackdrop;
+	var bg:FlxSprite;
+	var overlay:FlxBackdrop;
 	var logo:GameLogo;
+	var splashText:FlxText;
 
 	static final buttonSpacing:Int = 10;
 
 	var buttonGroup:FlxTypedContainer<SuffButton> = new FlxTypedContainer<SuffButton>();
+	var infoTextGroup:FlxTypedSpriteGroup<FlxText> = new FlxTypedSpriteGroup<FlxText>();
 	var playButton:SuffButton;
 	var optionsButton:SuffButton;
 	var galleryButton:SuffButton;
 	var creditsButton:SuffButton;
 
-	static final menuItems:Array<String> = ['PLAY', 'OPTIONS', 'ADDONS'];
+	static final menuItems:Array<String> = [
+		'Play',
+		'Options',
+		#if _ALLOW_ADDONS
+		'Addons',
+		#end
+		'Donate'
+	];
 
 	override public function create():Void {
 		// Paths.clearStoredMemory();
@@ -36,6 +49,10 @@ class MainMenuState extends SuffState {
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.keys.preventDefaultKeys = [TAB];
 
+		if (FlxG.sound.music == null || SuffState.currentMusicName == 'null') { // idk lmao
+			SuffState.playMusic('mainMenu');
+		}
+
 		var bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xFF347277);
 		add(bg);
 
@@ -43,37 +60,41 @@ class MainMenuState extends SuffState {
 		grid.velocity.set(-32, -32);
 		add(grid);
 
-		if (!initialized) {
-			if (FlxG.save.data != null && FlxG.save.data.fullscreen) {
-				FlxG.fullscreen = FlxG.save.data.fullscreen;
-				// trace('LOADED FULLSCREEN SETTING!!');
-			}
-			persistentDraw = true;
-			initialized = true;
-		}
+		overlay = new FlxBackdrop(Paths.image('gui/transitions/horizontal'), Y);
+		overlay.x = -overlay.width / 2 - 60;
+		overlay.velocity.set(0, 32);
+		overlay.color = 0xFF105060;
+		overlay.alpha = 0.75;
+		add(overlay);
 
-		if (FlxG.sound.music == null || SuffState.currentMusicName == 'null') { // idk lmao
-			SuffState.playMusic('mainMenu');
-		}
-
-		logo = new GameLogo(0, 20);
-		logo.screenCenter(X);
+		logo = new GameLogo(0, 0);
+		logo.x = FlxG.width / 2 + (FlxG.width / 2 - logo.width) / 2;
+		logo.y = (FlxG.height - logo.height) / 2;
 		add(logo);
 
+		splashText = new FlxText(0, 0, FlxG.width * 0.4, 'Empty');
+		splashText.setFormat(Paths.font('default'), 32, FlxColor.YELLOW, CENTER, FlxTextBorderStyle.SHADOW, 0x80000000);
+		splashText.text = getRandomSplashText();
+		splashText.y = logo.y + logo.height + 10;
+		add(splashText);
+		tweenSplashTextColor();
+
 		final infoTextList:Array<String> = [
-			#if ALLOW_VERSION_HANDLING
-			'Version ' + FlxG.stage.application.meta.get('version'),
-			VersionMetadata.getVersionName(FlxG.stage.application.meta.get('version'))
+			Utils.getGameTitle(),
+			#if _ALLOW_VERSION_HANDLING
+			'Version ' + FlxG.stage.application.meta.get('version'), VersionMetadata.getVersionName(FlxG.stage.application.meta.get('version'))
 			#else
 			'Modded Version ' + FlxG.stage.application.meta.get('version')
 			#end
 		];
+
+		add(infoTextGroup);
 		for (i in 0...infoTextList.length) {
 			var infoText = new FlxText(0, 0, 0, infoTextList[i]);
 			infoText.setFormat(Paths.font('default'), 16, FlxColor.WHITE);
 			infoText.x = FlxG.width - infoText.width;
 			infoText.y = FlxG.height - infoText.height * (infoTextList.length - i);
-			add(infoText);
+			infoTextGroup.add(infoText);
 		}
 
 		var creditImage = Paths.image('gui/menus/malletIndustriesLogo');
@@ -90,46 +111,157 @@ class MainMenuState extends SuffState {
 
 		for (i in 0...menuItems.length) {
 			var button = new SuffButton(0, 0, menuItems[i], null, null, 300, 100);
-			if (i % 2 == 1) {
-				button.x = FlxG.width + button.width;
-			} else {
-				button.x = button.width * -1;
-			}
-			button.y = logo.y
-				+ logo.height
-				+ (FlxG.height - (logo.y + logo.height) - (100 + buttonSpacing) * menuItems.length) / 2
-				+ (100 + buttonSpacing) * i;
+			if (menuItems[i] == 'Donate')
+				button.tooltipText = 'Your generous donation directly supports the creator of the game!';
+			button.x = (FlxG.width / 2 - button.width) / 2;
+			button.y = (FlxG.height - (100 + buttonSpacing) * menuItems.length) / 2 + (100 + buttonSpacing) * i;
 			button.onClick = function() {
 				menuButtonFunctions(menuItems[i]);
 			};
 			buttonGroup.add(button);
-
-			FlxTween.tween(button, {x: (FlxG.width - button.width) / 2}, 0.75, {
-				ease: FlxEase.cubeOut,
-				startDelay: 0.5 + i * 0.1
-			});
 		}
 
-		initialized = true;
+		if (!initialized || Preferences.data.alwaysPlayMainMenuAnims)
+			runFirstStartupTweens();
+		if (!initialized) {
+			if (FlxG.save.data != null && FlxG.save.data.fullscreen) {
+				FlxG.fullscreen = FlxG.save.data.fullscreen;
+				// trace('LOADED FULLSCREEN SETTING!!');
+			}
+			persistentDraw = true;
+			initialized = true;
+		}
 
 		super.create();
 	}
 
+	function runFirstStartupTweens() {
+		logo.x = (FlxG.width - logo.width) / 2;
+		logo.y = -logo.height;
+		FlxTween.tween(logo, {y: (FlxG.height - logo.height) / 2}, 1, {
+			ease: FlxEase.quintOut,
+			startDelay: 0.5
+		});
+		FlxTween.tween(logo, {x: FlxG.width / 2 + (FlxG.width / 2 - logo.width) / 2}, 1, {
+			ease: FlxEase.quintInOut,
+			startDelay: 1.5
+		});
+
+		overlay.x = -overlay.width;
+		FlxTween.tween(overlay, {x: -overlay.width / 2 - 60}, 1, {
+			ease: FlxEase.cubeOut,
+			startDelay: 1.75
+		});
+
+		for (num => button in buttonGroup.members) {
+			button.x = button.width * -1;
+
+			FlxTween.tween(button, {x: (FlxG.width / 2 - button.width) / 2}, 0.75, {
+				ease: FlxEase.cubeOut,
+				startDelay: 2 + num * 0.1
+			});
+		}
+
+		for (num => text in infoTextGroup.members) {
+			text.x = FlxG.width;
+			FlxTween.tween(text, {x: FlxG.width - text.width}, 1, {
+				ease: FlxEase.cubeOut,
+				startDelay: 2 + num * 0.2
+			});
+		}
+
+		creditsButton.x = -creditsButton.width;
+		FlxTween.tween(creditsButton, {x: 10}, 1, {
+			ease: FlxEase.cubeOut,
+			startDelay: 2.5
+		});
+
+		splashText.alpha = 0;
+		FlxTween.tween(splashText, {alpha: 1}, 0.5, {
+			startDelay: 2
+		});
+	}
+
+	function getRandomSplashText() {
+		return SplashManager.activeSplashes[FlxG.random.int(0, SplashManager.activeSplashes.length - 1)];
+	}
+
+	function changeSplashText() {
+		var leText = getRandomSplashText();
+		while (leText == splashText.text) {
+			leText = getRandomSplashText();
+		}
+		splashText.text = leText;
+	}
+
+	function fadeSplashText() {
+		FlxTween.tween(splashText, {alpha: 0}, 1, {
+			ease: FlxEase.cubeIn,
+			onComplete: function(twn:FlxTween) {
+				changeSplashText();
+				FlxTween.tween(splashText, {alpha: 1}, 1, {ease: FlxEase.cubeOut});
+			}
+		});
+	}
+
+	var curColor:Int = 0;
+
+	function tweenSplashTextColor() {
+		if (SplashManager.activeColors.length <= 1)
+			return;
+		curColor = FlxMath.wrap(curColor + 1, 0, SplashManager.activeColors.length - 1);
+		FlxTween.cancelTweensOf(splashText, ['color']);
+		FlxTween.color(splashText, 1, splashText.color, SplashManager.activeColors[curColor], {
+			onComplete: function(_) {
+				tweenSplashTextColor();
+			}
+		});
+	}
+
 	function menuButtonFunctions(menu:String) {
-		switch (menu) {
+		switch (menu.toUpperCase()) {
 			case 'PLAY':
 				SuffState.switchState(new CharacterSelectState());
 			case 'OPTIONS':
 				OptionsSubState.notInGame = true;
 				openSubState(new OptionsSubState());
+			#if _ALLOW_ADDONS
 			case 'ADDONS':
 				SuffState.switchState(new AddonMenuState());
+			#end
 			case 'CREDITS':
 				SuffState.switchState(new CreditsState());
+			case 'DONATE':
+				Utils.browserLoad('https://ko-fi.com/nicklysuffer');
 		}
 	}
 
+	var splashTextChangeTimer:Float = 0;
+
 	override function update(elapsed:Float) {
 		super.update(elapsed);
+
+		logo.angle = splashText.angle = Math.sin(SuffState.timePassedOnState) * 5;
+		logo.setGraphicSize(Std.int(FlxG.width / (3 - Math.pow(Math.sin(SuffState.timePassedOnState / 2), 2) * 0.25)));
+		if (FlxG.mouse.overlaps(logo) && FlxG.mouse.justPressed) {
+			splashTextChangeTimer = 0;
+			changeSplashText();
+			FlxTween.cancelTweensOf(splashText, ['y']);
+			FlxTween.tween(splashText, {y: splashText.y - 20}, 0.08, {
+				onComplete: function(_) {
+					FlxTween.tween(splashText, {y: logo.y + logo.height + 10}, 0.08);
+				}
+			});
+		}
+
+		splashText.x = logo.x + (logo.width - splashText.width) / 2;
+		var splashTextScale = 1 + Math.abs(Math.sin(SuffState.timePassedOnState * Math.PI * 2)) * 0.05;
+		splashText.scale.set(splashTextScale, splashTextScale);
+
+		splashTextChangeTimer += elapsed;
+		if (splashTextChangeTimer >= 10) {
+			splashTextChangeTimer = 0;
+			fadeSplashText();
+		}
 	}
 }

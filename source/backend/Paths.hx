@@ -137,7 +137,7 @@ class Paths {
 	 * @param library
 	 */
 	public static function getImagePath(file:String, ?library:Null<String> = null):String {
-		#if ALLOW_ADDONS
+		#if _ALLOW_ADDONS
 		var key = addonFolders('images/' + file + '.png');
 		if (key != null)
 			return key;
@@ -161,7 +161,7 @@ class Paths {
 	 * @param library
 	 */
 	public static function getSparrowXmlPath(file:String, ?library:Null<String> = null):String {
-		#if ALLOW_ADDONS
+		#if _ALLOW_ADDONS
 		var key = addonFolders('images/' + file + '.xml');
 		if (key != null)
 			return key;
@@ -238,7 +238,7 @@ class Paths {
 		var bitmap:BitmapData = null;
 		var file:String = null;
 
-		#if ALLOW_ADDONS
+		#if _ALLOW_ADDONS
 		file = addonsImages(key);
 		if (currentTrackedTextures.exists(file)) {
 			localTrackedAssets.push(file);
@@ -317,7 +317,7 @@ class Paths {
 	 */
 	static public function getTextFromFile(key:String):String {
 		#if sys
-		#if ALLOW_ADDONS
+		#if _ALLOW_ADDONS
 		if (FileSystem.exists(addonFolders(key)))
 			return File.getContent(addonFolders(key));
 		#end
@@ -373,7 +373,7 @@ class Paths {
 	public static function returnSound(path:String, key:String, ?library:String) {
 		var gottenPath:String = appendSoundExt(getPath('$path/$key', library));
 
-		#if ALLOW_ADDONS
+		#if _ALLOW_ADDONS
 		var addonLibPath:String = '';
 		if (library != null)
 			addonLibPath = '$library/';
@@ -412,7 +412,7 @@ class Paths {
 		return currentTrackedSounds.get(gottenPath);
 	}
 
-	#if ALLOW_ADDONS
+	#if _ALLOW_ADDONS
 	inline static public function addons(key:String = '') {
 		return 'addons/' + key;
 	}

@@ -68,6 +68,7 @@ class SuffTransition extends SuffSubState {
 				var tran:FlxSprite = new FlxSprite().loadGraphic(Paths.image('gui/transitions/default'));
 				tran.setGraphicSize(Std.int(tran.width * FlxG.width / 1280), Std.int(tran.height * FlxG.height / 720));
 				tran.updateHitbox();
+				tran.color = 0xFF000000;
 				trans.add(tran);
 			case BLOCKY:
 				var fileList = [];

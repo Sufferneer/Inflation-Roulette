@@ -16,14 +16,14 @@ class ReadySign extends SuffButton {
 		super((FlxG.width - 350 * signScale) / 2, 0, null, null, null, Std.int(350 * signScale), Std.int(240 * signScale), false);
 
 		sign = new FlxSprite();
-		sign.frames = Paths.sparrowAtlas('gui/menus/characterSelect/readySign');
+		sign.frames = Paths.sparrowAtlas('gui/menus/characterSelect/readySign/base');
 		sign.animation.addByPrefix('idle', 'idle', 24, false);
 		sign.scale.set(signScale, signScale);
 		sign.updateHitbox();
 		add(sign);
 
 		outline = new FlxSprite();
-		outline.frames = Paths.sparrowAtlas('gui/menus/characterSelect/readySignOutline');
+		outline.frames = Paths.sparrowAtlas('gui/menus/characterSelect/readySign/outline');
 		outline.animation.addByPrefix('idle', 'idle', 24, false);
 		outline.scale.set(signScale, signScale);
 		outline.updateHitbox();

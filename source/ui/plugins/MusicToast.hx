@@ -25,7 +25,6 @@ class MusicToast extends FlxTypedContainer<FlxBasic> {
 
 	public var leScale:Float = 1.2;
 
-	static final leScaleSnapping:Int = 100;
 	public static var enabled:Bool = false;
 
 	static final startDelay:Float = 0;
@@ -65,7 +64,7 @@ class MusicToast extends FlxTypedContainer<FlxBasic> {
 		recordBG.scrollFactor.set();
 		record.add(recordBG);
 
-		recordCover = new FlxSprite().loadGraphic(Paths.image('gui/musicToast/covers/sufferneer'));
+		recordCover = new FlxSprite().loadGraphic(Paths.image('gui/musicToast/covers/nicklysuffer'));
 		recordCover.scrollFactor.set();
 		record.add(recordCover);
 

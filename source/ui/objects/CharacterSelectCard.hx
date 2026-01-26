@@ -17,20 +17,20 @@ class CharacterSelectCard extends SuffButton {
 
 		this.characterData = character;
 
-		bg = new FlxSprite().loadGraphic(Paths.image('gui/menus/characterSelect/cards/${characterData.id}BG'));
+		bg = new FlxSprite().loadGraphic(Paths.image('gui/menus/characterSelect/cards/${characterData.id}/bg'));
 		add(bg);
 
-		outline = new FlxSprite().loadGraphic(Paths.image('gui/menus/characterSelect/cardOutline'));
+		outline = new FlxSprite().loadGraphic(Paths.image('gui/menus/characterSelect/cards/outline'));
 		add(outline);
 
 		charSprite = new FlxSprite();
-		charSprite.frames = Paths.sparrowAtlas('gui/menus/characterSelect/cards/${characterData.id}');
+		charSprite.frames = Paths.sparrowAtlas('gui/menus/characterSelect/cards/${characterData.id}/character');
 		charSprite.animation.addByPrefix('idle', 'idle');
 		charSprite.animation.addByPrefix('selected', 'selected', 24, false);
 		charSprite.animation.play('idle');
 		charSprite.animation.finishCallback = function(animName:String) {
 			if (animName == 'selected' && charSprite.animation.curAnim.reversed) {
-				charSprite.animation.play('idle');
+				charSprite.animation.play('idle', true);
 			}
 		};
 		add(charSprite);

@@ -1,4 +1,7 @@
 {
+	"spriteSheets": [
+		"full"
+	],
 	"animations": [
 		{
 			"name": "idle0",
@@ -286,7 +289,14 @@
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
-			"loop": false
+			"loop": false,
+			"soundPaths": [
+				"characters/goober/helpless_1",
+				"characters/goober/helpless_2",
+				"characters/goober/helpless_3", 
+				"characters/goober/helpless_4",
+				"characters/goober/helpless_5"
+			]
 		},
 		{
 			"name": "helplessNull",
@@ -294,7 +304,14 @@
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
-			"loop": false
+			"loop": false,
+			"soundPaths": [
+				"characters/goober/helpless_1",
+				"characters/goober/helpless_2",
+				"characters/goober/helpless_3", 
+				"characters/goober/helpless_4",
+				"characters/goober/helpless_5"
+			]
 		},
 		{
 			"name": "skill0",
@@ -423,6 +440,7 @@
 	"creakThreshold": 3,
 	"poppingVelocityMultiplier": [1.0, 1.0],
 	"poppingGravityMultiplier": 1.0,
+	"antialiasing": false,
 
 	"positionOffset": [-320, -570],
 	"cameraOffset": [0, -320],

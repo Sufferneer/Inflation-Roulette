@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
+	<set name="title" value="Inflation Roulette: Expanded" />
+	<meta title="${title}" />
+	<app file="Inflation-Roulette" version="0.2" package="com.malletindustries.inflationroulette" packageName="com.malletindustries.inflationroulette" main="Main" company="MalletIndustries" />
 
-	<app title="Inflation Roulette: Reloaded" file="Inflation-Roulette" packageName="com.malletindustries.inflationroulette" package="com.malletindustries.inflationroulette" main="Main" version="1.0.0" company="MalletIndustries" />
+	<haxedef name="title" value="${title}" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -36,11 +39,11 @@
 
 	<!-- __________________________ Game Assets & Etc. __________________________ -->
 	
-	<define name="ALLOW_CRASH_HANDLER" if="desktop" />
-	<define name="ALLOW_ADDONS" if="desktop" />
+	<define name="_ALLOW_CRASH_HANDLER" if="desktop" />
 
-	<section if="OFFICIAL_BUILD">
-		<define name="ALLOW_VERSION_HANDLING"/>
+	<section if="_OFFICIAL_BUILD">
+		<define name="_ALLOW_VERSION_HANDLING"/>
+		<define name="_ALLOW_ADDONS" if="desktop" />
 	</section>
 
 	<!-- Preload Assets -->
@@ -51,7 +54,7 @@
 	<assets path="assets/sounds" exclude="*.mp3"  unless="web" preload="true"/>
 	<assets path="assets/music" preload="true"/>
 	<assets path="assets/images" preload="true"/>
-	<section if="ALLOW_ADDONS">
+	<section if="_ALLOW_ADDONS">
 		<assets path='addons' embed='false'/>
 	</section>
 
@@ -97,7 +100,7 @@
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 
-	<haxedef name="HXCPP_CHECK_POINTER" if="ALLOW_CRASH_HANDLER" />
+	<haxedef name="HXCPP_CHECK_POINTER" if="_ALLOW_CRASH_HANDLER" />
 	<haxedef name="HXCPP_STACK_LINE"/>
 	<haxedef name="HXCPP_STACK_TRACE"/>
 	<haxedef name='no-deprecation-warnings' />

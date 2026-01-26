@@ -1,5 +1,6 @@
 package states;
 
+import openfl.display.BlendMode;
 import backend.Addons;
 import backend.types.AddonData;
 import flixel.util.FlxGradient;
@@ -11,6 +12,7 @@ import ui.objects.SuffIconButton;
 import tjson.TJSON as Json;
 
 class AddonMenuState extends SuffState {
+	var bg:FlxSprite;
 	var icons:FlxTypedSpriteGroup<AddonMenuBG> = new FlxTypedSpriteGroup<AddonMenuBG>();
 	var modBG:FlxSprite;
 	var modItems:FlxTypedSpriteGroup<AddonMenuItem> = new FlxTypedSpriteGroup<AddonMenuItem>();
@@ -43,7 +45,7 @@ class AddonMenuState extends SuffState {
 	override function create() {
 		super.create();
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(FlxGradient.createGradientBitmapData(FlxG.width, FlxG.height, [0xFF0000FF, 0xFF8000FF, 0xFFFF00FF]));
+		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xFFFFFFFF);
 		bg.alpha = 0.5;
 		add(bg);
 
@@ -54,8 +56,8 @@ class AddonMenuState extends SuffState {
 			for (w in 0...Math.ceil(FlxG.width / size) + 1) {
 				var tile = new AddonMenuBG(w * size, h * size);
 				for (item in tile.members) {
-					item.color = 0xFF8000FF;
-					item.alpha = 0.5;
+					item.alpha = 0.25;
+					item.blend = BlendMode.ADD;
 				}
 				icons.add(tile);
 			}
@@ -199,6 +201,9 @@ class AddonMenuState extends SuffState {
 			modMetadataScrollBar.alpha = 0.25;
 			modMetadataScrollBar.visible = (modMetadataItemsUpperY != modMetadataItemsLowerY);
 		}
+
+		FlxTween.cancelTweensOf(bg, ['color']);
+		FlxTween.color(bg, 1, bg.color, FlxColor.fromString(addon.color));
 	}
 
 	function changeBanner(folder:String) {

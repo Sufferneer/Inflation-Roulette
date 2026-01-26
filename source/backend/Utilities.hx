@@ -67,7 +67,7 @@ class Utilities {
 	 */
 	public static function cursorChange(tag:String, pressed:Bool = false):Void {
 		var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('gui/cursor/${tag}' + (pressed ? '_pressed' : '')));
-		FlxG.mouse.load(spr.pixels, 1, -11, -9);
+		FlxG.mouse.load(spr.pixels, 1, -7, -6);
 	}
 
 	/**
@@ -76,9 +76,9 @@ class Utilities {
 	 * @param tag The cursor used.
 	 * @param pressed Whether to use the pressed version of the cursor.
 	 */
-	public static function makeBorder(width:Int, height:Int, thickness:Int = 5, color:FlxColor = 0xFFFFFFFF):FlxGraphic {
-		var spr:FlxSprite = new FlxSprite().makeGraphic(width, height, 0x0);
-		FlxSpriteUtil.drawRect(spr, 0, 0, width, height, 0x0, {color: color, thickness: thickness * 2}, {smoothing: false});
+	public static function makeBorder(width:Float, height:Float, thickness:Int = 5, color:FlxColor = 0xFFFFFFFF):FlxGraphic {
+		var spr:FlxSprite = new FlxSprite().makeGraphic(Std.int(width), Std.int(height), 0x0);
+		FlxSpriteUtil.drawRect(spr, 0, 0, Std.int(width), Std.int(height), 0x0, {color: color, thickness: thickness * 2}, {smoothing: false});
 		return spr.graphic;
 	}
 
@@ -129,6 +129,11 @@ class Utilities {
 	inline public static function getSavePath():String {
 		@:privateAccess
 		return FlxG.stage.application.meta.get('company') + '/' + FlxG.stage.application.meta.get('file');
+	}
+
+	inline public static function getGameTitle():String {
+		@:privateAccess
+		return haxe.macro.Compiler.getDefine("title");
 	}
 
 	/**

@@ -58,6 +58,8 @@ class Constants {
 		0xFFFF00C0, // Magenta
 	];
 
+	public static final DEFAULT_SPLASH_TEXT_COLORS:Array<FlxColor> = [0xFFFFFF00];
+
 	/**
 	 * The size of CharacterSelectCards.
 	 * 1st value is width, 2nd value is height

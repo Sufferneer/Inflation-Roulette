@@ -6,7 +6,7 @@ import backend.enums.CharacterSelectSubstring;
 import ui.objects.GameIcon;
 
 class CharacterSelectText extends FlxSpriteGroup {
-	static final substringList:Array<CharacterSelectSubstring> = [MAX_PRESSURE, SKILLS, DESCRIPTION];
+	static final substringList:Array<CharacterSelectSubstring> = [MAX_PRESSURE, MAX_CONFIDENCE, SKILLS, DESCRIPTION];
 	static final separator:String = '·';
 	static final size:Int = 32;
 
@@ -43,7 +43,7 @@ class CharacterSelectText extends FlxSpriteGroup {
 							icons.push('stats/pressure');
 						};
 					case MAX_CONFIDENCE:
-						for (i in 0...character.maxPressure) {
+						for (i in 0...character.maxConfidence) {
 							icons.push('stats/confidence');
 						};
 					case SKILLS:

@@ -1,9 +1,9 @@
 {
 	"name": "Asimo",
-	"description": "This is an addon made in order to test the modding capabilities of the game.",
+	"description": "This is an addon made in order to test the modding capabilities of the game. (Note: Some animations are incomplete)",
 	"authors": [
-		["Sufferneer", "Artist/Animator"],
+		["NicklySuffer", "Artist/Animator"],
 		["WolfKylis", "Character Design"]
 	],
-	"color": [0, 192, 255]
+	"color": "#00C0FF"
 }

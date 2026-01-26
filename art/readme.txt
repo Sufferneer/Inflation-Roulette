@@ -19,7 +19,7 @@ if you're planning to showcase this game, please credit me via leaving the itch.
 
 === *** CREDITS *** ===
 
-Sufferneer
+NicklySuffer
 Producer, programmer, artist/animator, music composer & sound design
 
 Snowyboi

@@ -46,7 +46,7 @@ class SplashScreenState extends SuffState {
 			tileGroup.add(tile);
 		}
 
-		introSound = new FlxSound().loadEmbedded(Paths.sound('sufferneerIntro'));
+		introSound = new FlxSound().loadEmbedded(Paths.sound('malletIndustriesIntro'));
 		introSound.volume = 0.7;
 		introSound.play();
 

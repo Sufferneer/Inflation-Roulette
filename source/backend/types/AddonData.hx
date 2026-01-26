@@ -4,5 +4,5 @@ typedef AddonData = {
 	name:String,
 	description:String,
 	authors:Array<Array<String>>,
-	color:Array<Int>
+	color:String
 }

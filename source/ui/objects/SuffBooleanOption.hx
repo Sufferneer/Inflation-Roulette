@@ -8,19 +8,20 @@ class SuffBooleanOption extends FlxSpriteGroup {
 
 	var outline:FlxSprite;
 	var parent:FlxSprite;
+	public var tooltipText:String = '';
 
 	public function new(x:Float, y:Float, callback:Bool->Void, defaultValue:Bool = false, name:String = '') {
 		super(x, y);
 		onChangeCallback = callback;
 
 		outline = new FlxSprite();
-		outline.frames = Paths.sparrowAtlas('gui/menus/options/booleanOutline');
+		outline.frames = Paths.sparrowAtlas('gui/menus/options/boolean/outline');
 		outline.animation.addByPrefix('true', 'on', 24, false);
 		outline.animation.addByPrefix('false', 'off', 24, false);
 		add(outline);
 
 		parent = new FlxSprite();
-		parent.frames = Paths.sparrowAtlas('gui/menus/options/boolean');
+		parent.frames = Paths.sparrowAtlas('gui/menus/options/boolean/base');
 		parent.animation.addByPrefix('true', 'on', 24, false);
 		parent.animation.addByPrefix('false', 'off', 24, false);
 		add(parent);
@@ -38,6 +39,7 @@ class SuffBooleanOption extends FlxSpriteGroup {
 		if (FlxG.mouse.overlaps(parent, this.camera) && visible) {
 			if (!hovered) {
 				SuffState.playUISound(Paths.sound('ui/hover'));
+				Tooltip.text = tooltipText;
 				outline.visible = true;
 				hovered = true;
 			}
@@ -47,6 +49,8 @@ class SuffBooleanOption extends FlxSpriteGroup {
 				onChangeCallback(currentValue);
 			}
 		} else {
+			if (hovered)
+				Tooltip.text = '';
 			outline.visible = false;
 			hovered = false;
 		}

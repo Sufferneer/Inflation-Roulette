@@ -20,7 +20,7 @@ class SuffButton extends FlxSpriteGroup {
 	public var btnTextColorHovered:FlxColor = 0xFFFFFFFF;
 	public var btnTextColorClicked:FlxColor = 0xFFFFFFFF;
 	public var btnTextColorDisabled:FlxColor = 0xFF808080;
-	public var btnTextSize(default, set):Int = 32;
+	public var btnTextSize(default, set):Int = 48;
 	public var btnTextAlpha(default, set):Float = 1;
 	public var btnTextFont(default, set):String = 'default';
 
@@ -42,6 +42,8 @@ class SuffButton extends FlxSpriteGroup {
 
 	public var btnIconImage:FlxGraphic = null;
 	public var btnIconImageHovered:FlxGraphic = null;
+
+	public var tooltipText:String = '';
 
 	var btnBGColorTween:FlxTween;
 	var btnScaleTweens:Array<FlxTween> = [];
@@ -226,6 +228,8 @@ class SuffButton extends FlxSpriteGroup {
 			switchIconImage(btnIconImageHovered);
 		if (hoverSound != '')
 			SuffState.playUISound(Paths.sound(hoverSound));
+		if (tooltipText != '')
+			Tooltip.text = tooltipText;
 	}
 
 	function switchIconImage(img:FlxGraphic) {
@@ -255,6 +259,8 @@ class SuffButton extends FlxSpriteGroup {
 			btnText.color = btnTextColor;
 		if (btnIcon != null && !disabled)
 			switchIconImage(btnIconImage);
+		if (tooltipText != '')
+			Tooltip.text = '';
 	}
 
 	function scaleIn() {

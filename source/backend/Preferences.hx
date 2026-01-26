@@ -17,9 +17,11 @@ class SaveVariables {
 	public var ignoreEliminatedPlayers:Bool = false;
 	public var enableDebugMode:Bool = false;
 	public var photosensitivity:Bool = false;
+	public var forceAliasing:Bool = false;
+	public var alwaysPlayMainMenuAnims:Bool = false;
 	public var cameraEffectIntensity:Float = 1;
 	public var enableLetterbox:Bool = true;
-	public var showMusicToast:Bool = true;
+	public var showMusicToast:Bool = false;
 	public var useClassicMusic:Bool = false;
 	public var musicVolume:Float = 0.25;
 	public var gameSoundVolume:Float = 1;

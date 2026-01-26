@@ -12,7 +12,6 @@ class OptionsSubState extends SuffSubState {
 	var scrollBar:FlxSprite;
 	var headingText:FlxText;
 	var exitButton:SuffIconButton;
-	var descText:FlxText;
 
 	var optionsGroup:FlxSpriteGroup = new FlxSpriteGroup();
 	var optionsTitleToDescMap:Map<String, String> = new Map<String, String>();
@@ -60,11 +59,6 @@ class OptionsSubState extends SuffSubState {
 		scrollBar.makeGraphic(scrollBarWidth, Std.int(FlxG.height * (FlxG.height / (Math.abs(optionsScrollLowerLimit) + FlxG.height))), FlxColor.WHITE);
 		scrollBar.x = bg2.width - scrollBar.width;
 		updateScrollBar();
-
-		descText = new FlxText(0, 8, FlxG.width - bg2.width - scrollBar.width, '');
-		descText.setFormat(Paths.font('default'), 32, FlxColor.WHITE, RIGHT);
-		descText.alpha = 0.7;
-		add(descText);
 
 		exitButton = new SuffIconButton(20, 20, 'buttons/exit', null, 2);
 		exitButton.x = FlxG.width - exitButton.width - 20;
@@ -120,6 +114,15 @@ class OptionsSubState extends SuffSubState {
 				Preferences.data.photosensitivity = value;
 		}, Preferences.data.photosensitivity);
 
+		createBooleanOption('Antialising Suppression',
+			'Force all sprites to be pixelated even when they are supposed to. Improves performance, but makes certain assets blurry.', function(value:Bool) {
+				Preferences.data.forceAliasing = value;
+		}, Preferences.data.forceAliasing);
+
+		createBooleanOption('Main Menu Animations', 'Always play first startup animations in the Main Menu.', function(value:Bool) {
+			Preferences.data.alwaysPlayMainMenuAnims = value;
+		}, Preferences.data.alwaysPlayMainMenuAnims);
+
 		createSliderOption('Camera Intensity', 'How strong screen shaking and other disorienting effects should be.', function(value:Float) {
 			Preferences.data.cameraEffectIntensity = value;
 		}, 0, 1, 0.05, function(value:Float) {
@@ -156,14 +159,14 @@ class OptionsSubState extends SuffSubState {
 
 		createSliderOption('Game Sound Volume', 'The volume percentage of game sounds.', function(value:Float) {
 			Preferences.data.gameSoundVolume = value;
-			SuffState.playSound(Paths.sound('splash'));
+			SuffState.playSound(Paths.soundRandom('weapon', 1, 3));
 		}, 0.0, 1.0, 0.05, function(value:Float) {
 			return Math.round(value * 100) + '%';
 		}, Preferences.data.gameSoundVolume);
 
 		createSliderOption('UI Sound Volume', 'The volume percentage of UI sounds.', function(value:Float) {
 			Preferences.data.uiSoundVolume = value;
-			SuffState.playUISound(Paths.sound('splash'));
+			SuffState.playUISound(Paths.soundRandom('weapon', 1, 3));
 		}, 0.0, 1.0, 0.05, function(value:Float) {
 			return Math.round(value * 100) + '%';
 		}, Preferences.data.uiSoundVolume);
@@ -231,6 +234,7 @@ class OptionsSubState extends SuffSubState {
 		var option:SuffBooleanOption = new SuffBooleanOption(text.x + text.width + 16, optionsY, callback, defaultValue, name);
 		text.y = option.y + (option.height - text.height) / 2;
 		option.camera = this.camera;
+		option.tooltipText = description;
 		optionsGroup.add(option);
 
 		optionsY += option.height + 16;
@@ -251,6 +255,7 @@ class OptionsSubState extends SuffSubState {
 			defaultValue, name);
 		text.y = option.y + (option.height - text.height) / 2;
 		option.camera = this.camera;
+		option.tooltipText = description;
 		optionsGroup.add(option);
 
 		optionsY += option.height + 16;
@@ -265,7 +270,7 @@ class OptionsSubState extends SuffSubState {
 
 		if (scrollBarTween != null)
 			scrollBarTween.cancel();
-		scrollBarTween = FlxTween.tween(scrollBar, {alpha: 0.05}, 4, {
+		scrollBarTween = FlxTween.tween(scrollBar, {alpha: 0.15}, 4, {
 			startDelay: 1
 		});
 	}
@@ -315,23 +320,13 @@ class OptionsSubState extends SuffSubState {
 				var option:SuffBooleanOption = cast opt;
 				if (option.hovered) {
 					allowMouseScrolling = false;
-					updateDescText(optionsTitleToDescMap.get(option.name));
 				}
 			} else if (Std.isOfType(opt, SuffSliderOption)) {
 				var option:SuffSliderOption = cast opt;
-				if (option.hovered) {
-					updateDescText(optionsTitleToDescMap.get(option.name));
-				}
 				if (option.pressed) {
 					allowMouseScrolling = false;
 				}
 			}
 		}
-	}
-
-	function updateDescText(text:String) {
-		descText.text = text;
-		descText.x = FlxG.width - descText.width;
-		descText.y = FlxG.height - descText.height;
 	}
 }

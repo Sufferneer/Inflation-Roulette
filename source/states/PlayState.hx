@@ -1,6 +1,7 @@
 package states;
 
 import backend.CharacterManager;
+import backend.GameplayManager;
 import backend.enums.SuffTransitionStyle;
 import objects.Character;
 import objects.Confetti;
@@ -51,11 +52,13 @@ class PlayState extends SuffState {
 	var confidenceBar:SuffBar;
 	final confidenceBarColors:Array<FlxColor> = [0xFF4A4399, 0xFF7970FF];
 	var confidenceText:FlxText;
-
 	var pauseButton:SuffIconButton;
-
 	public static final playerWidthOffset:Float = 140;
 
+	// Sounds
+	var ambientSound:FlxSound;
+
+	// Game Logic
 	var currentTurnIndex:Int = 0;
 	var winnerIndex:Null<Int> = null;
 
@@ -112,18 +115,18 @@ class PlayState extends SuffState {
 
 		reloadCylinder(Constants.LIVE_ROUND_COUNT);
 
-		bg = new FlxSprite().loadGraphic(Paths.image('game/background/background'));
+		bg = new FlxSprite().loadGraphic(Paths.image('game/backgrounds/${GameplayManager.currentBackground}/bg'));
 		bg.screenCenter();
 		bg.scrollFactor.set(0.3, 0.5);
 		add(bg);
 
-		pumpRack = new FlxSprite().loadGraphic(Paths.image('game/background/pumpRack'));
+		pumpRack = new FlxSprite().loadGraphic(Paths.image('game/backgrounds/${GameplayManager.currentBackground}/pumpRack'));
 		pumpRack.x = bg.x + (bg.width - pumpRack.width) / 2;
 		pumpRack.y = -50;
 		pumpRack.scrollFactor.set(0.4, 0.6);
 		add(pumpRack);
 
-		floor = new FlxSprite().loadGraphic(Paths.image('game/background/floor'));
+		floor = new FlxSprite().loadGraphic(Paths.image('game/backgrounds/${GameplayManager.currentBackground}/floor'));
 		floor.x = bg.x;
 		floor.y = bg.y;
 		floor.scrollFactor.set(0.5, 0.8);
@@ -136,13 +139,13 @@ class PlayState extends SuffState {
 
 		FlxG.camera.setScrollBoundsRect(boundX, boundY, floorBoundXRight - floorBoundXLeft, floor.height + floor.height * floor.scrollFactor.y * (2 / 3));
 
-		tableTop = new FlxSprite().loadGraphic(Paths.image('game/background/tableTop'));
+		tableTop = new FlxSprite().loadGraphic(Paths.image('game/backgrounds/${GameplayManager.currentBackground}/tableTop'));
 		tableTop.x = floor.x + (floor.width - tableTop.width) / 2;
 		tableTop.y = 500;
 		tableTop.scrollFactor.set(1.2, 1.1);
 		tableTop.alpha = 0.75;
 
-		tableStand = new FlxSprite().loadGraphic(Paths.image('game/background/tableStand'));
+		tableStand = new FlxSprite().loadGraphic(Paths.image('game/backgrounds/${GameplayManager.currentBackground}/tableStand'));
 		tableStand.x = tableTop.x;
 		tableStand.y = tableTop.y;
 		tableStand.scrollFactor.set(1.2, 1.1);
@@ -183,6 +186,11 @@ class PlayState extends SuffState {
 		add(tableTop);
 
 		add(pumpGun);
+
+		ambientSound = new FlxSound().loadEmbedded(Paths.sound('ambient'));
+		ambientSound.volume = 0.25 * Preferences.data.gameSoundVolume;
+		ambientSound.looped = true;
+		ambientSound.play();
 
 		// UI Stuff//
 		letterboxTop = new FlxSprite().makeGraphic(FlxG.width, Std.int((FlxG.height - FlxG.width / 20 * 9) / 2), FlxColor.BLACK);
@@ -240,6 +248,7 @@ class PlayState extends SuffState {
 
 		pauseButton = new SuffIconButton(20, 20, 'buttons/pause', null, 2);
 		pauseButton.x = FlxG.width - pauseButton.width - 20;
+		pauseButton.camera = camHUD;
 		pauseButton.onClick = function() {
 			pauseGame();
 		};
@@ -364,7 +373,7 @@ class PlayState extends SuffState {
 
 		// I am sorry future me
 		animAllCharacters('introPartOne', 1, false); // All characters play their first intro animation
-		new FlxTimer().start(1.5 + getMaximumAnimLength('introPartOne'), function(_:FlxTimer) { // First intro animation delay + 1 second
+		new FlxTimer().start(1 + getMaximumAnimLength('introPartOne'), function(_:FlxTimer) { // First intro animation delay + 1.5 seconds
 			FlxTween.tween(pumpGun, {y: pumpGunDefaultY}, 0.5, { // Gun lands on table
 				onComplete: function(_:FlxTween) {
 					animAllCharacters('introPartTwo', 0.5, true); // All characters play their second intro animation
@@ -438,11 +447,16 @@ class PlayState extends SuffState {
 		getPlayer(playerIndex).currentConfidence -= skill.cost;
 
 		var animName:String = 'skill' + Utils.capitalize(skill.id);
+		var actualAnimName:String = animName + getPlayer(playerIndex).parseAnimationSuffix();
 		var soundName:String = animName;
-		if (!getPlayer(playerIndex).animExists(animName)) {
-			animName = 'skill';
+		if (getPlayer(playerIndex).animExists(actualAnimName)) {
+			// Do nothing
+		} else if (getPlayer(playerIndex).animExists(animName)) {
+			actualAnimName = animName;
+		} else {
+			actualAnimName = 'skill';
 		}
-		getPlayer(playerIndex).playAnim(animName);
+		getPlayer(playerIndex).playAnim(actualAnimName);
 
 		switch (skill.id) {
 			case 'reload':
@@ -610,10 +624,10 @@ class PlayState extends SuffState {
 				new Confetti(getPlayer(winnerIndex).x - FlxG.width / 2.5, getPlayer(winnerIndex).y - getPlayer(winnerIndex).height, 30));
 			members.insert(members.indexOf(tableTop) - 1,
 				new Confetti(getPlayer(winnerIndex).x + FlxG.width / 2.5, getPlayer(winnerIndex).y - getPlayer(winnerIndex).height, 150));
-			doTimer('winAnim', new FlxTimer().start(1.0, function(_:FlxTimer) {
+			doTimer('winAnim', new FlxTimer().start(0.5 + getPlayer(winnerIndex).getCurAnimLength(), function(_:FlxTimer) {
 				SuffState.playMusic('win', 1);
 				getPlayer(winnerIndex).playAnim('win', false);
-				doTimer('finishCutscene', new FlxTimer().start(Math.max(4, getPlayer(currentTurnIndex).getCurAnimLength()), function(_:FlxTimer) {
+				doTimer('finishCutscene', new FlxTimer().start(Math.max(4.5, getPlayer(currentTurnIndex).getCurAnimLength()), function(_:FlxTimer) {
 					finishEndCutscene();
 				}));
 			}));
@@ -621,6 +635,7 @@ class PlayState extends SuffState {
 	}
 
 	function finishEndCutscene() {
+		ambientSound.pause();
 		SuffState.playMusic('null');
 		SuffState.switchState(new MainMenuState(), BLOCKY);
 	}
@@ -682,7 +697,9 @@ class PlayState extends SuffState {
 	}
 
 	function cpuAction() {
-		deployGun(currentTurnIndex, function() return getPlayer(currentTurnIndex).calculatePressurePercentage() + FlxG.random.float(1.0, 1.5));
+		new FlxTimer().start(FlxG.random.float(1.0, 1.5), function(_) {
+			deployGun(currentTurnIndex, function() return getPlayer(currentTurnIndex).calculatePressurePercentage());
+		});
 	}
 
 	function focusCameraOnPlayer(playerIndex:Int) {

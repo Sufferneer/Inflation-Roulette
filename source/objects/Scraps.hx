@@ -17,7 +17,7 @@ class Scraps extends FlxTypedEmitter<Scrap> {
 
 		this.characterID = character.id;
 
-		var leImage:FlxGraphic = Paths.image('game/characters/scraps/$characterID');
+		var leImage:FlxGraphic = Paths.image('game/characters/$characterID/scraps');
 		loadParticles(leImage, FlxG.random.int(6, 10), 0, true);
 
 		start(true, 0.1, 0);

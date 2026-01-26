@@ -6,7 +6,7 @@ import states.MainMenuState;
 import states.PlayState;
 
 class PauseSubState extends SuffSubState {
-	var menuItems:Array<String> = ['RESUME', 'RESTART', 'OPTIONS', 'EXIT'];
+	var menuItems:Array<String> = ['Resume', 'Restart', 'Options', 'Exit'];
 	var menuButtonGroup:FlxTypedGroup<SuffButton>;
 	var pauseMusic:FlxSound;
 
@@ -47,7 +47,6 @@ class PauseSubState extends SuffSubState {
 
 		for (i in 0...menuItems.length) {
 			var button:SuffButton = new SuffButton(0, 0, menuItems[i], null, null, 300, 120);
-			button.btnTextSize = 64;
 			if (i % 2 == 1) {
 				button.x = FlxG.width + button.width;
 			} else {
@@ -73,7 +72,7 @@ class PauseSubState extends SuffSubState {
 	function buttonFunction(daSelected:String) {
 		if (timePassedOnSubState < 0.25) // Prevent Insta-Unpausing
 			return;
-		switch (daSelected) {
+		switch (daSelected.toUpperCase()) {
 			case 'RESUME':
 				PlayState.instance.isPaused = false;
 				PlayState.instance.resumeGame();

@@ -1,6 +1,6 @@
 {
 	"name": "Asimo",
-	"description": "This wolf isn't supposed to be here, but he just wants to have some fun. His experience in occult allows him to overload gadgets.",
+	"description": "This wolf just wants to have some fun. His experience in electrical occult allows him to overload weapons.",
 
 	"maxPressure": 3,
 	"maxConfidence": 5,
@@ -13,12 +13,6 @@
 		{
 			"id": "pressurize",
 			"cost": 3
-		}
-	],
-	"altSkins": [
-		{
-			"name": "Female",
-			"suffix": "_f"
 		}
 	]
 }

@@ -60,7 +60,9 @@ class CharacterSelectState extends SuffState {
 
 		CharacterManager.pushGlobalCharacterList();
 		var characterList = CharacterManager.globalCharacterList.copy();
-		characterList.push('random');
+		if (characterList.length >= 3) {
+			characterList.push('random');
+		}
 
 		/*
 		for (i in 0...20) { // For debug purposes only

@@ -28,7 +28,7 @@ Planned features are as follows:
 ## [Wiki](docs/MAIN_PAGE)
 We have a dedicated wiki for the documentation and guides for the inner workings for _Inflation Roulette: Reloaded_.
 ## Credits
-### Sufferneer
+### NicklySuffer
 Producer, Programming, Graphics, Music
 
 ### Snowyboi

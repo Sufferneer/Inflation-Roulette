@@ -1,4 +1,9 @@
 {
+	"spriteSheets": [
+		"cutscenes",
+		"gameplay",
+		"skills"
+	],
 	"animations": [
 		{
 			"name": "idle0",
@@ -63,6 +68,14 @@
 			"offset": [0, 0],
 			"indices": [],
 			"loop": false
+		},
+		{
+			"name": "introPartOne-loop",
+			"prefix": "introPartOne-loop",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": true
 		},
 		{
 			"name": "introPartTwo",
@@ -238,7 +251,14 @@
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
-			"loop": false
+			"loop": false,
+			"soundPaths": [
+				"belly/belches/belch_1",
+				"belly/belches/belch_2",
+				"belly/belches/belch_3", 
+				"belly/belches/belch_4",
+				"belly/belches/belch_5"
+			]
 		},
 		{
 			"name": "helplessNull",
@@ -246,35 +266,74 @@
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
-			"loop": false
+			"loop": false,
+			"soundPaths": [
+				"belly/belches/belch_1",
+				"belly/belches/belch_2",
+				"belly/belches/belch_3", 
+				"belly/belches/belch_4",
+				"belly/belches/belch_5"
+			]
 		},
 		{
-			"name": "skill0",
-			"prefix": "skill0",
+			"name": "skillReload0",
+			"prefix": "skillReload0",
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
 		{
-			"name": "skill1",
-			"prefix": "skill1",
+			"name": "skillReload1",
+			"prefix": "skillReload1",
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
 		{
-			"name": "skill2",
-			"prefix": "skill2",
+			"name": "skillReload2",
+			"prefix": "skillReload2",
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
 			"loop": false
 		},
 		{
-			"name": "skill3",
-			"prefix": "skill3",
+			"name": "skillReload3",
+			"prefix": "skillReload3",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "skillPressurize0",
+			"prefix": "skillPressurize0",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "skillPressurize1",
+			"prefix": "skillPressurize1",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "skillPressurize2",
+			"prefix": "skillPressurize2",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "skillPressurize3",
+			"prefix": "skillPressurize3",
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
@@ -337,12 +396,28 @@
 			"loop": false
 		},
 		{
+			"name": "win2-loop",
+			"prefix": "win2-loop",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": true
+		},
+		{
 			"name": "win3",
 			"prefix": "win3",
 			"fps": 24,
 			"offset": [0, 0],
 			"indices": [],
 			"loop": false
+		},
+		{
+			"name": "win3-loop",
+			"prefix": "win3-loop",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": true
 		}
 	],
 
@@ -351,6 +426,7 @@
 	"creakThreshold": 3,
 	"poppingVelocityMultiplier": [1.0, 1.0],
 	"poppingGravityMultiplier": 1.0,
+	"antialiasing": false,
 
 	"positionOffset": [-320, -570],
 	"cameraOffset": [0, -320],
