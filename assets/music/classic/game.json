@@ -1,5 +1,6 @@
 {
 	"name": "Main Theme",
 	"author": "Snowyboi",
-	"bpm": 130
+	"bpm": 130,
+	"toast": true
 }

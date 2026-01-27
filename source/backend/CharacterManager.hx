@@ -23,7 +23,7 @@ class CharacterManager {
 		var dataFolder:String = Paths.getPath('data/characters');
 		for (file in fileList) {
 			var path = haxe.io.Path.join([dataFolder, file]);
-			if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
+			#if sys if (!FileSystem.isDirectory(path) && file.endsWith('.json')) #end {
 				globalCharacterList.push(file.replace('.json', ''));
 			}
 		}

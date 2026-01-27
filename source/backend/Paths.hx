@@ -316,12 +316,12 @@ class Paths {
 	 * @param key The directory of the text file.
 	 */
 	static public function getTextFromFile(key:String):String {
+		var path = getPath(key);
 		#if sys
 		#if _ALLOW_ADDONS
 		if (FileSystem.exists(addonFolders(key)))
 			return File.getContent(addonFolders(key));
 		#end
-		var path = getPath(key);
 		if (FileSystem.exists(path))
 			return File.getContent(path);
 		#end

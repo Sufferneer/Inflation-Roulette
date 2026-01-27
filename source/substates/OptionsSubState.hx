@@ -83,7 +83,7 @@ class OptionsSubState extends SuffSubState {
 		}, Preferences.data.framerate);
 
 		#if (!html5 && !switch)
-		createBooleanOption('Unfocus Pausing', 'The game automatically pauses when out of focus.', function(value:Bool) {
+		createBooleanOption('Unfocus Pausing', 'Automatically pauses the game when out of focus.', function(value:Bool) {
 			Preferences.data.pauseOnUnfocus = value;
 		}, Preferences.data.pauseOnUnfocus);
 		#end
@@ -114,8 +114,8 @@ class OptionsSubState extends SuffSubState {
 				Preferences.data.photosensitivity = value;
 		}, Preferences.data.photosensitivity);
 
-		createBooleanOption('Antialising Suppression',
-			'Force all sprites to be pixelated even when they are supposed to. Improves performance, but makes certain assets blurry.', function(value:Bool) {
+		createBooleanOption('Force Alising',
+			'Removes antialiasing from all sprites even when enabled. Improves performance, but may make some graphics look jagged.', function(value:Bool) {
 				Preferences.data.forceAliasing = value;
 		}, Preferences.data.forceAliasing);
 
@@ -129,14 +129,14 @@ class OptionsSubState extends SuffSubState {
 			return Math.round(value * 100) + '%';
 		}, Preferences.data.cameraEffectIntensity);
 
-		createBooleanOption('Letterboxing', 'Black bars will appear during player animations and cutscenes.', function(value:Bool) {
+		createBooleanOption('Letterboxing', 'Show black bars on top and bottom sides of the screen during player animations and cutscenes.', function(value:Bool) {
 			Preferences.data.enableLetterbox = value;
 		}, Preferences.data.enableLetterbox);
 
 		// AUDIO SETTINGS
 		createSubheading('Audio & Music');
 
-		createBooleanOption('Classic Music', "Game plays music used in the original game instead of remixes.", function(value:Bool) {
+		createBooleanOption('Classic Music', "The game uses music in the original game instead of new music.", function(value:Bool) {
 			Preferences.data.useClassicMusic = value;
 			if (notInGame) {
 				SuffState.playMusic('options');
@@ -145,7 +145,7 @@ class OptionsSubState extends SuffSubState {
 		}, Preferences.data.useClassicMusic);
 
 		createBooleanOption('Music Toast',
-			'A notification containing the current background music and its author will be displayed whenever a music track is played.', function(value:Bool) {
+			'A notification containing the current background music name and its author will be shown whenever a music track is played.', function(value:Bool) {
 				Preferences.data.showMusicToast = value;
 		}, Preferences.data.showMusicToast);
 
@@ -281,6 +281,7 @@ class OptionsSubState extends SuffSubState {
 		if (touchedMusicOption) {
 			PauseSubState.resetMusic = true;
 		}
+		Tooltip.text = '';
 		close();
 		if (notInGame) {
 			SuffState.playMusic('mainMenu');

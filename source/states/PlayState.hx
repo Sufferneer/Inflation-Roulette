@@ -1,5 +1,6 @@
 package states;
 
+import ui.objects.GameIcon;
 import backend.CharacterManager;
 import backend.GameplayManager;
 import backend.enums.SuffTransitionStyle;
@@ -39,6 +40,7 @@ class PlayState extends SuffState {
 	var uiBGBottom:FlxSprite;
 	var uiBGGroup:FlxSpriteGroup = new FlxSpriteGroup();
 	var skillsText:FlxText;
+	var skillsIcon:GameIcon;
 	var skillCardsGroup:FlxTypedSpriteGroup<SkillCard> = new FlxTypedSpriteGroup<SkillCard>();
 
 	static final skillCardsGroupPaddingX:Int = 10;
@@ -48,11 +50,14 @@ class PlayState extends SuffState {
 
 	var pressureBar:SuffBar;
 	final pressureBarColors:Array<FlxColor> = [0xFF404060, 0xFFFFFFFF];
+	var pressureIcon:GameIcon;
 	var pressureText:FlxText;
+	var confidenceIcon:GameIcon;
 	var confidenceBar:SuffBar;
 	final confidenceBarColors:Array<FlxColor> = [0xFF4A4399, 0xFF7970FF];
 	var confidenceText:FlxText;
 	var pauseButton:SuffIconButton;
+	var cameraFocusButton:SuffIconButton;
 	public static final playerWidthOffset:Float = 140;
 
 	// Sounds
@@ -78,6 +83,7 @@ class PlayState extends SuffState {
 	var camFollow:FlxObject;
 	var camFollowOffset:Array<Float> = [0, 0];
 	var camFollowZoom:Float = 0.8;
+	var isManuallyFocusingStage:Bool = false;
 
 	public static var camGame:FlxCamera;
 	public static var camHUD:FlxCamera;
@@ -214,13 +220,24 @@ class PlayState extends SuffState {
 		uiBGBottom.alpha = 0.25;
 		uiBGGroup.add(uiBGBottom);
 
-		skillsText = new FlxText(0, 0, uiBGTop.width, 'SKILLS');
-		skillsText.setFormat(Paths.font('default'), 32, FlxColor.WHITE, RIGHT);
+		skillsText = new FlxText(0, 0, 0, 'SKILLS');
+		skillsText.setFormat(Paths.font('default'), 32, FlxColor.WHITE);
+		skillsText.x = uiBGTop.width - skillsText.width;
 		uiBGGroup.add(skillsText);
+		
+		skillsIcon = new GameIcon(0, 0, 'stats/skill', 32);
+		skillsIcon.x = skillsText.x - skillsIcon.width - 4;
+		skillsIcon.y = skillsText.y + (skillsText.height - skillsIcon.height) / 2;
+		uiBGGroup.add(skillsIcon);
 
-		pressureText = new FlxText(0, 0, 0, 'Pressure');
+		pressureIcon = new GameIcon(0, 0, 'stats/pressure', 32);
+		uiBGGroup.add(pressureIcon);
+
+		pressureText = new FlxText(pressureIcon.width + 4, 0, 0, '');
 		pressureText.setFormat(Paths.font('default'), 16, pressureBarColors[0]);
 		uiBGGroup.add(pressureText);
+
+		pressureIcon.color = pressureText.color;
 
 		pressureBar = new SuffBar(0, 0, function() return 0, 0, 1, 500, 20, 4, 1, pressureBarColors[0], pressureBarColors[1]);
 		uiBGGroup.add(pressureBar);
@@ -228,9 +245,14 @@ class PlayState extends SuffState {
 		confidenceBar = new SuffBar(0, 0, function() return 0, 0, 1, 500, 20, 4, 1, confidenceBarColors[0], confidenceBarColors[1]);
 		uiBGGroup.add(confidenceBar);
 
-		confidenceText = new FlxText(0, 6, 0, 'Confidence');
+		confidenceIcon = new GameIcon(0, 0, 'stats/confidence', 32);
+		uiBGGroup.add(confidenceIcon);
+
+		confidenceText = new FlxText(confidenceIcon.width + 4, 0, 0, '');
 		confidenceText.setFormat(Paths.font('default'), 16, confidenceBarColors[0]);
 		uiBGGroup.add(confidenceText);
+
+		confidenceIcon.color = confidenceText.color;
 
 		skillCardsGroup.y = skillCardsGroupPaddingY;
 		skillCardsGroup.camera = camHUD;
@@ -254,6 +276,22 @@ class PlayState extends SuffState {
 		};
 		add(pauseButton);
 
+		cameraFocusButton = new SuffIconButton(20, 20, 'buttons/camera', null, 2);
+		cameraFocusButton.x = FlxG.width - cameraFocusButton.width - 20;
+		cameraFocusButton.y = FlxG.height - cameraFocusButton.height - 20;
+		cameraFocusButton.camera = camHUD;
+		cameraFocusButton.onClick = function() {
+			isManuallyFocusingStage = !isManuallyFocusingStage;
+			if (isManuallyFocusingStage) {
+				focusCameraOnStage();
+				togglePlayerUI(false);
+			} else {
+				focusCameraOnPlayer(currentTurnIndex);
+				togglePlayerUI(true);
+			}
+		};
+		add(cameraFocusButton);
+
 		focusCameraOnPlayer(currentTurnIndex);
 		if (!hasSeenCutscene) {
 			playStartCutscene();
@@ -271,11 +309,18 @@ class PlayState extends SuffState {
 		if (delay == null)
 			usedDelay = function() return 0;
 		togglePlayerUI(false);
+		toggleCameraFocusButton(false);
 		toggleLetterbox(true);
 		getPlayer(playerIndex).playAnim('preShoot', false);
 		doTimer('playerShoot', new FlxTimer().start(getPlayer(playerIndex).getAnimLength('preShoot') + usedDelay(), function(_:FlxTimer) {
 			shoot(playerIndex);
 		}));
+	}
+
+	function toggleCameraFocusButton(show:Bool = false) {
+		cameraFocusButton.disabled = !show;
+		FlxTween.cancelTweensOf(cameraFocusButton, ['alpha']);
+		FlxTween.tween(cameraFocusButton, {alpha: show ? 1 : 0}, 0.25);
 	}
 
 	function reloadPlayerUI(playerIndex:Int) {
@@ -298,8 +343,9 @@ class PlayState extends SuffState {
 		uiBGTop.setGraphicSize(Std.int(skillCardsGroupPaddingX + skillCardsGroup.width + skillCardsGroupPaddingX),
 			Std.int(skillCardsGroupPaddingY + skillCardsGroup.height + skillCardsGroupPaddingX));
 		uiBGTop.updateHitbox();
-		uiBGBottom.y = pressureText.y = uiBGTop.height;
-		pressureBar.y = pressureText.y + pressureText.height;
+		uiBGBottom.y = pressureIcon.y = uiBGTop.height;
+		pressureText.y = pressureIcon.y + (pressureIcon.height - pressureText.height) / 2;
+		pressureBar.y = pressureIcon.y + pressureIcon.height;
 		uiBGBottom.setGraphicSize(Std.int(uiBGTop.width), Std.int(FlxG.height - uiBGTop.height));
 		uiBGBottom.updateHitbox();
 
@@ -310,7 +356,8 @@ class PlayState extends SuffState {
 		pressureBar.setBounds(0, getPlayer(playerIndex).maxPressure);
 
 		confidenceBar.y = pressureBar.y + pressureBar.height;
-		confidenceText.y = confidenceBar.y + confidenceBar.height;
+		confidenceIcon.y = confidenceBar.y + confidenceBar.height;
+		confidenceText.y = confidenceIcon.y + (confidenceIcon.height - confidenceText.height) / 2;
 
 		updateUIText(playerIndex);
 
@@ -322,8 +369,8 @@ class PlayState extends SuffState {
 	}
 
 	function updateUIText(playerIndex:Int) {
-		pressureText.text = 'Pressure: ' + getPlayer(playerIndex).currentPressure + ' / ' + getPlayer(playerIndex).maxPressure;
-		confidenceText.text = 'Confidence: ' + getPlayer(playerIndex).currentConfidence + ' / ' + getPlayer(playerIndex).maxConfidence;
+		pressureText.text = getPlayer(playerIndex).currentPressure + ' / ' + getPlayer(playerIndex).maxPressure;
+		confidenceText.text = getPlayer(playerIndex).currentConfidence + ' / ' + getPlayer(playerIndex).maxConfidence;
 	}
 
 	function updateSkillAvailability(playerIndex:Int) {
@@ -361,9 +408,15 @@ class PlayState extends SuffState {
 		SuffState.playSound(Paths.soundRandom('weapon', 1, 3));
 	}
 
+	function togglePauseFunctionality(enable:Bool = true) {
+		canPause = enable;
+		pauseButton.disabled = !enable;
+	}
+
 	function playStartCutscene() {
-		canPause = false;
+		togglePauseFunctionality(false);
 		togglePlayerUI(false);
+		cameraFocusButton.visible = false;
 		toggleLetterbox(true);
 		doTween('camHUD', FlxTween.tween(camHUD, {alpha: 0}, 0.5));
 		focusCameraOnStage();
@@ -409,8 +462,9 @@ class PlayState extends SuffState {
 	}
 
 	function finishStartCutscene() {
-		canPause = true;
+		togglePauseFunctionality(true);
 		toggleLetterbox(false);
+		cameraFocusButton.visible = true;
 		SuffState.playMusic('game', 1, true);
 
 		doTween('camHUD', FlxTween.tween(camHUD, {alpha: 1}, 0.5));
@@ -481,6 +535,7 @@ class PlayState extends SuffState {
 
 		toggleLetterbox(true);
 		togglePlayerUI(false);
+		toggleCameraFocusButton(false);
 		// trace(getPlayer(playerIndex).animSoundPaths[soundName]);
 		if (getPlayer(playerIndex).animSoundPaths[soundName] == null || getPlayer(playerIndex).animSoundPaths[soundName].length <= 0) {
 			if (Paths.fileExists(Paths.appendSoundExt('sounds/characters/GLOBAL/' + soundName), SOUND)) {
@@ -492,6 +547,7 @@ class PlayState extends SuffState {
 			togglePlayerUI((currentTurnIndex == playerIndex && CharacterManager.playerControlled[currentTurnIndex]));
 			if (currentTurnIndex == playerIndex) {
 				updateSkillAvailability(playerIndex);
+				toggleCameraFocusButton(true);
 			}
 			toggleLetterbox(false);
 		}));
@@ -617,6 +673,7 @@ class PlayState extends SuffState {
 
 	function playEndCutscene() {
 		focusCameraOnStage();
+		cameraFocusButton.visible = false;
 		doTimer('confettiTimer', new FlxTimer().start(0.5, function(_:FlxTimer) {
 			getPlayer(winnerIndex).playAnim('preWin', false);
 			SuffState.playSound(Paths.sound('confetti'));
@@ -677,6 +734,8 @@ class PlayState extends SuffState {
 						toggleLetterbox(!CharacterManager.playerControlled[currentTurnIndex]);
 						if (getPlayer(currentTurnIndex).cpuControlled) {
 							cpuAction();
+						} else {
+							toggleCameraFocusButton(true);
 						}
 					} else {
 						doTimer('helplessPreAnim', new FlxTimer().start(0.5, function(_:FlxTimer) {
@@ -749,7 +808,12 @@ class PlayState extends SuffState {
 					pauseButton.y = letterboxTop.y + letterboxTop.height + 20;
 				}
 			}));
-			doTween('letterboxBottomTween', FlxTween.tween(letterboxBottom, {y: FlxG.height - letterboxBottom.height}, 1, {ease: FlxEase.cubeOut}));
+			doTween('letterboxBottomTween', FlxTween.tween(letterboxBottom, {y: FlxG.height - letterboxBottom.height}, 1, {
+				ease: FlxEase.cubeOut,
+				onUpdate: function(_) {
+					cameraFocusButton.y = letterboxBottom.y - cameraFocusButton.height - 20;
+				}
+			}));
 		} else {
 			doTween('letterboxTopTween', FlxTween.tween(letterboxTop, {y: -letterboxTop.height}, 1, {
 				ease: FlxEase.cubeOut,
@@ -757,7 +821,12 @@ class PlayState extends SuffState {
 					pauseButton.y = letterboxTop.y + letterboxTop.height + 20;
 				}
 			}));
-			doTween('letterboxBottomTween', FlxTween.tween(letterboxBottom, {y: FlxG.height}, 1, {ease: FlxEase.cubeOut}));
+			doTween('letterboxBottomTween', FlxTween.tween(letterboxBottom, {y: FlxG.height}, 1, {
+				ease: FlxEase.cubeOut,
+				onUpdate: function(_) {
+					cameraFocusButton.y = letterboxBottom.y - cameraFocusButton.height - 20;
+				}
+			}));
 		}
 	}
 
@@ -790,7 +859,7 @@ class PlayState extends SuffState {
 		}
 		if (aliveCharCount <= 1) {
 			winnerIndex = aliveCharIndex;
-			canPause = false;
+			togglePauseFunctionality(false);
 		}
 		return (aliveCharCount <= 1);
 	}
@@ -827,7 +896,6 @@ class PlayState extends SuffState {
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
-		pauseButton.disabled = !canPause;
 
 		pressureBar.updateBar();
 		confidenceBar.updateBar();

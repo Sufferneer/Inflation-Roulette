@@ -1,5 +1,6 @@
 {
 	"name": "Standoff",
 	"author": "Snowyboi",
-	"bpm": 100
+	"bpm": 100,
+	"toast": true
 }

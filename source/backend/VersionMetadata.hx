@@ -6,7 +6,7 @@ class VersionMetadata {
 		'1' => 'Initial Release',
 		'2' => 'Modder\'s Catalogue',
 		'3' => 'Better Together',
-		'4' => 'The Chamber Spins',
+		'4' => 'The Chamber Flips',
 		'5' => 'Hit the Stage'
 	];
 
@@ -15,7 +15,7 @@ class VersionMetadata {
 		var major = majorVersionMap.get(arr[0]);
 		var minorText = '';
 		if (Std.parseInt(arr[1]) > 0)
-			minorText = ' (Minor ${arr[1]})';
+			minorText = ' (Release ${arr[1]})';
 		return major + minorText;
 	}
 

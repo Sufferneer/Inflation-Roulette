@@ -31,6 +31,7 @@ class Tooltip extends FlxSpriteGroup {
 		tooltipText.setFormat(Paths.font('default'), 32, FlxColor.WHITE, LEFT);
 
 		bg = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
+		bg.alpha = 0.7;
 		bgOutline = new FlxSprite().loadGraphic(Utils.makeBorder(1, 1, 4, 0xFFFFFFFF));
 
 		add(bg);
@@ -60,8 +61,11 @@ class Tooltip extends FlxSpriteGroup {
 
 		instance.bgOutline.loadGraphic(Utils.makeBorder(leWidth, leHeight, 4, 0xFFFFFFFF));
 
-		instance.x = FlxMath.bound(FlxG.mouse.x + positionOffset.x, 0, FlxG.width - instance.bg.width);
-		instance.y = FlxMath.bound(FlxG.mouse.y + positionOffset.y, 0, FlxG.height - instance.bg.height);
+		instance.camera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
+
+		var leMousePos = FlxG.mouse.getScreenPosition(this.camera);
+		instance.x = FlxMath.bound(leMousePos.x + positionOffset.x, 0, FlxG.width - instance.bg.width);
+		instance.y = FlxMath.bound(leMousePos.y + positionOffset.y, 0, FlxG.height - instance.bg.height);
 		instance.visible = FlxG.mouse.visible && (text.length > 0);
 	}
 }

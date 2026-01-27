@@ -12,5 +12,6 @@ class LunarDateConstants {
 	public static final MONTHS:Array<String> = ["正月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "冬月", "臘月"];
 	public static final NUMBERS:Array<String> = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
 	public static final ZODIAC:Array<String> = ["鼠", "牛", "虎", "兔", "龍", "蛇", "馬", "羊", "猴", "雞", "狗", "豬"];
+	public static final STEMS:Array<String> = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
 	public static final BRANCHES:Array<String> = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
 }

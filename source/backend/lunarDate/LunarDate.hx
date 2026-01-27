@@ -31,9 +31,12 @@ class LunarDate {
 		var leYear = LunarDateConstants.NUMBERS[Std.int(year / 1000) % 10] + LunarDateConstants.NUMBERS[Std.int(year / 100) % 10]
 			+ LunarDateConstants.NUMBERS[Std.int(year / 10) % 10] + LunarDateConstants.NUMBERS[Std.int(year % 10)];
 
-		var leZodiac = LunarDateConstants.ZODIAC[(this.year - 4) % 12];
-
 		var leMonth = LunarDateConstants.MONTHS[this.month - 1];
+
+		var offsetYear = this.year - 4;
+		var leZodiac = LunarDateConstants.ZODIAC[offsetYear % 12];
+		var leStem = LunarDateConstants.STEMS[offsetYear % 10];
+		var leBranch = LunarDateConstants.BRANCHES[offsetYear % 12];
 
 		var day = this.date;
 		var leDate = '';
@@ -47,8 +50,9 @@ class LunarDate {
 			leDate = LunarDateConstants.TWENTY_PREFIX + LunarDateConstants.NUMBERS[day - 20];
 		}
 		var leMonthPrefix = this.leap ? LunarDateConstants.LEAP_MONTH_PREFIX : "";
+		var leYearSuffix = LunarDateConstants.YEAR;
 
-		return '${leYear}${LunarDateConstants.YEAR} ${leMonthPrefix}${leMonth} ${leDate} ${leZodiac}';
+		return '$leYear$leYearSuffix（$leStem$leBranch$leYearSuffix）・$leMonthPrefix$leMonth$leDate・$leZodiac$leYearSuffix';
 	}
 
 	public static inline function now():LunarDate {

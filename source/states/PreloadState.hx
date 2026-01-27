@@ -15,6 +15,9 @@ import flixel.FlxG;
 @:bitmap("assets/images/gui/menus/loading/criDeSadGold.png") class LogoImage extends BitmapData {
 }
 
+@:bitmap("assets/images/gui/menus/loading/loadingText.png") class LoadingTextImage extends BitmapData {
+}
+
 @:font("assets/fonts/default.ttf") class CustomFont extends Font {
 }
 
@@ -28,8 +31,7 @@ class PreloadState extends FlxBasePreloader {
 	}
 
 	var logo:Sprite;
-	var textTitle:TextField;
-	var text:TextField;
+	var text:Sprite;
 
 	override function create():Void {
 		super.create();
@@ -41,22 +43,19 @@ class PreloadState extends FlxBasePreloader {
 		logo.addChild(new Bitmap(new LogoImage(0, 0))); // Sets the graphic of the sprite to a Bitmap object, which uses our embedded BitmapData class.
 		addChild(logo);
 
-		text = new TextField();
-		text.defaultTextFormat = new TextFormat("Suffirat Regular", 48, 0xffffff, false, false, false, "", "", TextFormatAlign.CENTER);
-		text.embedFonts = true;
-		text.selectable = false;
-		text.multiline = true;
-		text.x = 0;
-		text.y = 5 * _height / 4;
-		text.width = _width;
-		text.text = 'Running The Hell Machine';
+		text = new Sprite();
+		text.addChild(new Bitmap(new LoadingTextImage(0, 0)));
 		addChild(text);
 	}
 
 	override function update(Percent:Float):Void {
 		logo.scaleX = 1 + Percent;
-		logo.x = (this._width - logo.width) * 0.5;
-		logo.y = (this._height - logo.height) * 0.5;
+		logo.x = (this._width - logo.width) / 2;
+		logo.y = (this._height - logo.height) * 0.3;
+
+		text.scaleX = 1 + Percent * 6;
+		text.x = (this._width - text.width) / 2;
+		text.y = (this._height - text.height) * 0.75;
 
 		super.update(Percent);
 	}
