@@ -30,9 +30,8 @@ class CreditsState extends SuffState {
 		['PixelCarnage (OpenNSFW Sound Pack)', 'opennsfw', 'default'],
 		['SPECIAL THANKS', '', 'HEADING'],
 		['SqirraRNG - Crash Handler', '', 'default'],
-		['Psych Engine Team - Backend Reference Code', '', 'default'],
 		[
-			'Funkin\' Crew & FNF Modding Community - Inspiration For Game-Dev',
+			'changedinflation.de - Inspiration For Game-Dev',
 			'',
 			'default'
 		],
