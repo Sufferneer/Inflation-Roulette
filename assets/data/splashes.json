@@ -1,0 +1,278 @@
+{
+	"shared": [
+		"Made by NicklySuffer!",
+		"Courtesy of NicklySuffer!",
+		"Endorsed by Snowyboi!",
+		"Sketches drawn by the community!",
+		"Eighteen-plus!",
+		"Do not play this in public!",
+		"Lock your doors before playing!",
+		"Repent your sins after playing!",
+		"No modding tools! (yet)",
+		"Read our documentation!",
+		"Winlator incompatible!",
+		"HTML compatible!",
+		"Web support!",
+		"Linux port by changedinflation.de!",
+		"Macintosh port coming soon, I think",
+		"Also try Inflation Roulette Expanded!",
+		"Also try The Dealer's Choice!",
+		"Don't try the original."
+	],
+	"unique": [
+		{
+			"useLunarCalender": false,
+			"start": "12-01",
+			"end": "12-26",
+			"id": "christmas",
+			"name": "Christmas",
+			"colors": ["#00C000", "#FF2030"],
+			"splashes": [
+				"Happy Holidays!",
+				"Merry Christmas!",
+				"Happy Hanukkah!",
+				"Don't drink too much!",
+				"ho ho holy shit",
+				"The defrosting is real",
+				"Don't forget about Jesus!",
+				"he sees you when you're sleeping",
+				"he knows when you're awake",
+				"Indulge yourself!",
+				"Slient night, holy night",
+				"You're getting coal this year"
+			]
+		},
+		{
+			"useLunarCalender": false,
+			"start": "10-01",
+			"end": "10-31",
+			"id": "halloween",
+			"name": "Halloween",
+			"colors": ["#FF8000", "#400080"],
+			"splashes": [
+				"Happy Halloween!",
+				"Trick or treat!",
+				"Ghosts everywhere",
+				"OOGA BOOGA",
+				"It is Spooky Month!",
+				"Spooktober time",
+				"Spooky scary skeletons",
+				"Shit your pants!",
+				":gold_sad:"
+			]
+		},
+		{
+			"useLunarCalender": false,
+			"start": "12-29",
+			"end": "12-31",
+			"id": "newyearseve",
+			"name": "New Year's Eve",
+			"colors": ["#FF00FF", "#0000FF"],
+			"splashes": [
+				"Happy New Year's Eve!",
+				"Get ready for the new year!",
+				"Party tonight!",
+				"Time is running out.",
+				"The sun is leaking.",
+				"Make your resolutions!"
+			]
+		},
+		{
+			"useLunarCalender": false,
+			"start": "01-01",
+			"end": "01-01",
+			"id": "newyear",
+			"name": "New Year",
+			"colors": ["#FF0000", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF"],
+			"splashes": [
+				"Happy New Year!",
+				"Ignore your resolutions!",
+				"Overdose on alcohol!",
+				"Don't drink and drive!",
+				"Hit the gym later!"
+			]
+		},
+		{
+			"useLunarCalender": true,
+			"start": "12-20",
+			"end": "01-10",
+			"id": "lunarNewYear",
+			"name": "Lunar New Year",
+			"colors": ["#FF0000", "#FFFF00"],
+			"splashes": [
+				"Happy Lunar New Year!",
+				"Wishing you prosperity!",
+				"Gong xi fa cai!",
+				"give me red packets now",
+				"Visit your relatives!",
+				"Get judged by elders!",
+				"learn chinese i dare you",
+				"The creator works for the CCP!"
+			]
+		},
+		{
+			"useLunarCalender": false,
+			"start": "06-08",
+			"end": "06-08",
+			"id": "1984",
+			"name": "Nineteen Eighty-Four Anniversary",
+			"colors": ["#C00000", "#404040"],
+			"splashes": [
+				"Happy 1984!",
+				"Big brother is watching you!",
+				"War is peace!",
+				"Freedom is slavery!",
+				"Ignorance is strength!",
+				"Thoughtcrime is death!",
+				"Who controls the past controls the future!",
+				"Who controls the present controls the past!",
+				"2 + 2 = 5!",
+				"SWINE SWINE SWINE",
+				"[Removed by Minitrue]",
+				"Doubleplusgood day, Doubleplusungood game",
+				"DOWN WITH BIG BROTHER",
+				"Orwell was right.",
+				"GO TO ROOM 101",
+				"Down with Goldstein!",
+				"Oldthinkers unbellyful Ingsoc!"
+			]
+		},
+		{
+			"useLunarCalender": false,
+			"start": "06-01",
+			"end": "06-30",
+			"id": "pride",
+			"name": "Pride Month",
+			"colors": ["#FF0000", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF"],
+			"splashes": [
+				"Happy Pride Month!",
+				"Love is love!",
+				"Be yourself!",
+				"Supports LGBTQ+!",
+				"You are valid!",
+				"Lesbian rights!",
+				"Gay rights!",
+				"Bisexual rights!",
+				"Trans rights!"
+			]
+		},
+		{
+			"useLunarCalender": false,
+			"start": "02-14",
+			"end": "02-14",
+			"name": "Valentine's Day",
+			"id": "valentines",
+			"colors": ["#FF00FF", "#FFFFFF"],
+			"splashes": [
+				"Happy Valentine's Day!",
+				"Love is in the air!",
+				"Roses are red!",
+				"Violets are blue!",
+				"xoxo",
+				"<3",
+				"Love yourself!"
+			]
+		},
+		{
+			"useLunarCalender": false,
+			"start": "07-01",
+			"end": "07-01",
+			"id": "hk",
+			"name": "HK Establishment Day",
+			"colors": ["#FF0000", "#FFFFFF"],
+			"splashes": [
+				"Happy Hong Kong Establishment Day!",
+				"Celebrate HK!",
+				"Diu lei lo mo!"
+			]
+		},
+		{
+			"useLunarCalender": false,
+			"start": "07-04",
+			"end": "07-04",
+			"id": "independence",
+			"name": "USA Independence Day",
+			"colors": ["#FF0020", "#FFFFFF", "#0020FF"],
+			"splashes": [
+				"Happy Independence Day!",
+				"Celebrate freedom!",
+				"Fireworks!",
+				"Glory to the Land of McDonald's!",
+				"Second amendment!"
+			]
+		},
+		{
+			"useLunarCalender": true,
+			"start": "08-10",
+			"end": "08-16",
+			"id": "midautumnfestival",
+			"name": "Mid-Autumn Festival",
+			"colors": ["#0000A0", "#FFFF00"],
+			"splashes": [
+				"Happy Mid-Autumn Festival!",
+				"Happy Mooncake Festival!",
+				"Happy Moon Festival!",
+				"Eat lantern; play mooncake",
+				"Unite with your family!",
+				"Go outside and hang out!",
+				"Drink elixir of immortality and fly away!",
+				"The moon is pregnant they say"
+			]
+		},
+		{
+			"useLunarCalender": false,
+			"start": "03-01",
+			"end": "03-31",
+			"id": "preHKDSE",
+			"name": "Pre-HKDSE Study Leave",
+			"colors": ["#004762"],
+			"splashes": [
+				"Study hard!",
+				"Cram shit into your brain!",
+				"Memorize useless Chinese passages!",
+				"Do group discussions at night!",
+				"Study hard, forget everything later",
+				"Add oil HKDSErs!",
+				"Cry on Result Day!"
+			]
+		},
+		{
+			"useLunarCalender": false,
+			"start": "04-01",
+			"end": "05-01",
+			"id": "hkdse",
+			"name": "HKDSE Period",
+			"colors": ["#F5A65F", "#00916E"],
+			"splashes": [
+				"Study harder!",
+				"Go to school by bus!",
+				"Listen to Greensleeves!",
+				"Good luck HKDSErs!",
+				"Try your best to read markers' minds!",
+				"Education reform? Never!"
+			]
+		}
+	],
+	"fallback": [
+		"Absolutely zaza-free!",
+		"Cancer-inducing!",
+		"Radioactive!",
+		"Consumes more memory than Chrome!",
+		"Rigged horrendously!",
+		"Runs effectively without GPU!",
+		"Features object-oriented programming!",
+		"Spaghetti code guaranteed!",
+		"Capitalism always triumph over good!",
+		"Console port coming never!",
+		"Supports the North Korean government!",
+		"All proceeds go to CCP!",
+		"Gamble your soul away!",
+		"May cause nausea!",
+		"May cause feelings of rage!",
+		"May cause bouts of cringe!",
+		"Lock your doors!",
+		"Not fun for the whole family!",
+		"Buy one get one free!",
+		"Happiness not guaranteed!"
+	]
+}

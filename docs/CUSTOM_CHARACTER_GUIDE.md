@@ -25,7 +25,7 @@ Manually editing each frame will be a tedious process, but Adobe Animate/Macrome
 
 *Press 'Generate Sprite Sheet' to export.*
 
-When prompted, set the **'Data format'** to either `Starling` or `Sparrow v2`, and the destination to be `<GAME FOLDER>/assets/images/game/characters/<YOUR-CHARACTER-ID-HERE>.png`.
+When prompted, set the **'Data format'** to either `Starling` or `Sparrow v2`, and the destination folder to be `images/game/characters/<YOUR-CHARACTER-ID-HERE>` in your addon folder.
 
 ![Setting 'Data format' to Sparrow v2.](images/sprite_sheet_data_format.png)
 
@@ -40,7 +40,7 @@ Once it is all set and done, click **Export**.
 For documentation regarding animation names and JSON attributes, please read [Character Animation Documentation](CHARACTER_ANIMATION_DOCUMENTATION.md).
 
 ## Creating Scrap Particles
-When the character explodes, particles that resemble shed skin tissue will be spawned and launched away at/from the player's position, fluttering in the air until fading away on the ground.
+When the character explodes, particles that resemble shed skin tissue will be spawned and launched away from the player's position, fluttering in the air until fading away on the ground.
 
 Each particle is stored in the `scraps` folder in the `characters` folder, as a horizontal grid of square sub-images.
 

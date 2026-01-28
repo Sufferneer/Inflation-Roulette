@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="readySign.png">
+	<!-- Created with Adobe Animate version 23.0.0.407 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="idle0000" x="0" y="0" width="350" height="235"/>
+	<SubTexture name="idle0001" x="350" y="0" width="350" height="235"/>
+	<SubTexture name="idle0002" x="350" y="0" width="350" height="235"/>
+	<SubTexture name="idle0003" x="700" y="0" width="350" height="235"/>
+	<SubTexture name="idle0004" x="700" y="0" width="350" height="235"/>
+	<SubTexture name="idle0005" x="1050" y="0" width="350" height="235"/>
+	<SubTexture name="idle0006" x="1050" y="0" width="350" height="235"/>
+	<SubTexture name="idle0007" x="1400" y="0" width="350" height="235"/>
+	<SubTexture name="idle0008" x="1400" y="0" width="350" height="235"/>
+	<SubTexture name="idle0009" x="1750" y="0" width="350" height="235"/>
+	<SubTexture name="idle0010" x="1750" y="0" width="350" height="235"/>
+	<SubTexture name="idle0011" x="2100" y="0" width="350" height="235"/>
+</TextureAtlas>

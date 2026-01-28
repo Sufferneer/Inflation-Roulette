@@ -22,8 +22,8 @@ class Character extends FlxSprite {
 	public var belchThreshold:Int = 3;
 	public var gurgleThreshold:Int = 2;
 	public var creakThreshold:Int = 4;
-	public var positionOffset:Array<Int> = [0, 0];
-	public var poppedCameraOffsetChange:Array<Int> = [0, 0];
+	public var originPosition:Array<Int> = [0, 0];
+	public var poppedCameraOffset:Array<Int> = [0, 0];
 	public var cameraOffset:Array<Int> = [0, 0];
 	public var pointerOffset:Array<Int> = [0, 0];
 	public var poppingGravityMultiplier:Float = 1.0;
@@ -70,10 +70,10 @@ class Character extends FlxSprite {
 		belchThreshold = spriteJson.belchThreshold;
 		gurgleThreshold = spriteJson.gurgleThreshold;
 		creakThreshold = spriteJson.creakThreshold;
-		if (spriteJson.positionOffset != null)
-			positionOffset = spriteJson.positionOffset;
-		if (spriteJson.poppedCameraOffsetChange != null)
-			poppedCameraOffsetChange = spriteJson.poppedCameraOffsetChange;
+		if (spriteJson.originPosition != null)
+			originPosition = spriteJson.originPosition;
+		if (spriteJson.poppedCameraOffset != null)
+			poppedCameraOffset = spriteJson.poppedCameraOffset;
 		if (spriteJson.cameraOffset != null)
 			cameraOffset = spriteJson.cameraOffset;
 		if (spriteJson.pointerOffset != null)
@@ -98,7 +98,7 @@ class Character extends FlxSprite {
 		if (animationsArray != null && animationsArray.length > 0) {
 			for (anim in animationsArray) {
 				var animName:String = '' + anim.name;
-				var animPrefix:String = '' + anim.prefix + '0'; //Prevent wocky shit from happening
+				var animPrefix:String = '' + anim.prefix + '0'; // Prevent wocky shit from happening
 				var animFps:Int = anim.fps;
 				var animLoop:Bool = !!anim.loop;
 				var animIndices:Array<Int> = anim.indices;
@@ -156,7 +156,7 @@ class Character extends FlxSprite {
 		super.update(elapsed);
 		if (currentPressure <= maxPressure || !disableBellySounds) {
 			if (Preferences.data.allowBellyGurgles) {
-				if (currentPressure >= gurgleThreshold) {
+				if (gurgleThreshold <= -1 && currentPressure >= gurgleThreshold) {
 					gurgleTimer -= elapsed;
 					if (gurgleTimer < 0) {
 						var intensity = Math.min(1, (currentPressure - gurgleThreshold + 1) / (maxPressure - gurgleThreshold + 1));
@@ -167,7 +167,7 @@ class Character extends FlxSprite {
 				}
 			}
 			if (Preferences.data.allowBellyCreaks) {
-				if (currentPressure >= creakThreshold) {
+				if (creakThreshold <= -1 && currentPressure >= creakThreshold) {
 					creakTimer -= elapsed;
 					if (creakTimer < 0) {
 						var intensity = Math.min(1, (currentPressure - creakThreshold + 1) / (maxPressure - creakThreshold + 1));
@@ -232,9 +232,9 @@ class Character extends FlxSprite {
 
 		var daOffset = animOffsets.get(usedAnimName);
 		if (animOffsets.exists(usedAnimName)) {
-			offset.set(daOffset[0] - positionOffset[0], daOffset[1] - positionOffset[1]);
+			offset.set(daOffset[0] + originPosition[0], daOffset[1] + originPosition[1]);
 		} else {
-			offset.set(-positionOffset[0], -positionOffset[1]);
+			offset.set(originPosition[0], originPosition[1]);
 		}
 
 		if (playSound) {

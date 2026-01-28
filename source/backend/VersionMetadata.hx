@@ -4,10 +4,9 @@ class VersionMetadata {
 	public static var majorVersionMap:Map<String, String> = [
 		'0' => 'Closed Beta',
 		'1' => 'Initial Release',
-		'2' => 'Modder\'s Catalogue',
-		'3' => 'Better Together',
-		'4' => 'The Chamber Flips',
-		'5' => 'Hit the Stage'
+		/*
+		'2' => nuh uh
+		*/
 	];
 
 	public static function getVersionName(version:String) {

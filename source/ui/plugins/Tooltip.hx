@@ -15,7 +15,7 @@ class Tooltip extends FlxSpriteGroup {
 
 	static final maxWidth:Int = 480;
 	static final padding:FlxPoint = new FlxPoint(12, 8);
-	static final positionOffset:FlxPoint = new FlxPoint(40, -8);
+	static final position:FlxPoint = new FlxPoint(40, -8);
 
 	public static var enabled:Bool = false;
 
@@ -64,8 +64,8 @@ class Tooltip extends FlxSpriteGroup {
 		instance.camera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
 
 		var leMousePos = FlxG.mouse.getScreenPosition(this.camera);
-		instance.x = FlxMath.bound(leMousePos.x + positionOffset.x, 0, FlxG.width - instance.bg.width);
-		instance.y = FlxMath.bound(leMousePos.y + positionOffset.y, 0, FlxG.height - instance.bg.height);
+		instance.x = FlxMath.bound(leMousePos.x + position.x, 0, FlxG.width - instance.bg.width);
+		instance.y = FlxMath.bound(leMousePos.y + position.y, 0, FlxG.height - instance.bg.height);
 		instance.visible = FlxG.mouse.visible && (text.length > 0);
 	}
 }

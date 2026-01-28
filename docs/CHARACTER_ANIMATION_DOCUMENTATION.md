@@ -9,18 +9,15 @@ To do this, each animation name follows this format:
 
 *A base name is followed by a suffix and afterwards a pressure value.*
 
-A **Base Name** is followed by an **Animation Suffix** and afterwards a **Pressure Value**. The name uses _camelCase_ for the capitalization.
+A **Base Name** is followed by a **Pressure Value**. The name uses _camelCase_ for the capitalization.
 
 ### Base Name
 The type of the animation. Examples are (introPartOne, preWin, skill).
 
-### Animation Suffix
-The "modifier" of the animation. For example, if a character wants to play a Skill animation that is exclusive to the Skill used. It first checks if the animation with that name exists (`skillSabotage2`). If it does, play the animation. If it does not, play the animation without the Animation Suffix (`skill2`).
-
 ### Pressure Value
 Another modifier of the animation, but refers to the **Current Pressure** of the character. If no animation with the name that includes the Pressure Value exists, it is ignored, and it searches for one without the Pressure Value.
 
-Pressure Value ranges from `0` to the **Max Pressure** of the user. It can also be `Overinflated` or `Null` when the character is defeated, either by Overinflation or Popping respectively.
+Pressure Value ranges from `0` to the `maxPressure` of the user. It can also be `Overinflated` or `Null` when the character is defeated, either by Overinflation or Popping respectively.
 
 ### Failsafe
 If no animation exists after doing the above checks, no animation is played, and a debug message is displayed on the console.
@@ -32,7 +29,7 @@ Animation [<ANIMATION_NAME>] for <CHARACTER_ID> does not exist
 ## Default Animations
 Here is a list of Base Names of all animations that are used in-game by default.
 
-Note: Some animations do not need Animation Suffixes and/or Pressure Values. If they need one, Animation Suffixes will be denoted with `$`, and Pressure Value will be denoted with `#`.
+Note: Some animations do not need Animation Suffixes and/or Pressure Values. Pressure Value will be denoted with `#`.
 
 - `introPartOne`
 - `introPartTwo`
@@ -41,9 +38,9 @@ Note: Some animations do not need Animation Suffixes and/or Pressure Values. If 
 - `shootBlank#`
 - `shootLive#`
 - `pass#`
-- `skill$#`
+- `skill<Skill>#`
 - `popped`
-- `helpless`
+- `helpless#`
 - `preWin#`
 - `win#`
 
@@ -154,5 +151,9 @@ The used frame indices of the animation. Frames with the index that are not in t
 ### "loop"
 #### Boolean
 Determines whether the animation is forcibly looped or not. Default value is `false`.
+
+### "soundPaths"
+#### Array of Strings
+The paths of sounds that would be played at the start of the animation. Sound paths are randomly picked.
 
 # [Back To Main Page](MAIN_PAGE.md)

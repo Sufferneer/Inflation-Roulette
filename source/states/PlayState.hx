@@ -58,6 +58,7 @@ class PlayState extends SuffState {
 	var confidenceText:FlxText;
 	var pauseButton:SuffIconButton;
 	var cameraFocusButton:SuffIconButton;
+
 	public static final playerWidthOffset:Float = 140;
 
 	// Sounds
@@ -224,7 +225,7 @@ class PlayState extends SuffState {
 		skillsText.setFormat(Paths.font('default'), 32, FlxColor.WHITE);
 		skillsText.x = uiBGTop.width - skillsText.width;
 		uiBGGroup.add(skillsText);
-		
+
 		skillsIcon = new GameIcon(0, 0, 'stats/skill', 32);
 		skillsIcon.x = skillsText.x - skillsIcon.width - 4;
 		skillsIcon.y = skillsText.y + (skillsText.height - skillsIcon.height) / 2;
@@ -763,9 +764,8 @@ class PlayState extends SuffState {
 
 	function focusCameraOnPlayer(playerIndex:Int) {
 		var characterCameraOffset:Array<Int> = getPlayer(playerIndex).cameraOffset;
-		var OffsetChange:Array<Int> = getPlayer(playerIndex).poppedCameraOffsetChange;
-		var xOffset:Int = getPlayer(playerIndex).isEliminated() && currentSessionAllowPopping ? OffsetChange[0] : 0;
-		var yOffset:Int = getPlayer(playerIndex).isEliminated() && currentSessionAllowPopping ? OffsetChange[1] : 0;
+		if (getPlayer(playerIndex).isEliminated())
+			characterCameraOffset = getPlayer(playerIndex).poppedCameraOffset;
 
 		camFollow.x = getPlayer(playerIndex).x + characterCameraOffset[0] + xOffset;
 		camFollow.y = getPlayer(playerIndex).y + characterCameraOffset[1] + yOffset;

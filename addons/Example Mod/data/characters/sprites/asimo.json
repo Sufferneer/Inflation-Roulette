@@ -1,8 +1,13 @@
 {
 	"spriteSheets": [
-		"cutscenes",
-		"gameplay",
-		"skills"
+		"idle",
+		"preShoot",
+		"shoot",
+		"skillPressurize",
+		"skillReload",
+		"misc",
+		"intro",
+		"win"
 	],
 	"animations": [
 		{
@@ -428,8 +433,8 @@
 	"poppingGravityMultiplier": 1.0,
 	"antialiasing": false,
 
-	"positionOffset": [-320, -570],
+	"originPosition": [320, 570],
 	"cameraOffset": [0, -320],
-	"poppedCameraOffsetChange": [0, 200],
+	"poppedCameraOffset": [0, -120],
 	"pointerOffset": [0, 0]
 }
