@@ -767,8 +767,8 @@ class PlayState extends SuffState {
 		if (getPlayer(playerIndex).isEliminated())
 			characterCameraOffset = getPlayer(playerIndex).poppedCameraOffset;
 
-		camFollow.x = getPlayer(playerIndex).x + characterCameraOffset[0] + xOffset;
-		camFollow.y = getPlayer(playerIndex).y + characterCameraOffset[1] + yOffset;
+		camFollow.x = getPlayer(playerIndex).x + characterCameraOffset[0];
+		camFollow.y = getPlayer(playerIndex).y + characterCameraOffset[1];
 		camFollowZoom = 1.2;
 	}
 
