@@ -18,7 +18,7 @@ Of course, not saying that you mustn't follow the art style, but as of now, all 
 *Goober hanging out with OCs of different art styles.*
 
 ## do not be the op roleplay character
-Fun is allowed as long as it feels fair and reasonable. The part of the fun is to see your creation struggle with the pressures of luck. Try to balance out Max Pressure with Skills. (Higher your limit, less skills, and vice versa), and make their cost reasonable. (Prices should not exceed Max Confidence)
+Fun is allowed as long as it feels fair and reasonable. The part of the fun is to see your creation struggle with the pressures of luck. Try to balance out Max Pressure with Skills. (Higher your limit, less powerful skills, and vice versa), and make their cost reasonable. (Prices should not exceed Max Confidence)
 
 ## Stay Silent
 _Inflation Roulette_ is supposed to be a game without any dialogue. Unless they are non-lingual interjections, all characters in this game should not say any voicelines to not break the immersion of the game.
@@ -37,12 +37,7 @@ Empty frames are pauses in-between actions. Try to keep them at most 2 seconds t
 
 *The amount of frames determine the length of the animation.*
 
-## No One Left for Dead
-I know some people are into perma-popping, but having your creation obliterated into lifeless pieces of skin is not only terrifying by itself, it does not fit into the style of the game, as some features of the game relies on non-fatal popping.
-
-If I ever saw you making the popped idle animation transparent, I will find you, and I'm gonna prick holes on your walls
-
 ## Have Fun
-Most importantly, try to keep yourself from ending it all. This codebase is a mess and I have no plans in fixing it lmao. Nevertheless, have fun drawing your characters!
+Most importantly, try to keep yourself from ending it all.
 
 # [Back To Main Page](MAIN_PAGE.md)
