@@ -159,7 +159,7 @@ class Character extends FlxSprite {
 		super.update(elapsed);
 		if (currentPressure <= maxPressure || !disableBellySounds) {
 			if (Preferences.data.allowBellyGurgles) {
-				if (gurgleThreshold <= -1 && currentPressure >= gurgleThreshold) {
+				if (gurgleThreshold >= -1 && currentPressure >= gurgleThreshold) {
 					gurgleTimer -= elapsed;
 					if (gurgleTimer < 0) {
 						var intensity = Math.min(1, (currentPressure - gurgleThreshold + 1) / (maxPressure - gurgleThreshold + 1));
@@ -170,7 +170,7 @@ class Character extends FlxSprite {
 				}
 			}
 			if (Preferences.data.allowBellyCreaks) {
-				if (creakThreshold <= -1 && currentPressure >= creakThreshold) {
+				if (creakThreshold >= -1 && currentPressure >= creakThreshold) {
 					creakTimer -= elapsed;
 					if (creakTimer < 0) {
 						var intensity = Math.min(1, (currentPressure - creakThreshold + 1) / (maxPressure - creakThreshold + 1));
