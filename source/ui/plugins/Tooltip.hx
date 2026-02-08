@@ -11,7 +11,7 @@ class Tooltip extends FlxSpriteGroup {
 	var bgOutline:FlxSprite;
 	var tooltipText:FlxText;
 
-	public static var text:String = '';
+	public static var text(default, set):String = '';
 
 	static final maxWidth:Int = 480;
 	static final padding:FlxPoint = new FlxPoint(12, 8);
@@ -27,7 +27,6 @@ class Tooltip extends FlxSpriteGroup {
 		scrollFactor.set();
 
 		tooltipText = new FlxText(padding.x, padding.y, 0, '');
-		tooltipText.fieldWidth = maxWidth;
 		tooltipText.setFormat(Paths.font('default'), 32, FlxColor.WHITE, LEFT);
 
 		bg = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
@@ -47,12 +46,13 @@ class Tooltip extends FlxSpriteGroup {
 		FlxG.plugins.add(instance);
 	}
 
-	override function update(elapsed:Float) {
-		super.update(elapsed);
-		if (instance == null) {
-			return;
-		}
-		instance.tooltipText.text = text;
+	private static function set_text(value:String):String {
+		text = value;
+		if (instance == null)
+			return value;
+		instance.visible = false;
+
+		instance.tooltipText.text = Utils.wrapColumns(text, 32);
 		var leWidth = instance.tooltipText.width + padding.x * 2;
 		var leHeight = instance.tooltipText.height + padding.y * 2;
 
@@ -60,12 +60,21 @@ class Tooltip extends FlxSpriteGroup {
 		instance.bg.updateHitbox();
 
 		instance.bgOutline.loadGraphic(Utils.makeBorder(leWidth, leHeight, 4, 0xFFFFFFFF));
+		instance.visible = FlxG.mouse.visible && (text.length > 0);
+		return value;
+	}
 
+	override function update(elapsed:Float) {
+		if (instance == null) {
+			return;
+		}
 		instance.camera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
-
 		var leMousePos = FlxG.mouse.getScreenPosition(this.camera);
 		instance.x = FlxMath.bound(leMousePos.x + position.x, 0, FlxG.width - instance.bg.width);
 		instance.y = FlxMath.bound(leMousePos.y + position.y, 0, FlxG.height - instance.bg.height);
+
+		super.update(elapsed);
+
 		instance.visible = FlxG.mouse.visible && (text.length > 0);
 	}
 }

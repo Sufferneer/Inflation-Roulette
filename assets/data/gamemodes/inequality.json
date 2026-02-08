@@ -1,0 +1,10 @@
+{
+	"name": "Inequality",
+	"description": "Players are given random skills on each live shot.\nAll players are equal, but some players are more equal than others.",
+	"color": "#FF2080",
+
+	"skillsRandomPool": ["all"],
+	"skillsCostMultiplier": 0,
+	"skillsReplenishCountOnLive": 1,
+	"skillsExhaustible": true
+}

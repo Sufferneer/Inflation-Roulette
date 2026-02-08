@@ -98,7 +98,7 @@ class AddonMenuState extends SuffState {
 
 		modBanner = new FlxSprite();
 
-		modBannerVignette = new FlxSprite().loadGraphic(Paths.image('gui/menus/addon/bannerVignette'));
+		modBannerVignette = new FlxSprite().loadGraphic(Paths.image('gui/menus/addons/bannerVignette'));
 		changeBanner('');
 
 		modBannerBG = new FlxSprite();
@@ -164,7 +164,8 @@ class AddonMenuState extends SuffState {
 	function changeDisplayedMetadata(folder:String, addon:AddonData = null) {
 		changeBanner(folder);
 
-		if (addon == null) return;
+		if (addon == null)
+			return;
 		modTitleText.text = addon.name;
 		modTitleText.updateHitbox();
 		modDescriptionText.text = addon.description + '\n';
@@ -209,7 +210,7 @@ class AddonMenuState extends SuffState {
 	function changeBanner(folder:String) {
 		var path:String = Paths.addons('$folder/banner.png');
 		if (!FileSystem.exists(path)) {
-			path = Paths.getImagePath('gui/menus/addon/defaultBanner');
+			path = Paths.getImagePath('gui/menus/addons/defaultBanner');
 		}
 		var leWidth:Float = Std.int(FlxG.width / 2 - padding - scrollBarWidth);
 		modBanner.loadGraphic(path);

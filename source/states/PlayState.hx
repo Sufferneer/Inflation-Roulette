@@ -3,6 +3,7 @@ package states;
 import ui.objects.GameIcon;
 import backend.CharacterManager;
 import backend.GameplayManager;
+import backend.enums.RoundRandomStatus;
 import backend.enums.SuffTransitionStyle;
 import objects.Character;
 import objects.Confetti;
@@ -62,7 +63,7 @@ class PlayState extends SuffState {
 	public static final playerWidthOffset:Float = 140;
 
 	// Sounds
-	var ambientSound:FlxSound;
+	public var ambientSound:FlxSound;
 
 	// Game Logic
 	var currentTurnIndex:Int = 0;
@@ -70,8 +71,10 @@ class PlayState extends SuffState {
 
 	var cylinderContent:Array<Bool> = []; // True: Live, False: Blank
 	var liveRoundDamage:Int = 1;
+	// This array is only used when cylinderTrueRandomness is true.
+	var roundRandomStatuses:Array<RoundRandomStatus> = [POSSIBLE];
 
-	public static var hasSeenCutscene = false;
+	public static var hasSeenStartCutscene = false;
 
 	public var canPause = true;
 	public var isPaused = false;
@@ -120,7 +123,7 @@ class PlayState extends SuffState {
 		FlxG.camera.follow(camFollow, LOCKON);
 		FlxG.camera.followLerp = Constants.DEFAULT_CAMERA_FOLLOW_LERP;
 
-		reloadCylinder(Constants.LIVE_ROUND_COUNT);
+		reloadCylinder(GameplayManager.currentGamemode.cylinderLiveCount);
 
 		bg = new FlxSprite().loadGraphic(Paths.image('game/backgrounds/${GameplayManager.currentBackground}/bg'));
 		bg.screenCenter();
@@ -181,6 +184,14 @@ class PlayState extends SuffState {
 				cameraFollowPointer.offset.set(32, 32);
 				add(cameraFollowPointer);
 			 */
+		}
+
+		// skillsFixedPool or skillsRandomPool is not empty
+		if (GameplayManager.currentGamemode.skillsFixedPool.length + GameplayManager.currentGamemode.skillsRandomPool.length > 0) {
+			for (char in characterGroup) {
+				char.currentSkills = [];
+			}
+			giveSkillsToAllPlayers(1);
 		}
 
 		pumpGun.x = pumpGunDestinations[currentTurnIndex];
@@ -290,13 +301,14 @@ class PlayState extends SuffState {
 				focusCameraOnPlayer(currentTurnIndex);
 				togglePlayerUI(true);
 			}
+			updateSkillAvailability(currentTurnIndex);
 		};
 		add(cameraFocusButton);
 
 		focusCameraOnPlayer(currentTurnIndex);
-		if (!hasSeenCutscene) {
+		if (!hasSeenStartCutscene) {
 			playStartCutscene();
-			hasSeenCutscene = true;
+			hasSeenStartCutscene = true;
 		} else {
 			finishStartCutscene();
 		}
@@ -330,18 +342,25 @@ class PlayState extends SuffState {
 			skillCard.destroy();
 		}
 		skillCardsGroup.clear();
-		var skills:Array<Skill> = getPlayer(playerIndex).skills;
+
+		// Dummy skill card to fix issue regarding tween issues after switching from a player with no skill.
+		var skillCard:SkillCard = new SkillCard(0, 0, new Skill('reload'));
+		skillCard.visible = false;
+		skillCardsGroup.add(skillCard);
+
+		var skills:Array<Skill> = getPlayer(playerIndex).currentSkills;
+		skillsText.visible = skillsIcon.visible = (skills.length > 0);
 		for (i in 0...skills.length) {
 			var leSkill = skills[i];
 			var skillCard:SkillCard = new SkillCard(0, i * (120 + skillCardsGroupPaddingX), leSkill);
 			skillCard.onClick = function() {
-				activateSkill(currentTurnIndex, leSkill);
+				activateSkill(currentTurnIndex, i);
 			}
 			skillCardsGroup.add(skillCard);
 		}
 		updateSkillAvailability(playerIndex);
 
-		uiBGTop.setGraphicSize(Std.int(skillCardsGroupPaddingX + skillCardsGroup.width + skillCardsGroupPaddingX),
+		uiBGTop.setGraphicSize(Std.int(skillCardsGroupPaddingX + 480 + skillCardsGroupPaddingX),
 			Std.int(skillCardsGroupPaddingY + skillCardsGroup.height + skillCardsGroupPaddingX));
 		uiBGTop.updateHitbox();
 		uiBGBottom.y = pressureIcon.y = uiBGTop.height;
@@ -478,13 +497,15 @@ class PlayState extends SuffState {
 
 	function reloadCylinder(liveRounds:Int = 1) {
 		cylinderContent = [];
-		var liveRoundsNotInserted:Int = liveRounds;
-		for (i in 0...Constants.CYLINDER_CAPACITY) {
-			if (liveRoundsNotInserted > 0 && FlxG.random.bool((i + 1) / Constants.CYLINDER_CAPACITY * 100)) {
-				cylinderContent.push(true);
-				liveRoundsNotInserted--;
-			} else {
-				cylinderContent.push(false);
+		var liveRoundsInserted:Int = 0;
+		for (i in 0...GameplayManager.currentGamemode.cylinderSize) {
+			cylinderContent.push(false);
+		}
+		while (liveRoundsInserted < Math.min(GameplayManager.currentGamemode.cylinderSize, liveRounds)) {
+			var leIndex = FlxG.random.int(0, GameplayManager.currentGamemode.cylinderSize - 1);
+			if (cylinderContent[leIndex] != true) {
+				cylinderContent[leIndex] = true;
+				liveRoundsInserted++;
 			}
 		}
 		trace(cylinderContent);
@@ -494,12 +515,17 @@ class PlayState extends SuffState {
 		return characterGroup.members[index];
 	}
 
-	function activateSkill(playerIndex:Int, skill:Skill) {
+	function activateSkill(playerIndex:Int, skillIndex:Int) {
+		var skill = getPlayer(playerIndex).currentSkills[skillIndex];
 		if (getPlayer(playerIndex).currentConfidence < skill.cost) {
 			trace('Not enough confidence for Player ${playerIndex + 1}');
 			return;
 		}
 		getPlayer(playerIndex).currentConfidence -= skill.cost;
+
+		if (GameplayManager.currentGamemode.skillsExhaustible) {
+			getPlayer(playerIndex).currentSkills.remove(skill);
+		}
 
 		var animName:String = 'skill' + Utils.capitalize(skill.id);
 		var actualAnimName:String = animName + getPlayer(playerIndex).parseAnimationSuffix();
@@ -515,13 +541,21 @@ class PlayState extends SuffState {
 
 		switch (skill.id) {
 			case 'reload':
-				reloadCylinder(Constants.LIVE_ROUND_COUNT);
+				reloadCylinder(GameplayManager.currentGamemode.cylinderLiveCount);
 			case 'sabotage':
 				cylinderContent[0] = false;
 				if (cylinderContent.length > 1) {
 					cylinderContent[1] = true;
 				} else {
 					cylinderContent.push(true);
+				}
+				if (GameplayManager.currentGamemode.cylinderTrueRandomness) {
+					roundRandomStatuses[0] = IMPOSSIBLE;
+					if (roundRandomStatuses.length > 1) {
+						roundRandomStatuses[1] = GUARANTEED;
+					} else {
+						roundRandomStatuses.push(GUARANTEED);
+					}
 				}
 			case 'pressurize':
 				liveRoundDamage *= 2;
@@ -545,6 +579,7 @@ class PlayState extends SuffState {
 		}
 		doTimer('reenablePlayerUI', new FlxTimer().start(getPlayer(playerIndex).getCurAnimLength(), function(_:FlxTimer) {
 			getPlayer(playerIndex).playAnim('prepareShoot', false);
+			reloadPlayerUI(playerIndex);
 			togglePlayerUI((currentTurnIndex == playerIndex && CharacterManager.playerControlled[currentTurnIndex]));
 			if (currentTurnIndex == playerIndex) {
 				updateSkillAvailability(playerIndex);
@@ -555,9 +590,24 @@ class PlayState extends SuffState {
 	}
 
 	function shoot(playerIndex:Int) {
-		var dealDamage:Bool = cylinderContent.shift();
+		var dealDamage:Bool = false;
+		if (!GameplayManager.currentGamemode.cylinderTrueRandomness)
+			dealDamage = cylinderContent[0];
+		else {
+			switch (roundRandomStatuses[0]) {
+				case GUARANTEED:
+					dealDamage = true;
+				case IMPOSSIBLE:
+					dealDamage = false;
+				default:
+					dealDamage = FlxG.random.bool((GameplayManager.currentGamemode.cylinderLiveCount / GameplayManager.currentGamemode.cylinderSize) * 100);
+			}
+			roundRandomStatuses.shift();
+			if (roundRandomStatuses.length <= 0)
+				roundRandomStatuses = [POSSIBLE];
+		}
 		var playerAnimName:String = 'idle';
-		trace(cylinderContent);
+
 		SuffState.playSound(Paths.sound('shoot'));
 		if (dealDamage) {
 			playerAnimName = 'shootLive';
@@ -574,23 +624,27 @@ class PlayState extends SuffState {
 			getPlayer(playerIndex).currentConfidence += getPlayer(playerIndex).confidenceChangeOnLiveShot;
 			if (liveRoundDamage > 1) {
 				liveRoundDamage -= 1;
-				cylinderContent.unshift(true);
 				if (!getPlayer(playerIndex).isEliminated()) {
 					doTimer('morePressure', new FlxTimer().start(0.75, function(_) {
 						shoot(playerIndex);
 					}));
 				} else {
-					liveRoundDamage = 1;
+					liveRoundDamage = GameplayManager.currentGamemode.cylinderInitialDamage;
 					cylinderContent.shift();
-					if (!cylinderContent.contains(true) || cylinderContent.length <= 0) {
-						reloadCylinder(Constants.LIVE_ROUND_COUNT);
+					checkToReloadCylinder();
+					if (GameplayManager.currentGamemode.skillsFixedPool.length + GameplayManager.currentGamemode.skillsRandomPool.length > 0) {
+						giveSkillsToAllPlayers(GameplayManager.currentGamemode.skillsReplenishCountOnLive);
 					}
 				}
 			} else {
-				if (!cylinderContent.contains(true) || cylinderContent.length <= 0) {
-					reloadCylinder(Constants.LIVE_ROUND_COUNT);
+				cylinderContent.shift();
+				checkToReloadCylinder();
+				if (GameplayManager.currentGamemode.skillsFixedPool.length + GameplayManager.currentGamemode.skillsRandomPool.length > 0) {
+					giveSkillsToAllPlayers(GameplayManager.currentGamemode.skillsReplenishCountOnLive);
 				}
 			}
+
+			liveRoundDamage += GameplayManager.currentGamemode.cylinderDamageChangeOnLive;
 
 			var percent = getPlayer(playerIndex).calculatePressurePercentage();
 			var fwoompSuffix:String = percent >= 0.5 ? 'Large' : 'Small';
@@ -602,7 +656,14 @@ class PlayState extends SuffState {
 			screenShake(0.01, 0.1);
 		} else {
 			getPlayer(playerIndex).currentConfidence += getPlayer(playerIndex).confidenceChangeOnBlankShot;
+			cylinderContent.shift();
+			checkToReloadCylinder();
+			if (GameplayManager.currentGamemode.skillsFixedPool.length + GameplayManager.currentGamemode.skillsRandomPool.length > 0) {
+				giveSkillsToAllPlayers(GameplayManager.currentGamemode.skillsReplenishCountOnBlank);
+			}
+			liveRoundDamage += GameplayManager.currentGamemode.cylinderDamageChangeOnBlank;
 		}
+		trace(cylinderContent);
 
 		getPlayer(playerIndex).currentConfidence = Std.int(FlxMath.bound(getPlayer(playerIndex).currentConfidence, 0, getPlayer(playerIndex).maxConfidence));
 
@@ -616,6 +677,12 @@ class PlayState extends SuffState {
 		}));
 	}
 
+	function checkToReloadCylinder() {
+		if ((!cylinderContent.contains(true) && GameplayManager.currentGamemode.cylinderReloadOnNoLives) || cylinderContent.length <= 0) {
+			reloadCylinder(GameplayManager.currentGamemode.cylinderLiveCount);
+		}
+	}
+
 	function screenShake(intensity:Float = 0.02, duration:Float = 0.25) {
 		if (Preferences.data.cameraEffectIntensity <= 0)
 			return;
@@ -627,6 +694,26 @@ class PlayState extends SuffState {
 		if (Preferences.data.photosensitivity)
 			usedColor.alpha = 32;
 		FlxG.camera.flash(usedColor, duration, true);
+	}
+
+	function giveSkillsToAllPlayers(count:Int = 1) {
+		var leArray = (GameplayManager.currentGamemode.skillsRandomPool.length > 0) ? GameplayManager.currentGamemode.skillsRandomPool : GameplayManager.currentGamemode.skillsFixedPool;
+		var leCount = (GameplayManager.currentGamemode.skillsRandomPool.length > 0) ? count : leArray.length;
+		for (char in characterGroup) {
+			if (GameplayManager.currentGamemode.skillsFixedPool.length > 0)
+				char.currentSkills = [];
+			if (char.currentSkills.length >= 3)
+				continue; // Maximum of three skills
+			for (i in 0...leCount) {
+				var skillName = '';
+				if (GameplayManager.currentGamemode.skillsRandomPool.length > 0)
+					skillName = GameplayManager.currentGamemode.skillsRandomPool[FlxG.random.int(0,
+						GameplayManager.currentGamemode.skillsRandomPool.length - 1)];
+				else if (GameplayManager.currentGamemode.skillsFixedPool.length > 0)
+					skillName = leArray[i];
+				char.currentSkills.push(new Skill(skillName, null, GameplayManager.currentGamemode.skillsCostMultiplier));
+			}
+		}
 	}
 
 	function eliminatePlayer(playerIndex:Int, turnChangeAfterwards:Int = 0) {
@@ -867,15 +954,13 @@ class PlayState extends SuffState {
 	public function pauseGame() {
 		if (!canPause)
 			return;
+		persistentUpdate = false;
 		isPaused = true;
 		toggleMonochrome(true);
-		for (tag => tween in gameTweens) {
-			tween.active = false;
-		}
-		for (tag => timer in gameTimers) {
-			timer.active = false;
-		}
-		persistentUpdate = false;
+		FlxTimer.globalManager.forEach(function(tmr:FlxTimer) if (!tmr.finished)
+			tmr.active = false);
+		FlxTween.globalManager.forEach(function(twn:FlxTween) if (!twn.finished)
+			twn.active = false);
 
 		openSubState(new PauseSubState());
 	}
@@ -884,12 +969,10 @@ class PlayState extends SuffState {
 		persistentUpdate = true;
 		isPaused = false;
 		toggleMonochrome(false);
-		for (tag => tween in gameTweens) {
-			tween.active = true;
-		}
-		for (tag => timer in gameTimers) {
-			timer.active = true;
-		}
+		FlxTimer.globalManager.forEach(function(tmr:FlxTimer) if (!tmr.finished)
+			tmr.active = true);
+		FlxTween.globalManager.forEach(function(twn:FlxTween) if (!twn.finished)
+			twn.active = true);
 
 		super.closeSubState();
 	}

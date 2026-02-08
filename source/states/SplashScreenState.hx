@@ -28,7 +28,6 @@ class SplashScreenState extends SuffState {
 	var skipIntroTimer:FlxTimer;
 
 	function startIntro() {
-		trace("STARTING INTRO");
 		logo = new FlxSprite().loadGraphic(Paths.image('gui/menus/malletIndustriesLogo'));
 		blockCount = Std.int(logo.height);
 		logo.scale.set(scale, scale);

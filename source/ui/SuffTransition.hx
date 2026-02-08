@@ -71,18 +71,7 @@ class SuffTransition extends SuffSubState {
 				tran.color = 0xFF000000;
 				trans.add(tran);
 			case BLOCKY:
-				var fileList = [];
-				var imageList = [];
-				#if sys
-				fileList = FileSystem.readDirectory(Paths.getPath('images/gui/transitions/blocky'));
-				#else
-				fileList = Utils.textFileToArray(Paths.getPath('images/gui/transitions/blocky/blockList.txt'));
-				#end
-				for (folder in fileList) {
-					if (!folder.toLowerCase().endsWith('.txt')) {
-						imageList.push(folder.replace('.png', ''));
-					}
-				}
+				var imageList = Paths.readDirectories('images/gui/transitions/blocky', 'images/gui/transitions/blockList.txt', 'png');
 
 				for (h in 0...Math.ceil(FlxG.height / blockSize)) {
 					for (w in 0...Math.ceil(FlxG.width / blockSize)) {

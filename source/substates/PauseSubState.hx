@@ -88,6 +88,7 @@ class PauseSubState extends SuffSubState {
 				OptionsSubState.notInGame = false;
 				openSubState(new OptionsSubState());
 			case 'EXIT':
+				PlayState.instance.ambientSound.pause();
 				SuffState.switchState(new MainMenuState(), BLOCKY);
 				SuffState.playMusic('null');
 				FlxG.camera.followLerp = 0;

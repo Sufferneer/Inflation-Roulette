@@ -154,6 +154,39 @@ class Paths {
 		return file + '.$SOUND_EXT';
 	}
 
+	inline public static function readDirectories(path:String, listPath:String = '', fileFormat:String = '', addons:Bool = true) {
+		var pathsInFolder:Array<String> = Utils.textFileToArray(listPath);
+		#if sys
+		// Main folder
+		if (FileSystem.exists(Paths.getPath(path))) {
+			for (i in FileSystem.readDirectory(Paths.getPath(path))) {
+				var item = i.replace('.$fileFormat', '');
+				if (!pathsInFolder.contains(item) && !FileSystem.isDirectory(Paths.getPath(path + '/' + i)))
+					pathsInFolder.push(item);
+			}
+		}
+
+		#if _ALLOW_ADDONS
+		if (addons) {
+			for (addon in Addons.getGlobalAddons()) {
+				if (FileSystem.exists(Paths.addons(addon + '/' + path))) {
+					for (i in FileSystem.readDirectory(Paths.addons(addon + '/' + path))) {
+						var item = i.replace('.$fileFormat', '');
+						if (!pathsInFolder.contains(item) && !FileSystem.isDirectory(Paths.addons(addon + '/' + path + '/' + i)))
+							pathsInFolder.push(item);
+					}
+				}
+			}
+		}
+		#end
+		#else
+		for (num => item in pathsInFolder) {
+			pathsInFolder[num] = item.replace('.$fileFormat', '');
+		}
+		#end
+		return pathsInFolder;
+	}
+
 	/**
 	 * Find the XML file for a Sparrow v2 spritesheet.
 	 * 
@@ -293,7 +326,7 @@ class Paths {
 		}
 
 		localTrackedAssets.push(file);
-		#if !html5
+		#if desktop
 		if (allowGPU && Preferences.data.cacheOnGPU) {
 			var texture:RectangleTexture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);
 			texture.uploadFromBitmapData(bitmap);

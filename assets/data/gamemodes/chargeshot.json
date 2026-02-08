@@ -1,0 +1,7 @@
+{
+	"name": "Chargeshot",
+	"description": "Damage increases with each blank shot.\nRisky and rewarding gameplay.",
+	"color": "#C00020",
+
+	"cylinderDamageChangeOnBlank": 1
+}

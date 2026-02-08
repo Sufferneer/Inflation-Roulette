@@ -1,6 +1,8 @@
 package;
 
 import backend.Addons;
+import backend.CharacterManager;
+import backend.GameplayManager;
 import backend.SplashManager;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxGame;
@@ -87,13 +89,6 @@ class Main extends Sprite {
 		fpsVar.alpha = 0.5;
 		#end
 
-		MusicToast.initialize();
-		Tooltip.initialize();
-		SplashManager.parseSplashes();
-		#if _ALLOW_ADDONS
-		Addons.pushGlobalAddons();
-		#end
-
 		#if html5
 		FlxG.autoPause = false;
 		#end
@@ -116,6 +111,16 @@ class Main extends Sprite {
 			if (FlxG.game != null)
 				resetSpriteCache(FlxG.game);
 		});
+
+		#if _ALLOW_ADDONS
+		Addons.pushGlobalAddons();
+		#end
+		MusicToast.initialize();
+		Tooltip.initialize();
+		CustomCursorHandler.initialize();
+		SplashManager.parseSplashes();
+		CharacterManager.initialize();
+		GameplayManager.initialize();
 	}
 
 	static function resetSpriteCache(sprite:Sprite):Void {
@@ -125,8 +130,7 @@ class Main extends Sprite {
 		}
 	}
 
-	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
-	// very cool person for real they don't get enough credit for their work
+	// Code entirely made by sqirra-rng
 	#if _ALLOW_CRASH_HANDLER
 	function onCrash(e:UncaughtErrorEvent):Void {
 		var errMsg:String = "";

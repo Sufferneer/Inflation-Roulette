@@ -6,16 +6,17 @@ import backend.VersionMetadata;
 #end
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
-import states.CharacterSelectState;
 import states.CreditsState;
 #if _ALLOW_ADDONS
 import states.AddonMenuState;
 #end
 import substates.OptionsSubState;
+import substates.GamemodeSelectSubState;
 import ui.objects.GameLogo;
 
 class MainMenuState extends SuffState {
 	public static var initialized:Bool = false;
+	var finishedAnimation:Bool = true;
 
 	var bg:FlxSprite;
 	var overlay:FlxBackdrop;
@@ -105,6 +106,7 @@ class MainMenuState extends SuffState {
 		creditsButton.onClick = function() {
 			menuButtonFunctions('CREDITS');
 		}
+		creditsButton.tooltipText = 'Copyright © NicklySuffer';
 		add(creditsButton);
 
 		add(buttonGroup);
@@ -136,6 +138,7 @@ class MainMenuState extends SuffState {
 	}
 
 	function runFirstStartupTweens() {
+		finishedAnimation = false;
 		logo.x = (FlxG.width - logo.width) / 2;
 		logo.y = -logo.height;
 		FlxTween.tween(logo, {y: (FlxG.height - logo.height) / 2}, 1, {
@@ -176,9 +179,14 @@ class MainMenuState extends SuffState {
 			startDelay: 2.5
 		});
 
-		splashText.alpha = 0;
-		FlxTween.tween(splashText, {alpha: 1}, 0.5, {
-			startDelay: 2
+		splashText.y = FlxG.height * 1.25;
+		new FlxTimer().start(2.0, function(_) { // logo position will be fetched after timer ends
+			FlxTween.tween(splashText, {y: logo.y + logo.height + 10}, 0.75, {
+				ease: FlxEase.cubeOut,
+				onComplete: function(_) {
+					finishedAnimation = true;
+				}
+			});
 		});
 	}
 
@@ -195,11 +203,11 @@ class MainMenuState extends SuffState {
 	}
 
 	function fadeSplashText() {
-		FlxTween.tween(splashText, {alpha: 0}, 1, {
+		FlxTween.tween(splashText, {y: FlxG.height}, 1, {
 			ease: FlxEase.cubeIn,
 			onComplete: function(twn:FlxTween) {
 				changeSplashText();
-				FlxTween.tween(splashText, {alpha: 1}, 1, {ease: FlxEase.cubeOut});
+				FlxTween.tween(splashText, {y: logo.y + logo.height + 10}, 1, {ease: FlxEase.cubeOut});
 			}
 		});
 	}
@@ -221,7 +229,7 @@ class MainMenuState extends SuffState {
 	function menuButtonFunctions(menu:String) {
 		switch (menu.toUpperCase()) {
 			case 'PLAY':
-				SuffState.switchState(new CharacterSelectState());
+				openSubState(new GamemodeSelectSubState());
 			case 'OPTIONS':
 				OptionsSubState.notInGame = true;
 				openSubState(new OptionsSubState());
@@ -237,31 +245,34 @@ class MainMenuState extends SuffState {
 	}
 
 	var splashTextChangeTimer:Float = 0;
+	var displayedLogoScale:Float = GameLogo.logoScale;
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
 		logo.angle = splashText.angle = Math.sin(SuffState.timePassedOnState) * 5;
-		logo.setGraphicSize(Std.int(FlxG.width / (3 - Math.pow(Math.sin(SuffState.timePassedOnState / 2), 2) * 0.25)));
-		if (FlxG.mouse.overlaps(logo) && FlxG.mouse.justPressed) {
-			splashTextChangeTimer = 0;
-			changeSplashText();
-			FlxTween.cancelTweensOf(splashText, ['y']);
-			FlxTween.tween(splashText, {y: splashText.y - 20}, 0.08, {
-				onComplete: function(_) {
-					FlxTween.tween(splashText, {y: logo.y + logo.height + 10}, 0.08);
-				}
-			});
-		}
+		displayedLogoScale = FlxMath.lerp(displayedLogoScale, GameLogo.logoScale, elapsed * 10);
+		var leScale = displayedLogoScale - Math.pow(Math.sin(SuffState.timePassedOnState / 2), 2) * 0.05;
+		logo.scale.set(leScale, leScale);
 
 		splashText.x = logo.x + (logo.width - splashText.width) / 2;
 		var splashTextScale = 1 + Math.abs(Math.sin(SuffState.timePassedOnState * Math.PI * 2)) * 0.05;
 		splashText.scale.set(splashTextScale, splashTextScale);
+		if (finishedAnimation) {
+			if (FlxG.mouse.overlaps(logo) && FlxG.mouse.justPressed) {
+				splashTextChangeTimer = 0;
+				displayedLogoScale -= 0.025;
+				changeSplashText();
+				FlxTween.cancelTweensOf(splashText, ['y']);
+				FlxTween.tween(splashText, {y: logo.y + logo.height + 10}, 0.08, {ease: FlxEase.cubeOut});
+				SuffState.playUISound(Paths.sound('musicToastClick'));
+			}
 
-		splashTextChangeTimer += elapsed;
-		if (splashTextChangeTimer >= 10) {
-			splashTextChangeTimer = 0;
-			fadeSplashText();
+			splashTextChangeTimer += elapsed;
+			if (splashTextChangeTimer >= 10) {
+				splashTextChangeTimer = 0;
+				fadeSplashText();
+			}
 		}
 	}
 }

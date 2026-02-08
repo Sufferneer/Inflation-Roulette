@@ -14,7 +14,6 @@ import flash.media.Sound;
 
 class SuffState extends FlxUIState {
 	public static var currentMusicName:String = '';
-	public static var hardcodedMouseChanges:Bool = true;
 	public static var timePassedOnState:Float = 0;
 	public static var currentMusicBPM:Float = 0;
 
@@ -60,13 +59,17 @@ class SuffState extends FlxUIState {
 	}
 
 	public static function playSound(tag:Sound, volume:Float = 1, pitch:Float = 1) {
-		var sound = FlxG.sound.play(tag, volume * Preferences.data.gameSoundVolume);
+		var sound = new FlxSound().loadEmbedded(tag, false, true);
+		sound.volume = volume * Preferences.data.gameSoundVolume;
 		sound.pitch = pitch;
+		sound.play();
 	}
 
 	public static function playUISound(tag:Sound, volume:Float = 1, pitch:Float = 1) {
-		var sound = FlxG.sound.play(tag, volume * Preferences.data.uiSoundVolume);
+		var sound = new FlxSound().loadEmbedded(tag, false, true);
+		sound.volume = volume * Preferences.data.uiSoundVolume;
 		sound.pitch = pitch;
+		sound.play();
 	}
 
 	override function update(elapsed:Float) {
@@ -74,9 +77,6 @@ class SuffState extends FlxUIState {
 
 		if (FlxG.save.data != null)
 			FlxG.save.data.fullscreen = FlxG.fullscreen;
-
-		if (hardcodedMouseChanges)
-			Utils.cursorChange('default', FlxG.mouse.pressed);
 
 		super.update(elapsed);
 	}

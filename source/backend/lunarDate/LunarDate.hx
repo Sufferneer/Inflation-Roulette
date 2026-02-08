@@ -8,16 +8,14 @@ class LunarDate {
 	public var info(default, null):Info;
 	public var year(default, null):Int; // Lunar year
 	public var month(default, null):Int; // Lunar month [1 ~ 12]
-	public var date(default, null):Int; // Lunar day
+	public var day(default, null):Int; // Lunar day
 	public var leap(default, null):Bool; // Whether the current date is in a "leap month"
-	public var days(default, null):Int; // Number of days passed since Lunar New Year's Day (1st day of 1st lunar month)
 
 	private function new(ly:Int, lm:Int, ld:Int, le:Bool, ds:Int, t:Date, i:Info) {
 		this.year = ly;
 		this.month = lm;
-		this.date = ld;
+		this.day = ld;
 		this.leap = le;
-		this.days = ds;
 		this.time = t;
 		this.info = i;
 	}
@@ -38,7 +36,7 @@ class LunarDate {
 		var leStem = LunarDateConstants.STEMS[offsetYear % 10];
 		var leBranch = LunarDateConstants.BRANCHES[offsetYear % 12];
 
-		var day = this.date;
+		var day = this.day;
 		var leDate = '';
 		if (day < 11) {
 			leDate = LunarDateConstants.ONE_PREFIX + LunarDateConstants.NUMBERS[day];

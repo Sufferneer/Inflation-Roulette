@@ -16,20 +16,28 @@ class Utilities {
 	 * 
 	 * @param path The directory relative to the asset folder of the game.
 	 */
-	inline public static function textFileToArray(path:String):Array<String> {
+	inline public static function textFileToArray(path:String, mods:Bool = true):Array<String> {
 		var daList:String = null;
-		#if (sys)
+		var lePath = Paths.getPath(path);
+		#if sys
 		var formatted:Array<String> = path.split(':');
 		path = formatted[formatted.length - 1];
-		if (FileSystem.exists(path))
-			daList = File.getContent(path);
+		if (FileSystem.exists(lePath))
+			daList = File.getContent(lePath);
+		#if _ALLOW_ADDONS
+		for (addon in Addons.getGlobalAddons()) {
+			var lePath = Paths.addons(addon + '/' + path);
+			if (FileSystem.exists(lePath))
+				daList = daList + '\n' + File.getContent(lePath);
+		}
+		#end
 		#else
-		if (Assets.exists(path))
-			daList = Assets.getText(path);
+		if (Assets.exists(lePath))
+			daList = Assets.getText(lePath);
 		#end
 		var leList:Array<String> = listFromString(daList);
-		if (leList[leList.length - 1] == '') {
-			leList.pop();
+		while (leList.remove('') == true) {
+			leList.remove('');
 		}
 		return leList;
 	}
@@ -176,4 +184,38 @@ class Utilities {
 		var whitespace = ~/(?<=\r|\s|^)([a-z])/g;
 		return whitespace.map(str, (r) -> r.matched(0).toUpperCase());
 	}
+
+	// Fetched from thx.core library. Thanks fponticelli!
+	static var SPLIT_LINES = ~/\r\n|\n\r|\n|\r/g;
+	static var WSG = ~/[ \t\r\n]+/g;
+	static function wrapLine(s:String, columns:Int, indent:String, newline:String) {
+		var parts = [], pos = 0, len = s.length, ilen = indent.length;
+		columns -= ilen;
+		while (true) {
+			if (pos + columns >= len - ilen) {
+				parts.push(s.substring(pos));
+				break;
+			}
+
+			var i = 0;
+			while (!StringTools.isSpace(s, pos + columns - i) && i < columns)
+				i++;
+			if (i == columns) {
+				// search ahead
+				i = 0;
+				while (!StringTools.isSpace(s, pos + columns + i) && pos + columns + i < len)
+					i++;
+				parts.push(s.substring(pos, pos + columns + i));
+				pos += columns + i + 1;
+			} else {
+				parts.push(s.substring(pos, pos + columns - i));
+				pos += columns - i + 1;
+			}
+		}
+
+		return indent + parts.join(newline + indent);
+	}
+
+	public static function wrapColumns(s:String, columns = 78, indent = "", newline = "\n")
+		return SPLIT_LINES.split(s).map(function(part) return wrapLine(StringTools.trim(WSG.replace(part, " ")), columns, indent, newline)).join(newline);
 }

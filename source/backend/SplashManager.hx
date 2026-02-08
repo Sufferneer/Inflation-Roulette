@@ -32,33 +32,47 @@ class SplashManager {
 		for (grp in collection.unique) {
 			var group:SplashGroupData = cast grp;
 			if (group.start != null && group.end != null) {
-				var currentMonth:Int = 1;
-				var currentDay:Int = 1;
+				var currentMonth:String = '0';
+				var currentDay:String = '0';
+				var currentYear:Int = 1;
 				if (!group.useLunarCalender) {
-					currentMonth = gregorianCurrentTime.getMonth() + 1;
-					currentDay = gregorianCurrentTime.getDate();
+					currentYear = gregorianCurrentTime.getFullYear();
+					currentMonth = StringTools.lpad(gregorianCurrentTime.getMonth() + 1 + '', '0', 2);
+					currentDay = StringTools.lpad(gregorianCurrentTime.getDate() + '', '0', 2);
 				} else {
-					currentMonth = lunarCurrentTime.month;
-					currentDay = lunarCurrentTime.month;
+					currentYear = lunarCurrentTime.year;
+					currentMonth = StringTools.lpad(lunarCurrentTime.month + '', '0', 2);
+					currentDay = StringTools.lpad(lunarCurrentTime.day + '', '0', 2);
 				}
+				var currentTime:Date = Date.fromString('$currentYear-$currentMonth-$currentDay');
 
-				var leStartDate:Array<Dynamic> = group.start.split('-');
-				var leEndDate:Array<Dynamic> = group.end.split('-');
+				var leStartDate:Array<String> = group.start.split('-');
+				var leEndDate:Array<String> = group.end.split('-');
 				for (s in 0...leStartDate.length) {
-					leStartDate[s] = Std.parseInt(leStartDate[s]);
+					leStartDate[s] = StringTools.lpad(leStartDate[s], '0', 2);
 				}
 				for (s in 0...leEndDate.length) {
-					leEndDate[s] = Std.parseInt(leEndDate[s]);
+					leEndDate[s] = StringTools.lpad(leEndDate[s], '0', 2);
 				}
-				if (currentMonth >= leStartDate[0] && currentMonth <= leEndDate[0]) {
-					if (currentDay >= leStartDate[1] && currentDay <= leEndDate[1]) {
-						hasUnique = true;
-						for (splash in group.splashes) {
-							activeSplashes.push(splash);
-						}
-						for (color in group.colors) {
-							activeColors.push(FlxColor.fromString(color));
-						}
+				var startTime:Date = Date.fromString('$currentYear-${leStartDate[0]}-${leStartDate[1]}');
+				var endTime:Date = Date.fromString('$currentYear-${leEndDate[0]}-${leEndDate[1]}');
+
+				if (startTime.getTime() > endTime.getTime()) {
+					if (endTime.getTime() < currentTime.getTime()) {
+						endTime = Date.fromString('${currentYear + 1}-${leEndDate[0]}-${leEndDate[1]}');
+					} else {
+						startTime = Date.fromString('${currentYear - 1}-${leStartDate[0]}-${leStartDate[1]}');
+					}
+				}
+
+				if (startTime.getTime() <= currentTime.getTime() && currentTime.getTime() <= endTime.getTime()) {
+					trace('${group.name} - $startTime - $currentTime - $endTime');
+					hasUnique = true;
+					for (splash in group.splashes) {
+						activeSplashes.push(splash);
+					}
+					for (color in group.colors) {
+						activeColors.push(FlxColor.fromString(color));
 					}
 				}
 			}

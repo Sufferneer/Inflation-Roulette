@@ -1,0 +1,9 @@
+{
+	"name": "Classic",
+	"description": "True randomness and sabotage endlessly.\nThe original way of playing the game.",
+	"color": "#40C0C0",
+
+	"cylinderTrueRandomness": true,
+	"skillsFixedPool": ["sabotage"],
+	"skillsCostMultiplier": 0
+}

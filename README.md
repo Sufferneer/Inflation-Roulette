@@ -16,7 +16,7 @@ Although the game as a whole is still a work in progress, it is fully playable w
 These following features are either implemented, but are not used in-game, or partially finished:
 - Local multiplayer support
 - Custom characters
-- Mobile support (HTML)
+- Mobile support (HTML, Android)
 - Selectable characters
 
 Planned features are as follows:

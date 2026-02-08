@@ -4,10 +4,12 @@ import objects.Skill;
 
 class SkillCard extends SuffButton {
 	public var skill:Skill;
-	public var skillTitle:FlxText;
-	public var skillDescription:FlxText;
-	public var skillCost:FlxText;
-	public var skillIcon:GameIcon;
+	var skillTitle:FlxText;
+	var skillDescription:FlxText;
+	var skillCost:FlxText;
+	var skillIcon:GameIcon;
+
+	var costIcon:GameIcon;
 
 	public var notEnoughConfidence(default, set):Bool = true;
 
@@ -30,9 +32,15 @@ class SkillCard extends SuffButton {
 		skillDescription.alpha = 0.5;
 		add(skillDescription);
 
-		skillCost = new FlxText(usedImage.height, usedImage.height - 24 - 6 - 6, 0, 'Cost: ' + skill.cost);
-		skillCost.setFormat(Paths.font('default'), 24, FlxColor.WHITE);
+		costIcon = new GameIcon(usedImage.height, usedImage.height - 40, 'stats/confidence', 32);
+		costIcon.color = 0xFF4A4399;
+		add(costIcon);
+
+		skillCost = new FlxText(usedImage.height + costIcon.width + 2, usedImage.height - 40, 0, '' + skill.cost);
+		skillCost.setFormat(Paths.font('default'), 32, costIcon.color);
 		add(skillCost);
+
+		// skillCost.visible = costIcon.visible = (skill.cost > 0);
 	}
 
 	private function set_notEnoughConfidence(value:Bool):Bool{
@@ -41,13 +49,13 @@ class SkillCard extends SuffButton {
 		if (notEnoughConfidence) {
 			this.btnIcon.color = 0xFF808080;
 			this.alpha = 0.6;
-			skillCost.text = 'Cost: ${skill.cost}';
-			skillCost.color = 0xFFC00000;
+			skillCost.text = '${skill.cost} · <>';
+			costIcon.color = skillCost.color = 0xFFC00000;
 		} else {
 			this.btnIcon.color = 0xFFFFFFFF;
 			this.alpha = 1;
-			skillCost.text = 'Cost: ${skill.cost}';
-			skillCost.color = FlxColor.PURPLE;
+			skillCost.text = '${skill.cost}';
+			costIcon.color = skillCost.color = 0xFF4A4399;
 		}
 		return value;
 	}

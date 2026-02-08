@@ -13,7 +13,7 @@ class SuffSubState extends FlxSubState {
 	}
 
 	override function update(elapsed:Float) {
-		if (!persistentUpdate)
+		if (persistentUpdate)
 			SuffState.timePassedOnState += elapsed;
 
 		timePassedOnSubState += elapsed;

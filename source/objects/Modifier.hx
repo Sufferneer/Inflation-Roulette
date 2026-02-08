@@ -9,6 +9,6 @@ class Modifier {
 	}
 
 	public function toString():String {
-		return 'Modifier(id: ${id} || value: ${value})';
+		return 'Modifier(id: ${id} | value: ${value})';
 	}
 }

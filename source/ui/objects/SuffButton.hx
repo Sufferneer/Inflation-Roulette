@@ -61,23 +61,26 @@ class SuffButton extends FlxSpriteGroup {
 	 * @param height The hitbox height of the button.
 	 * @param visibleBG Whether the default button background is visible or not.
 	 */
-	public function new(x:Float, y:Float, ?text:String = null, ?img:FlxGraphic = null, ?imgHovered:FlxGraphic = null, ?width:Int = 300, ?height:Int = 100,
+	public function new(x:Float, y:Float, ?text:String = null, ?img:FlxGraphic = null, ?imgHovered:FlxGraphic = null, ?width:Float = 300, ?height:Float = 100,
 			visibleBG:Bool = true) {
 		super(x, y);
 
-		var btnBGRect = new Rectangle(0, 0, width / bgScale, height / bgScale);
+		var leWidth = Std.int(width);
+		var leHeight = Std.int(height);
+
+		var btnBGRect = new Rectangle(0, 0, leWidth / bgScale, leHeight / bgScale);
 		var nineSlice = [20, 10, 44, 22];
 
-		btnBG = new FlxUI9SliceSprite(0, 0, Paths.getImagePath('gui/buttonBase'), btnBGRect, nineSlice, 0x11);
-		btnBG.setGraphicSize(Std.int(width), Std.int(height));
+		btnBG = new FlxUI9SliceSprite(0, 0, Paths.getImagePath('gui/boxes/boxBase'), btnBGRect, nineSlice, 0x11);
+		btnBG.setGraphicSize(Std.int(leWidth), Std.int(leHeight));
 		btnBG.updateHitbox();
 		btnBG.color = btnBGColor;
 		btnBG.alpha = btnBGAlpha;
 		btnBG.visible = visibleBG;
 		add(btnBG);
 
-		btnBGOutline = new FlxUI9SliceSprite(0, 0, Paths.getImagePath('gui/buttonOutline'), btnBGRect, nineSlice, 0x11);
-		btnBGOutline.setGraphicSize(Std.int(width), Std.int(height));
+		btnBGOutline = new FlxUI9SliceSprite(0, 0, Paths.getImagePath('gui/boxes/boxOutline'), btnBGRect, nineSlice, 0x11);
+		btnBGOutline.setGraphicSize(Std.int(leWidth), Std.int(leHeight));
 		btnBGOutline.updateHitbox();
 		btnBGOutline.color = btnBGOutlineColor;
 		btnBGOutline.alpha = btnBGAlpha;
@@ -192,10 +195,14 @@ class SuffButton extends FlxSpriteGroup {
 					onHover();
 				hovered = true;
 			}
-			if (!disabled && hovered && FlxG.mouse.pressed) {
-				if (!clicked)
-					clickButton();
-				clicked = true;
+			if (!disabled && hovered) {
+				if (Tooltip.text == '')
+					Tooltip.text = tooltipText;
+				if (FlxG.mouse.pressed) {
+					if (!clicked)
+						clickButton();
+					clicked = true;
+				}
 			}
 			if (FlxG.mouse.justReleased && clicked) {
 				if (!disabled && onClick != null)
@@ -228,8 +235,6 @@ class SuffButton extends FlxSpriteGroup {
 			switchIconImage(btnIconImageHovered);
 		if (hoverSound != '')
 			SuffState.playUISound(Paths.sound(hoverSound));
-		if (tooltipText != '')
-			Tooltip.text = tooltipText;
 	}
 
 	function switchIconImage(img:FlxGraphic) {

@@ -1,5 +1,6 @@
 package objects;
 
+import backend.GameplayManager;
 import backend.types.CharacterData;
 import backend.types.CharacterSpriteData;
 import backend.types.ModifierData;
@@ -35,6 +36,7 @@ class Character extends FlxSprite {
 	public var maxPressure:Int = 4;
 	public var currentConfidence:Int = 0;
 	public var maxConfidence:Int = 4;
+	public var currentSkills:Array<Skill> = [];
 
 	public var modifiers:Array<Modifier> = [];
 	public var skills:Array<Skill> = [];
@@ -143,7 +145,8 @@ class Character extends FlxSprite {
 				if (skills.length < 3) {
 					var skillID:String = '' + skill.id;
 					var skillCost:Int = skill.cost;
-					skills.push(new Skill(skillID, skillCost));
+					skills.push(new Skill(skillID, skillCost, 1));
+					currentSkills.push(new Skill(skillID, skillCost, GameplayManager.currentGamemode.skillsCostMultiplier));
 				}
 			}
 		}
@@ -294,6 +297,6 @@ class Character extends FlxSprite {
 	}
 
 	override function toString():String {
-		return 'Character(id: ${id} || name: ${name} || ${currentPressure} / ${maxPressure})';
+		return 'Character(id: ${id} | name: ${name} | ${currentPressure} / ${maxPressure})';
 	}
 }

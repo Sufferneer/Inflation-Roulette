@@ -1,4 +1,5 @@
 {
 	"name": "Sabotage",
-	"description": "The next player will have a guaranteed chance of being shot with a live round."
+	"description": "The next player will have a guaranteed chance of being shot with a live round.",
+	"defaultCost": 3
 }

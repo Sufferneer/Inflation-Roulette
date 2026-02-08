@@ -3,7 +3,15 @@
 	"description": "This is an addon made in order to test the modding capabilities of the game. (Note: Some animations are incomplete)",
 	"authors": [
 		["NicklySuffer", "Artist/Animator"],
-		["WolfKylis", "Character Design"]
+		["WolfKylis", "Character Design"],
+		["crococat", "Credits Menu Sketcher"],
+		["howfuii", "Credits Menu Sketcher"],
+		["Skodd420", "Credits Menu Sketcher"],
+		["TheRoboticError", "Credits Menu Sketcher"],
+		["Protogenics_Red", "Credits Menu Sketcher"],
+		["RetroActiveX", "Credits Menu Sketcher"],
+		["theotherface58", "Credits Menu Sketcher"],
+		["SillyJuices", "Credits Menu Sketcher"]
 	],
 	"color": "#00C0FF"
 }

@@ -9,6 +9,7 @@ import flixel.effects.FlxFlicker;
 import flixel.util.FlxGradient;
 import states.MainMenuState;
 import states.PlayState;
+import substates.GameOnSubState;
 import tjson.TJSON as Json;
 import ui.objects.CharacterSelectBanner;
 import ui.objects.CharacterSelectCard;
@@ -26,6 +27,7 @@ class CharacterSelectState extends SuffState {
 
 	static final margin:Int = 50;
 	public static final cardOccupicationHeight:Float = 0.35;
+
 	var sectionWidth:Int = Math.ceil(FlxG.width / CharacterManager.selectedCharacterList.length);
 	var optionY:Array<Float> = [16, 16, 16, 16];
 
@@ -48,28 +50,24 @@ class CharacterSelectState extends SuffState {
 	var leftButton:SuffButton;
 	var rightButton:SuffButton;
 	var readySign:ReadySign;
-	var selectYourDipshit:FlxText;
-	var slashBGDim:FlxSprite;
-	var slashBG:FlxSprite;
-	var gameOn:FlxText;
+	var selectCharacterTxt:FlxText;
 
 	var cardGroup:FlxTypedSpriteGroup<CharacterSelectCard> = new FlxTypedSpriteGroup<CharacterSelectCard>();
 
 	override function create() {
 		super.create();
 
-		CharacterManager.pushGlobalCharacterList();
 		var characterList = CharacterManager.globalCharacterList.copy();
-		if (characterList.length >= 3) {
+		if (characterList.length > 1) {
 			characterList.push('random');
 		}
 
 		/*
-		for (i in 0...20) { // For debug purposes only
-			characterList.push('goober');
-			characterList.push('random');
-		}
-		*/
+			for (i in 0...20) { // For debug purposes only
+				characterList.push('goober');
+				characterList.push('random');
+			}
+		 */
 
 		add(bannerGroup);
 		CharacterManager.playerControlled = [];
@@ -93,12 +91,12 @@ class CharacterSelectState extends SuffState {
 		grid.velocity.set(160, 160);
 		add(grid);
 
-		selectYourDipshit = new FlxText(0, 0, 0, 'CHOOSE YOUR VESSELS');
-		selectYourDipshit.setFormat(Paths.font('default'), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.SHADOW, 0x80000000);
-		selectYourDipshit.borderSize = 4;
-		selectYourDipshit.screenCenter();
-		selectYourDipshit.y = FlxG.height * (1 - cardOccupicationHeight) - selectYourDipshit.height;
-		add(selectYourDipshit);
+		selectCharacterTxt = new FlxText(0, 0, 0, 'CHOOSE YOUR VESSELS');
+		selectCharacterTxt.setFormat(Paths.font('default'), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.SHADOW, 0x80000000);
+		selectCharacterTxt.borderSize = 4;
+		selectCharacterTxt.screenCenter();
+		selectCharacterTxt.y = FlxG.height * (1 - cardOccupicationHeight) - selectCharacterTxt.height;
+		add(selectCharacterTxt);
 
 		add(playerOutlineShadows);
 
@@ -160,12 +158,12 @@ class CharacterSelectState extends SuffState {
 			}, CharacterManager.playerControlled[i]);
 
 			/*
-			addSliderOption(i, 'Skill Level', function(val:Float) {
-				CharacterManager.cpuLevel[i] = Std.int(val);
-			}, 1, 3, 1, function(val:Float) {
-				return Std.int(val) + '';
-			}, CharacterManager.cpuLevel[i]);
-			*/
+				addSliderOption(i, 'Skill Level', function(val:Float) {
+					CharacterManager.cpuLevel[i] = Std.int(val);
+				}, 1, 3, 1, function(val:Float) {
+					return Std.int(val) + '';
+				}, CharacterManager.cpuLevel[i]);
+			 */
 		}
 		playerSettingGroup.y = FlxG.height;
 
@@ -228,29 +226,10 @@ class CharacterSelectState extends SuffState {
 		add(rightButton);
 
 		readySign = new ReadySign();
-		readySign.onClick = function () {
+		readySign.onClick = function() {
 			proceedToPlayState();
 		};
 		add(readySign);
-
-		slashBGDim = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
-		slashBGDim.alpha = 0;
-		add(slashBGDim);
-
-		slashBG = new FlxSprite();
-		slashBG.frames = Paths.sparrowAtlas('gui/menus/characterSelect/slashBG');
-		slashBG.animation.addByPrefix('idle', 'idle', 24, false);
-		slashBG.screenCenter();
-		slashBG.scale.set(1, 0.75);
-		slashBG.alpha = 0;
-		add(slashBG);
-
-		gameOn = new FlxText(0, 0, 0, 'GAME ON!');
-		gameOn.setFormat(Paths.font('default'), 256, FlxColor.WHITE);
-		gameOn.alpha = 0;
-		gameOn.screenCenter();
-		gameOn.scale.set(0, 0);
-		add(gameOn);
 
 		changeDescription(null);
 		changePage();
@@ -274,8 +253,10 @@ class CharacterSelectState extends SuffState {
 		playerSettingGroup.add(text);
 	}
 
-	function addSliderOption(i:Int, name:String, callback:Float->Void, rangeMin:Float, rangeMax:Float, step:Float, displayFunction:Float->String, defaultValue:Float) {
-		var option:SuffSliderOption = new SuffSliderOption(sectionWidth * i + (sectionWidth - 256) / 2, optionY[i], callback, rangeMin, rangeMax, step, displayFunction, defaultValue);
+	function addSliderOption(i:Int, name:String, callback:Float->Void, rangeMin:Float, rangeMax:Float, step:Float, displayFunction:Float->String,
+			defaultValue:Float) {
+		var option:SuffSliderOption = new SuffSliderOption(sectionWidth * i + (sectionWidth - 256) / 2, optionY[i], callback, rangeMin, rangeMax, step,
+			displayFunction, defaultValue);
 
 		var text:FlxText = new FlxText(0, optionY[i], 0, name);
 		text.setFormat(Paths.font('default'), 32, FlxColor.WHITE, LEFT);
@@ -293,7 +274,7 @@ class CharacterSelectState extends SuffState {
 	function changeDescription(char:CharacterData) {
 		if (cardTweens.get('NOSKIP_description') != null)
 			cardTweens.get('NOSKIP_description').cancel();
-		
+
 		description.reloadText(char);
 		description.x = marginRight.x + marginRight.width / 2;
 		description.y = initialDescriptionY;
@@ -310,7 +291,7 @@ class CharacterSelectState extends SuffState {
 			description.x = marginLeft.x + marginLeft.width;
 		} else {
 			description.screenCenter(X);
-		} 
+		}
 	}
 
 	function moveDescription(direction:Int = 0, delay:Float = 1.0) {
@@ -451,7 +432,7 @@ class CharacterSelectState extends SuffState {
 	function moveOnToPlayerSettings() {
 		inPlayerSettings = true;
 		playerOutline.visible = false;
-		selectYourDipshit.visible = false;
+		selectCharacterTxt.visible = false;
 		for (outline in playerOutlineShadows) {
 			outline.visible = false;
 		}
@@ -485,7 +466,7 @@ class CharacterSelectState extends SuffState {
 		for (banner in bannerGroup) {
 			banner.disabled = false;
 		}
-		selectYourDipshit.visible = true;
+		selectCharacterTxt.visible = true;
 
 		curPlayer += change;
 		curPage = playerPages[curPlayer];
@@ -525,22 +506,9 @@ class CharacterSelectState extends SuffState {
 	}
 
 	function proceedToPlayState() {
-		SuffState.playMusic('characterSelectEnd', 1, true, true, false);
 		playerSettingGroup.y = FlxG.height;
 		isExiting = true;
 		readySign.moveSign(true);
-		cardTweens.set('slashBGDim', FlxTween.tween(slashBGDim, {alpha: 0.5}, 0.5));
-		slashBG.alpha = 0.25;
-		slashBG.animation.play('idle');
-		cardTweens.set('gameOn', FlxTween.tween(gameOn, {alpha: 1, 'scale.x': 1, 'scale.y': 1}, 1, {
-			ease: FlxEase.bounceOut,
-			onComplete: function(_) {
-				new FlxTimer().start(1, function(_) {
-					CharacterManager.parseRandomCharacters();
-					PlayState.hasSeenCutscene = false;
-					SuffState.switchState(new PlayState());
-				});
-			}
-		}));
+		openSubState(new GameOnSubState(new PlayState()));
 	}
 }

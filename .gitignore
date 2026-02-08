@@ -1,2 +1,4 @@
 export/
 source/backend/VersionMetadataPrivate
+.vscode
+.idea

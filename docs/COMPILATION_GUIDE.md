@@ -33,7 +33,4 @@ The game compiles without additional setup.
 ## Building
 Run `lime test <PLATFORM>` to build and launch the game for your platform. (for example, `lime test windows`)
 
-## Remarks
-- In compliance with GitHub community guidelines, all in-game assets will **not** be provided in the source files. Download the original game to extract them yourself.
-
 # [Back To Main Page](MAIN_PAGE.md)

@@ -1,4 +1,5 @@
 {
 	"name": "Deflate",
-	"description": "Deplete one bar of Pressure."
+	"description": "Deplete one bar of Pressure.",
+	"defaultCost": 4
 }

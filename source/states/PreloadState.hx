@@ -12,21 +12,21 @@ import flash.text.TextFormatAlign;
 import flash.Lib;
 import flixel.FlxG;
 
-@:bitmap("assets/images/gui/menus/loading/criDeSadGold.png") class LogoImage extends BitmapData {
+@:bitmap("assets/images/gui/menus/preload/criDeSadGold.png") class LogoImage extends BitmapData {
 }
 
-@:bitmap("assets/images/gui/menus/loading/loadingText.png") class LoadingTextImage extends BitmapData {
+@:bitmap("assets/images/gui/menus/preload/loadingText.png") class LoadingTextImage extends BitmapData {
 }
 
 @:font("assets/fonts/default.ttf") class CustomFont extends Font {
 }
 
 class PreloadState extends FlxBasePreloader {
-	public function new(MinDisplayTime:Float = 3, ?AllowedURLs:Array<String>) {
-		#if (!windows && !mac && !linux)
-		super(MinDisplayTime, AllowedURLs);
+	public function new(MinDisplayTime:Float = 0, ?AllowedURLs:Array<String>) {
+		#if !desktop
+		super(3, AllowedURLs);
 		#else
-		super(0, AllowedURLs);
+		super(MinDisplayTime, AllowedURLs);
 		#end
 	}
 

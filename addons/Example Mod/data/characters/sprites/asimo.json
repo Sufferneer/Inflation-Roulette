@@ -7,6 +7,7 @@
 		"skillReload",
 		"misc",
 		"intro",
+		"preWin",
 		"win"
 	],
 	"animations": [
@@ -338,6 +339,38 @@
 		},
 		{
 			"name": "skillPressurize3",
+			"prefix": "skillPressurize3",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "skill0",
+			"prefix": "skillPressurize0",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "skill1",
+			"prefix": "skillPressurize1",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "skill2",
+			"prefix": "skillPressurize2",
+			"fps": 24,
+			"offset": [0, 0],
+			"indices": [],
+			"loop": false
+		},
+		{
+			"name": "skill3",
 			"prefix": "skillPressurize3",
 			"fps": 24,
 			"offset": [0, 0],

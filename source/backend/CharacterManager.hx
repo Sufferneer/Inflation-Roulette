@@ -10,36 +10,8 @@ class CharacterManager {
 		// ass
 	}
 
-	public static function pushGlobalCharacterList() {
-		globalCharacterList = [];
-
-		// vanilla characters
-		#if sys
-		var fileList = FileSystem.readDirectory(Paths.getPath('data/characters'));
-		#else
-		var fileList = Utils.textFileToArray(Paths.getPath('data/characterList.txt'));
-		#end
-
-		var dataFolder:String = Paths.getPath('data/characters');
-		for (file in fileList) {
-			var path = haxe.io.Path.join([dataFolder, file]);
-			#if sys if (!FileSystem.isDirectory(path) && file.endsWith('.json')) #end {
-				globalCharacterList.push(file.replace('.json', ''));
-			}
-		}
-
-		#if _ALLOW_ADDONS
-		var addonPath = Paths.addons();
-		for (addonFolder in Addons.getGlobalAddons()) {
-			var addonCharacterFolder = haxe.io.Path.join([addonPath, addonFolder, 'data/characters']);
-			for (file in FileSystem.readDirectory(addonCharacterFolder)) {
-				var path = haxe.io.Path.join([addonCharacterFolder, file]);
-				if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
-					globalCharacterList.push(file.replace('.json', ''));
-				}
-			}
-		}
-		#end
+	public static function initialize() {
+		globalCharacterList = Paths.readDirectories('data/characters', 'data/characterList.txt', 'json');
 	}
 
 	public static function parseRandomCharacters() {

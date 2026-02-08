@@ -31,7 +31,7 @@ class CreditsState extends SuffState {
 		['SPECIAL THANKS', '', 'HEADING'],
 		['SqirraRNG - Crash Handler', '', 'default'],
 		[
-			'changedinflation.de - Inspiration For Game-Dev',
+			'changedinflation.de - Linux Port',
 			'',
 			'default'
 		],
@@ -40,18 +40,8 @@ class CreditsState extends SuffState {
 		['Haxe', 'haxe', 'LOGO'],
 		['OpenFL', 'openfl', 'LOGO'],
 		['Lime', 'lime', 'default'],
-		['CREDITS SKETCHES', '', 'HEADING'],
-		['crococat', '', 'default'],
-		['howfuii', '', 'default'],
-		['Skodd420', '', 'default'],
-		['TheRoboticError', '', 'default'],
-		['Protogenics_Red', '', 'default'],
-		['RetroActiveX', '', 'default'],
-		['theotherface58', '', 'default'],
-		['SillyJuices', '', 'default'],
-		['NicklySuffer', 'nicklysuffer', 'LOGO', Std.int(FlxG.height / 4)],
 		[
-			'This game is made in 72 hours (336 hours) as a joke. I would like to thank my fans for their support throughout this game, as well as Discord members who provided feedback and ideas.',
+			'This game is made in 72 hours (correction: 2,048 hours) as a joke. I would like to thank my fans for their support throughout this game, as well as Discord members who provided feedback and ideas.',
 			'',
 			'default',
 			Std.int(FlxG.height / 2)
@@ -147,18 +137,7 @@ class CreditsState extends SuffState {
 		};
 		add(exitButton);
 
-		var fileList = [];
-		#if sys
-		fileList = FileSystem.readDirectory(Paths.getPath('images/gui/menus/credits/sketches'));
-		#else
-		fileList = Utils.textFileToArray(Paths.getPath('images/gui/menus/credits/sketches/sketchesList.txt'));
-		#end
-
-		for (folder in fileList) {
-			if (!folder.toLowerCase().endsWith('.txt')) {
-				imageList.push(folder.replace('.png', ''));
-			}
-		}
+		imageList = Paths.readDirectories('images/gui/menus/credits/sketches', 'images/gui/menus/credits/sketchesList.txt', 'png');
 	}
 
 	function exitMenu() {

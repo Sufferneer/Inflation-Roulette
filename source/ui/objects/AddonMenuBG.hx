@@ -79,23 +79,20 @@ class AddonMenuBG extends FlxTypedSpriteGroup<AddonMenuBGTile> {
 	}
 }
 
-class AddonMenuBGTile extends FlxSprite {
+class AddonMenuBGTile extends GameIcon {
 	public static final bgSize:Int = 160;
 	
 	static final images:Array<String> = [
-		'gui/icons/stats/skill',
-		'gui/icons/stats/pressure',
-		'gui/icons/stats/gun',
-		'gui/icons/stats/confidence'
+		'stats/skill',
+		'stats/pressure',
+		'stats/gun',
+		'stats/confidence'
 	];
 	public var index:Int = 0;
 
 	public function new(x:Float, y:Float, index:Int) {
-		super(x, y);
+		super(x, y, images[index], bgSize);
 		this.index = index;
-		loadGraphic(Paths.image(images[index]));
-		setGraphicSize(bgSize, bgSize);
-		updateHitbox();
 	}
 
 	override function update(elapsed:Float) {
