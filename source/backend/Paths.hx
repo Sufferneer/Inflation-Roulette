@@ -358,6 +358,8 @@ class Paths {
 		if (FileSystem.exists(path))
 			return File.getContent(path);
 		#end
+
+		trace(path);
 		if (OpenFlAssets.exists(path, TEXT))
 			return Assets.getText(path);
 		return null;

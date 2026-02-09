@@ -171,18 +171,17 @@ class CharacterSelectState extends SuffState {
 		lastPage = Std.int((characterList.length * calculatedWidth) / (FlxG.width - marginLeft.width - marginRight.width));
 		initialCardY = FlxG.height * (1 - cardOccupicationHeight) + (FlxG.height * cardOccupicationHeight - description.height - calculatedHeight) / 2;
 		for (i in 0...characterList.length) {
-			var leChar:CharacterData = cast Json.parse(Paths.getTextFromFile('data/characters/' + characterList[i] + '.json'));
-			if (characterList[i] == 'random') {
-				leChar = {
-					id: 'random',
-					name: '???',
-					description: 'Not sure who to choose? Let the game decide.',
-					skills: [],
-					modifiers: [],
-					maxPressure: 0,
-					maxConfidence: 0
-				};
-			}
+			var leChar:CharacterData = {
+				id: 'random',
+				name: '???',
+				description: 'Not sure who to choose? Let the game decide.',
+				skills: [],
+				modifiers: [],
+				maxPressure: 0,
+				maxConfidence: 0
+			};
+			if (characterList[i] != 'random')
+				leChar = cast Json.parse(Paths.getTextFromFile('data/characters/' + characterList[i] + '.json'));
 			leChar.id = characterList[i];
 
 			var card = new CharacterSelectCard(0, 0, leChar);
@@ -411,7 +410,7 @@ class CharacterSelectState extends SuffState {
 					ease: FlxEase.quintOut
 				}));
 			} else {
-				FlxFlicker.flicker(card, 1, FlxG.elapsed * (Preferences.data.photosensitivity ? 8 : 2), true, true, function(_) {
+				FlxFlicker.flicker(card, 1, FlxG.elapsed * (Preferences.data.enablePhotosensitiveMode ? 8 : 2), true, true, function(_) {
 					var index:Int = curPlayer;
 					for (i in 0...CharacterManager.selectedCharacterList.length) {
 						index = (index + 1) % CharacterManager.selectedCharacterList.length;

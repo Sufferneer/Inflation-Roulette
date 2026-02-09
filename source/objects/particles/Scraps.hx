@@ -1,4 +1,4 @@
-package objects;
+package objects.particles;
 
 import flixel.graphics.FlxGraphic;
 import flixel.effects.particles.FlxParticle;

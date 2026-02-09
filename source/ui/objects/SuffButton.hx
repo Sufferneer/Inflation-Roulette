@@ -31,9 +31,9 @@ class SuffButton extends FlxSpriteGroup {
 	public var btnBGOutlineColor(default, set):FlxColor = 0xFF008FB5;
 	public var btnBGAlpha(default, set):Float = 1;
 
-	public var clickSound:String = 'ui/click';
-	public var releaseSound:String = 'ui/release';
-	public var hoverSound:String = 'ui/hover';
+	public var clickSound:String = 'ui/buttonClick';
+	public var releaseSound:String = 'ui/buttonRelease';
+	public var hoverSound:String = 'ui/buttonHover';
 
 	public var btnBG:FlxUI9SliceSprite;
 	public var btnBGOutline:FlxUI9SliceSprite;

@@ -26,6 +26,11 @@ class OptionsSubState extends SuffSubState {
 	var optionsScrollLowerLimit:Float = 0;
 	var scrollBarTween:FlxTween;
 
+	var optionsScroll:Float = 0;
+	var optionsScrollLerped:Float = 0;
+
+	static final scrollLerpFactor:Float = 10;
+
 	var touchedMusicOption:Bool = false;
 
 	public function new() {
@@ -111,13 +116,13 @@ class OptionsSubState extends SuffSubState {
 
 		createBooleanOption('Photosensitive Mode',
 			'Dampen screen flashes and other flashing effects.\nStrongly recommended for people with photosensitive epilepsy.', function(value:Bool) {
-				Preferences.data.photosensitivity = value;
-		}, Preferences.data.photosensitivity);
+				Preferences.data.enablePhotosensitiveMode = value;
+		}, Preferences.data.enablePhotosensitiveMode);
 
 		createBooleanOption('Force Alising',
 			'Removes antialiasing from all sprites even when enabled. Improves performance, but may make some graphics look jagged.', function(value:Bool) {
-				Preferences.data.forceAliasing = value;
-		}, Preferences.data.forceAliasing);
+				Preferences.data.enableForceAliasing = value;
+		}, Preferences.data.enableForceAliasing);
 
 		createBooleanOption('Main Menu Animations', 'Always play first startup animations in the Main Menu.', function(value:Bool) {
 			Preferences.data.alwaysPlayMainMenuAnims = value;
@@ -129,9 +134,10 @@ class OptionsSubState extends SuffSubState {
 			return Math.round(value * 100) + '%';
 		}, Preferences.data.cameraEffectIntensity);
 
-		createBooleanOption('Letterboxing', 'Show black bars on top and bottom sides of the screen during player animations and cutscenes.', function(value:Bool) {
-			Preferences.data.enableLetterbox = value;
-		}, Preferences.data.enableLetterbox);
+		createBooleanOption('Letterboxing', 'Show black bars on top and bottom sides of the screen during player animations and cutscenes.',
+			function(value:Bool) {
+				Preferences.data.enableLetterbox = value;
+			}, Preferences.data.enableLetterbox);
 
 		// AUDIO SETTINGS
 		createSubheading('Audio & Music');
@@ -145,9 +151,10 @@ class OptionsSubState extends SuffSubState {
 		}, Preferences.data.useClassicMusic);
 
 		createBooleanOption('Music Toast',
-			'A notification containing the current background music name and its author will be shown whenever a music track is played.', function(value:Bool) {
+			'A notification containing the current background music name and its author will be shown whenever a music track is played.',
+			function(value:Bool) {
 				Preferences.data.showMusicToast = value;
-		}, Preferences.data.showMusicToast);
+			}, Preferences.data.showMusicToast);
 
 		createSliderOption('Music Volume', 'The volume percentage of background music.', function(value:Float) {
 			Preferences.data.musicVolume = value;
@@ -170,6 +177,10 @@ class OptionsSubState extends SuffSubState {
 		}, 0.0, 1.0, 0.05, function(value:Float) {
 			return Math.round(value * 100) + '%';
 		}, Preferences.data.uiSoundVolume);
+
+		createBooleanOption('Cursor Sounds', 'Plays a click sound whenever the mouse cursor clicks something.', function(value:Bool) {
+			Preferences.data.playCursorSounds = value;
+		}, Preferences.data.playCursorSounds);
 
 		createBooleanOption('Borborygmi', "Players play belly gurgle sounds on idle when inflated.", function(value:Bool) {
 			Preferences.data.allowBellyGurgles = value;
@@ -266,7 +277,6 @@ class OptionsSubState extends SuffSubState {
 
 	function updateScrollBar() {
 		scrollBar.alpha = 0.375;
-		scrollBar.y = optionsGroup.y / optionsScrollLowerLimit * (FlxG.height - scrollBar.height);
 
 		if (scrollBarTween != null)
 			scrollBarTween.cancel();
@@ -289,10 +299,10 @@ class OptionsSubState extends SuffSubState {
 	}
 
 	function boundOptionMenuScroll() {
-		if (optionsGroup.y > 0) {
-			optionsGroup.y = 0;
-		} else if (optionsGroup.y < optionsScrollLowerLimit) {
-			optionsGroup.y = optionsScrollLowerLimit;
+		if (optionsScroll > 0) {
+			optionsScroll = 0;
+		} else if (optionsScroll < optionsScrollLowerLimit) {
+			optionsScroll = optionsScrollLowerLimit;
 		}
 	}
 
@@ -305,15 +315,20 @@ class OptionsSubState extends SuffSubState {
 			exitOptionsMenu();
 		}
 		if (FlxG.mouse.wheel != 0) {
-			optionsGroup.y += FlxG.mouse.wheel * 128;
+			optionsScroll += FlxG.mouse.wheel * 128;
 			boundOptionMenuScroll();
 			updateScrollBar();
 		}
 		if (FlxG.mouse.pressed && allowMouseScrolling) {
-			optionsGroup.y = optionsGroup.y - (FlxG.mouse.deltaScreenY) * (FlxG.height / scrollBar.height);
+			optionsScroll = optionsScroll - (FlxG.mouse.deltaScreenY) * (FlxG.height / scrollBar.height);
 			boundOptionMenuScroll();
+			optionsScrollLerped = optionsScroll;
 			updateScrollBar();
 		}
+
+		optionsScrollLerped = FlxMath.lerp(optionsScrollLerped, optionsScroll, elapsed * scrollLerpFactor);
+		optionsGroup.y = optionsScrollLerped;
+		scrollBar.y = optionsScrollLerped / optionsScrollLowerLimit * (FlxG.height - scrollBar.height);
 
 		allowMouseScrolling = true;
 		for (opt in optionsGroup) {

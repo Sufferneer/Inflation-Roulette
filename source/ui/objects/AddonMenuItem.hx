@@ -24,7 +24,7 @@ class AddonMenuItem extends SuffButton {
 		add(bg);
 
 		var iconOffset:Float = (defaultHeight - iconSize) / 2;
-		icon = new FlxSprite(iconOffset, iconOffset).loadGraphic(Paths.addons(folder + '/pack.png'));
+		icon = new FlxSprite(iconOffset, iconOffset).loadGraphic(Paths.addons(folder + '/metadata/pack.png'));
 		icon.setGraphicSize(iconSize, iconSize);
 		icon.updateHitbox();
 		add(icon);

@@ -16,8 +16,8 @@ class SaveVariables {
 	public var allowPopping:Bool = true;
 	public var ignoreEliminatedPlayers:Bool = false;
 	public var enableDebugMode:Bool = false;
-	public var photosensitivity:Bool = false;
-	public var forceAliasing:Bool = false;
+	public var enablePhotosensitiveMode:Bool = false;
+	public var enableForceAliasing:Bool = false;
 	public var alwaysPlayMainMenuAnims:Bool = false;
 	public var cameraEffectIntensity:Float = 1;
 	public var enableLetterbox:Bool = true;
@@ -26,6 +26,7 @@ class SaveVariables {
 	public var musicVolume:Float = 0.25;
 	public var gameSoundVolume:Float = 1;
 	public var uiSoundVolume:Float = 0.5;
+	public var playCursorSounds:Bool = true;
 	public var allowBellyGurgles:Bool = false;
 	public var allowBellyCreaks:Bool = true;
 	public var cacheOnGPU:Bool = true;
@@ -45,6 +46,7 @@ class Preferences {
 	 * The current list of setting variables and its values that the game is currently using.
 	 */
 	public static var data:SaveVariables = null;
+
 	/**
 	 * List of setting variables and its default values.
 	 */

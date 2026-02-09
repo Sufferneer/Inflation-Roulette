@@ -11,27 +11,25 @@ import ui.objects.AddonMenuItem;
 import ui.objects.SuffIconButton;
 import tjson.TJSON as Json;
 
-class AddonMenuState extends SuffState {
+class AddonsMenuState extends SuffState {
 	var bg:FlxSprite;
 	var icons:FlxTypedSpriteGroup<AddonMenuBG> = new FlxTypedSpriteGroup<AddonMenuBG>();
 	var modBG:FlxSprite;
 	var modItems:FlxTypedSpriteGroup<AddonMenuItem> = new FlxTypedSpriteGroup<AddonMenuItem>();
-	var modItemsUpperY:Float = 0;
-	var modItemsLowerY:Float = 0;
-	var modItemScrollBar:FlxSprite;
+	var modItemsScrollLimit:Float = 0;
+	var modItemsScrollBar:FlxSprite;
 
 	var modBannerBG:FlxSprite;
 	var modBanner:FlxSprite;
 	var modBannerVignette:FlxSprite;
 
 	var modMetadataItems:FlxSpriteGroup = new FlxSpriteGroup();
-	var modMetadataItemsUpperY:Float = 0;
-	var modMetadataItemsLowerY:Float = 0;
+	var modMetadataItemsScrollLimit:Float = 0;
 	var modTitleText:FlxText;
 	var modDescriptionText:FlxText;
 	var modAuthorTitleText:FlxText;
 	var modAuthorsText:FlxText;
-	var modMetadataScrollBar:FlxSprite;
+	var modMetadataItemsScrollBar:FlxSprite;
 
 	public static final padding:Int = 20;
 	public static final itemCount:Int = 5;
@@ -71,7 +69,7 @@ class AddonMenuState extends SuffState {
 		add(modBG);
 
 		AddonMenuItem.defaultWidth = Std.int(modBG.width);
-		AddonMenuItem.defaultHeight = Std.int(modBG.height / AddonMenuState.itemCount);
+		AddonMenuItem.defaultHeight = Std.int(modBG.height / AddonsMenuState.itemCount);
 
 		add(modItems);
 		for (i in 0...leAddons.length) {
@@ -86,15 +84,15 @@ class AddonMenuState extends SuffState {
 		}
 
 		if (modItems.height > FlxG.height) {
-			modItemsLowerY = FlxG.height - modItems.height;
+			modItemsScrollLimit = modItems.height - FlxG.height;
 		}
 
-		modItemScrollBar = new FlxSprite(modBG.x + modBG.width,
-			modBG.y).makeGraphic(Std.int(scrollBarWidth), Std.int(FlxG.height * (FlxG.height / (Math.abs(modItemsLowerY) + FlxG.height))), 0xFFFFFFFF);
-		modItemScrollBar.alpha = 0.25;
-		modItemScrollBar.visible = (modItems.height > FlxG.height);
-		updateModItemScrollBar();
-		add(modItemScrollBar);
+		modItemsScrollBar = new FlxSprite(modBG.x + modBG.width,
+			modBG.y).makeGraphic(Std.int(scrollBarWidth), Std.int(FlxG.height * (FlxG.height / (Math.abs(modItemsScrollLimit) + FlxG.height))), 0xFFFFFFFF);
+		modItemsScrollBar.alpha = 0.5;
+		modItemsScrollBar.visible = (modItems.height > FlxG.height);
+		updateModItemsScrollBar();
+		add(modItemsScrollBar);
 
 		modBanner = new FlxSprite();
 
@@ -132,9 +130,9 @@ class AddonMenuState extends SuffState {
 		modAuthorsText.alpha = 0.75;
 		modMetadataItems.add(modAuthorsText);
 
-		modMetadataScrollBar = new FlxSprite(modBannerBG.x - scrollBarWidth, modBannerBG.y);
-		updateModMetadataScrollBar();
-		add(modMetadataScrollBar);
+		modMetadataItemsScrollBar = new FlxSprite(modBannerBG.x - scrollBarWidth, modBannerBG.y);
+		updateModMetadataItemsScrollBar();
+		add(modMetadataItemsScrollBar);
 
 		if (leAddons.length > 0) {
 			changeDisplayedMetadata(leAddons[0], modItems.members[0].addon);
@@ -153,12 +151,13 @@ class AddonMenuState extends SuffState {
 		curCrochet = 60 / SuffState.currentMusicBPM * 1000;
 	}
 
-	function updateModItemScrollBar() {
-		modItemScrollBar.y = modItems.y / modItemsLowerY * (FlxG.height - modItemScrollBar.height);
+	function updateModItemsScrollBar() {
+		modItemsScrollBar.y = modItemsScrollLerped / modItemsScrollLimit * (FlxG.height - modItemsScrollBar.height);
 	}
 
-	function updateModMetadataScrollBar() {
-		modMetadataScrollBar.y = modMetadataItems.y / modMetadataItemsLowerY * (FlxG.height - modMetadataScrollBar.height);
+	function updateModMetadataItemsScrollBar() {
+		var percent:Float = (modMetadataItemsScrollLimit > 0) ? modMetadataItemsScrollLerped / modMetadataItemsScrollLimit : 0;
+		modMetadataItemsScrollBar.y = modBanner.y + modBanner.height + percent * (FlxG.height - modMetadataItemsScrollBar.height - modBanner.height);
 	}
 
 	function changeDisplayedMetadata(folder:String, addon:AddonData = null) {
@@ -187,20 +186,18 @@ class AddonMenuState extends SuffState {
 		modAuthorsText.y = modAuthorTitleText.y + modAuthorTitleText.height;
 		modTitleText.x = modDescriptionText.x = modAuthorTitleText.x = modAuthorsText.x = modBannerBG.x + 16;
 
-		modMetadataItems.y = modMetadataItemsUpperY = modBanner.y + modBanner.height;
-		if ((FlxG.height - modMetadataItems.y) < modMetadataItems.height) {
-			modMetadataItemsLowerY = (FlxG.height - modMetadataItems.y) - modMetadataItems.height;
-			modMetadataItemsLowerY = modMetadataItemsUpperY + modMetadataItemsLowerY - 16;
+		modMetadataItems.y = modBanner.y + modBanner.height;
+		if (modMetadataItems.height > (FlxG.height - modMetadataItems.y)) {
+			modMetadataItemsScrollLimit = modMetadataItems.height - (FlxG.height - modMetadataItems.y);
 		} else {
-			modMetadataItemsLowerY = modMetadataItemsUpperY;
+			modMetadataItemsScrollLimit = 0;
 		}
 
-		if (modMetadataScrollBar != null) {
-			modMetadataScrollBar.makeGraphic(Std.int(scrollBarWidth),
-				Std.int((FlxG.height - modBanner.height) * (FlxG.height / (Math.abs(modMetadataItemsUpperY - modMetadataItemsLowerY) + FlxG.height))),
-				0xFFFFFFFF);
-			modMetadataScrollBar.alpha = 0.25;
-			modMetadataScrollBar.visible = (modMetadataItemsUpperY != modMetadataItemsLowerY);
+		if (modMetadataItemsScrollBar != null) {
+			modMetadataItemsScrollBar.makeGraphic(Std.int(scrollBarWidth),
+				Std.int((FlxG.height - modBanner.height) * (FlxG.height / (modMetadataItemsScrollLimit + FlxG.height))), 0xFFFFFFFF);
+			modMetadataItemsScrollBar.alpha = 0.5;
+			modMetadataItemsScrollBar.visible = (modMetadataItemsScrollLimit > 0);
 		}
 
 		FlxTween.cancelTweensOf(bg, ['color']);
@@ -208,7 +205,7 @@ class AddonMenuState extends SuffState {
 	}
 
 	function changeBanner(folder:String) {
-		var path:String = Paths.addons('$folder/banner.png');
+		var path:String = Paths.addons('$folder/metadata/banner.png');
 		if (!FileSystem.exists(path)) {
 			path = Paths.getImagePath('gui/menus/addons/defaultBanner');
 		}
@@ -224,6 +221,14 @@ class AddonMenuState extends SuffState {
 		modBannerVignette.y = modBanner.y;
 	}
 
+	var modItemsScroll:Float = 0;
+	var modItemsScrollLerped:Float = 0;
+
+	var modMetadataItemsScroll:Float = 0;
+	var modMetadataItemsScrollLerped:Float = 0;
+
+	static final scrollLerpFactor:Float = 10;
+
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
@@ -236,31 +241,36 @@ class AddonMenuState extends SuffState {
 
 		if (FlxG.mouse.wheel != 0) {
 			if (FlxG.mouse.overlaps(modBG)) {
-				modItems.y += FlxG.mouse.wheel * 64;
-				updateModItemScrollBar();
+				modItemsScroll += FlxG.mouse.wheel * 64;
 				boundModItemsY();
 			} else if (FlxG.mouse.overlaps(modBannerBG)) {
-				modMetadataItems.y += FlxG.mouse.wheel * 32;
-				updateModMetadataScrollBar();
+				modMetadataItemsScroll += FlxG.mouse.wheel * 32;
 				boundModMetadataItemsY();
 			}
 		}
+
 		if (FlxG.keys.justPressed.ESCAPE) {
 			backToMainMenu();
 		}
 		if (FlxG.mouse.pressed) {
-			if (FlxG.mouse.x > FlxG.width / 2) {
-				if (modMetadataScrollBar.visible) {
-					modMetadataItems.y = modMetadataItems.y - (FlxG.mouse.deltaScreenY) * (FlxG.height / modMetadataScrollBar.height);
-					boundModMetadataItemsY();
-					updateModMetadataScrollBar();
-				}
-			} else {
-				modItems.y = modItems.y - (FlxG.mouse.deltaScreenY) * (FlxG.height / modItemScrollBar.height);
+			if (modMetadataItemsScrollBar.visible && FlxG.mouse.x > FlxG.width / 2) {
+				modMetadataItemsScroll = modMetadataItemsScroll + (FlxG.mouse.deltaScreenY) * (FlxG.height / modMetadataItemsScrollBar.height);
+				boundModMetadataItemsY();
+			} else if (modItemsScrollBar.visible && FlxG.mouse.x < FlxG.width / 2) {
+				modItemsScroll = modItemsScroll + (FlxG.mouse.deltaScreenY) * (FlxG.height / modItemsScrollBar.height);
 				boundModItemsY();
-				updateModItemScrollBar();
+				updateModItemsScrollBar();
 			}
 		}
+
+		modItemsScrollLerped = FlxMath.lerp(modItemsScrollLerped, modItemsScroll, elapsed * scrollLerpFactor);
+		modItems.y = -modItemsScrollLerped;
+
+		modMetadataItemsScrollLerped = FlxMath.lerp(modMetadataItemsScrollLerped, modMetadataItemsScroll, elapsed * scrollLerpFactor);
+		modMetadataItems.y = modBanner.y + modBanner.height - modMetadataItemsScrollLerped;
+
+		updateModItemsScrollBar();
+		updateModMetadataItemsScrollBar();
 
 		curBeat = Std.int(FlxG.sound.music.time / curCrochet);
 		if (prevBeat != curBeat) {
@@ -271,18 +281,18 @@ class AddonMenuState extends SuffState {
 	}
 
 	function boundModMetadataItemsY() {
-		if (modMetadataItems.y < modMetadataItemsLowerY) {
-			modMetadataItems.y = modMetadataItemsLowerY;
-		} else if (modMetadataItems.y > modMetadataItemsUpperY) {
-			modMetadataItems.y = modMetadataItemsUpperY;
+		if (modMetadataItemsScroll < 0) {
+			modMetadataItemsScroll = 0;
+		} else if (modMetadataItemsScroll > modMetadataItemsScrollLimit) {
+			modMetadataItemsScroll = modMetadataItemsScrollLimit;
 		}
 	}
 
 	function boundModItemsY() {
-		if (modItems.y < modItemsLowerY) {
-			modItems.y = modItemsLowerY;
-		} else if (modItems.y > modItemsUpperY) {
-			modItems.y = modItemsUpperY;
+		if (modItemsScroll > modItemsScrollLimit) {
+			modItemsScroll = modItemsScrollLimit;
+		} else if (modItemsScroll < 0) {
+			modItemsScroll = 0;
 		}
 	}
 

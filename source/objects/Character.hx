@@ -91,7 +91,7 @@ class Character extends FlxSprite {
 			combinedAtlas.addAtlas(atlas, false);
 		}
 		frames = combinedAtlas;
-		antialiasing = (!Preferences.data.forceAliasing) ? !!spriteJson.antialiasing : false;
+		antialiasing = (!Preferences.data.enableForceAliasing) ? !!spriteJson.antialiasing : false;
 
 		animOffsets = new Map<String, Array<Dynamic>>();
 		animSoundPaths = new Map<String, Array<String>>();

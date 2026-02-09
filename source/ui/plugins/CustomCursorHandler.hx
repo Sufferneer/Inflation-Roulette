@@ -1,8 +1,8 @@
 package ui.plugins;
 
-import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.addons.ui.FlxUI9SliceSprite;
+import openfl.geom.Rectangle;
 
 class CustomCursorHandler extends FlxBasic {
 	public static var instance:Null<CustomCursorHandler> = null;
@@ -23,6 +23,9 @@ class CustomCursorHandler extends FlxBasic {
 		if (instance == null && enabled)
 			return;
 		Utils.cursorChange('default', FlxG.mouse.pressed);
+		if (Preferences.data.playCursorSounds && FlxG.mouse.visible && FlxG.mouse.justPressed) {
+			SuffState.playUISound(Paths.sound('ui/cursorClick'), 0.5, FlxG.random.float(1.5, 3));
+		}
 		super.update(elapsed);
 	}
 }

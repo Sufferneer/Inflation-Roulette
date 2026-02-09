@@ -39,7 +39,7 @@ class Addons {
 
 	public static function getAddonData(?folder:String = null):AddonData {
 		#if _ALLOW_ADDONS
-		var path = Paths.addons(folder + '/metadata.json');
+		var path = Paths.addons(folder + '/metadata/metadata.json');
 		if (FileSystem.exists(path)) {
 			try {
 				#if sys

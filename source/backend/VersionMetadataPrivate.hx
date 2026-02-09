@@ -15,7 +15,7 @@ class VersionMetadata {
 		var major = majorVersionMap.get(arr[0]);
 		var minorText = '';
 		if (Std.parseInt(arr[1]) > 0)
-			minorText = ' (Release ${arr[1]})';
+			minorText = ' (Pitstop ${arr[1]})';
 		return major + minorText;
 	}
 

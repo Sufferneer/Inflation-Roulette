@@ -6,8 +6,8 @@ import backend.GameplayManager;
 import backend.enums.RoundRandomStatus;
 import backend.enums.SuffTransitionStyle;
 import objects.Character;
-import objects.Confetti;
-import objects.Scraps;
+import objects.particles.Confetti;
+import objects.particles.Scraps;
 import objects.Skill;
 import substates.PauseSubState;
 import ui.objects.SkillCard;
@@ -691,7 +691,7 @@ class PlayState extends SuffState {
 
 	function screenFlash(color:FlxColor = 0xFFFFFFFF, duration:Float = 0.125) {
 		var usedColor = color;
-		if (Preferences.data.photosensitivity)
+		if (Preferences.data.enablePhotosensitiveMode)
 			usedColor.alpha = 32;
 		FlxG.camera.flash(usedColor, duration, true);
 	}

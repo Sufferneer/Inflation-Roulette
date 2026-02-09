@@ -8,7 +8,7 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import states.CreditsState;
 #if _ALLOW_ADDONS
-import states.AddonMenuState;
+import states.AddonsMenuState;
 #end
 import substates.OptionsSubState;
 import substates.GamemodeSelectSubState;
@@ -16,6 +16,7 @@ import ui.objects.GameLogo;
 
 class MainMenuState extends SuffState {
 	public static var initialized:Bool = false;
+
 	var finishedAnimation:Bool = true;
 
 	var bg:FlxSprite;
@@ -106,7 +107,7 @@ class MainMenuState extends SuffState {
 		creditsButton.onClick = function() {
 			menuButtonFunctions('CREDITS');
 		}
-		creditsButton.tooltipText = 'Copyright © NicklySuffer';
+		creditsButton.tooltipText = 'Copyright (C) NicklySuffer';
 		add(creditsButton);
 
 		add(buttonGroup);
@@ -235,7 +236,7 @@ class MainMenuState extends SuffState {
 				openSubState(new OptionsSubState());
 			#if _ALLOW_ADDONS
 			case 'ADDONS':
-				SuffState.switchState(new AddonMenuState());
+				SuffState.switchState(new AddonsMenuState());
 			#end
 			case 'CREDITS':
 				SuffState.switchState(new CreditsState());
