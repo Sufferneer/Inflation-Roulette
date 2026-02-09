@@ -25,7 +25,7 @@ Planned features are as follows:
 - Game modes
 - Selectable stages
 - Character & stage editor
-## [Wiki](docs/MAIN_PAGE)
+## [Wiki](https://github.com/Sufferneer/Inflation-Roulette/wiki)
 We have a dedicated wiki for the documentation and guides for the inner workings for _Inflation Roulette: Reloaded_.
 ## Credits
 ### NicklySuffer
