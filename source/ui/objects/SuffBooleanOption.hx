@@ -8,6 +8,7 @@ class SuffBooleanOption extends FlxSpriteGroup {
 
 	var outline:FlxSprite;
 	var parent:FlxSprite;
+
 	public var tooltipText:String = '';
 
 	public function new(x:Float, y:Float, callback:Bool->Void, defaultValue:Bool = false, name:String = '') {
@@ -38,7 +39,7 @@ class SuffBooleanOption extends FlxSpriteGroup {
 		super.update(elapsed);
 		if (FlxG.mouse.overlaps(parent, this.camera) && visible) {
 			if (!hovered) {
-				SuffState.playUISound(Paths.sound('ui/hover'));
+				SuffState.playUISound(Paths.sound('ui/buttonHover'));
 				Tooltip.text = tooltipText;
 				outline.visible = true;
 				hovered = true;

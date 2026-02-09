@@ -12,7 +12,9 @@ class SuffSliderOption extends FlxSpriteGroup {
 
 	var outline:FlxSprite;
 	var parent:FlxSprite;
+
 	public var tooltipText:String = '';
+
 	var displayText:FlxText;
 	var minX:Float = 0;
 	var maxX:Float = 0;
@@ -96,7 +98,7 @@ class SuffSliderOption extends FlxSpriteGroup {
 		super.update(elapsed);
 		if (FlxG.mouse.overlaps(parent, this.camera) && visible) {
 			if (!hovered) {
-				SuffState.playUISound(Paths.sound('ui/hover'));
+				SuffState.playUISound(Paths.sound('ui/buttonHover'));
 				parent.animation.play('hovered');
 				Tooltip.text = tooltipText;
 				hovered = true;
