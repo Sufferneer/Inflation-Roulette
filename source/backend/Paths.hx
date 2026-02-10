@@ -219,9 +219,9 @@ class Paths {
 			for (addon in Addons.getGlobalAddons()) {
 				if (FileSystem.exists(Paths.addons('$addon/$path'))) {
 					for (i in FileSystem.readDirectory(Paths.addons('$addon/$path'))) {
-						if (!pathsInFolder.contains(item)
-							&& FileSystem.isDirectory(Paths.addons('$addon/$path/$i')
-								&& FileSystem.exists(Paths.getPath('$addon/$path/$i/$fileToCheck'))))
+						if (!pathsInFolder.contains(i)
+							&& FileSystem.isDirectory(Paths.addons('$addon/$path/$i'))
+							&& FileSystem.exists(Paths.addons('$addon/$path/$i/$fileToCheck')))
 							pathsInFolder.push(i);
 					}
 				}
