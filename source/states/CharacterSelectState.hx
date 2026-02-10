@@ -181,7 +181,7 @@ class CharacterSelectState extends SuffState {
 				maxConfidence: 0
 			};
 			if (characterList[i] != 'random')
-				leChar = cast Json.parse(Paths.getTextFromFile('data/characters/' + characterList[i] + '.json'));
+				leChar = cast Json.parse(Paths.getTextFromFile('data/characters/' + characterList[i] + '/gameplay.json'));
 			leChar.id = characterList[i];
 
 			var card = new CharacterSelectCard(0, 0, leChar);

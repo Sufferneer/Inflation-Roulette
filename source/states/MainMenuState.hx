@@ -1,6 +1,10 @@
 package states;
 
 import backend.SplashManager;
+import backend.lunarDate.LunarDate;
+#if _ALLOW_BUILD_HANDLING
+import backend.PlatformMetadata;
+#end
 #if _ALLOW_VERSION_HANDLING
 import backend.VersionMetadata;
 #end
@@ -27,7 +31,8 @@ class MainMenuState extends SuffState {
 	static final buttonSpacing:Int = 10;
 
 	var buttonGroup:FlxTypedContainer<SuffButton> = new FlxTypedContainer<SuffButton>();
-	var infoTextGroup:FlxTypedSpriteGroup<FlxText> = new FlxTypedSpriteGroup<FlxText>();
+	var topInfoTextGroup:FlxTypedSpriteGroup<FlxText> = new FlxTypedSpriteGroup<FlxText>();
+	var bottomInfoTextGroup:FlxTypedSpriteGroup<FlxText> = new FlxTypedSpriteGroup<FlxText>();
 	var playButton:SuffButton;
 	var optionsButton:SuffButton;
 	var galleryButton:SuffButton;
@@ -81,22 +86,37 @@ class MainMenuState extends SuffState {
 		add(splashText);
 		tweenSplashTextColor();
 
-		final infoTextList:Array<String> = [
+		var topInfoTextList:Array<String> = [DateTools.format(Date.now(), '%B %d, %Y')];
+		if (SplashManager.usesLunarCalendar) {
+			var date = LunarDate.now().toString().split('・');
+			topInfoTextList.push(date[0]);
+			topInfoTextList.push(date[1] + '・' + date[2]);
+		}
+		add(topInfoTextGroup);
+		for (i in 0...topInfoTextList.length) {
+			var infoText = new FlxText(0, 0, 0, topInfoTextList[i]);
+			infoText.setFormat(Paths.font((i == 0) ? 'default' : 'unicode'), 16, FlxColor.WHITE);
+			infoText.x = FlxG.width - infoText.width;
+			infoText.y = infoText.height * i;
+			topInfoTextGroup.add(infoText);
+		}
+
+		final bottomInfoTextList:Array<String> = [
 			Utils.getGameTitle(),
+			'${PlatformMetadata.getBuildName()} Build',
 			#if _ALLOW_VERSION_HANDLING
 			'Version ' + FlxG.stage.application.meta.get('version'), VersionMetadata.getVersionName(FlxG.stage.application.meta.get('version'))
 			#else
 			'Modded Version ' + FlxG.stage.application.meta.get('version')
 			#end
 		];
-
-		add(infoTextGroup);
-		for (i in 0...infoTextList.length) {
-			var infoText = new FlxText(0, 0, 0, infoTextList[i]);
+		add(bottomInfoTextGroup);
+		for (i in 0...bottomInfoTextList.length) {
+			var infoText = new FlxText(0, 0, 0, bottomInfoTextList[i]);
 			infoText.setFormat(Paths.font('default'), 16, FlxColor.WHITE);
 			infoText.x = FlxG.width - infoText.width;
-			infoText.y = FlxG.height - infoText.height * (infoTextList.length - i);
-			infoTextGroup.add(infoText);
+			infoText.y = FlxG.height - infoText.height * (bottomInfoTextList.length - i);
+			bottomInfoTextGroup.add(infoText);
 		}
 
 		var creditImage = Paths.image('gui/menus/malletIndustriesLogo');
@@ -166,7 +186,15 @@ class MainMenuState extends SuffState {
 			});
 		}
 
-		for (num => text in infoTextGroup.members) {
+		for (num => text in topInfoTextGroup.members) {
+			text.x = FlxG.width;
+			FlxTween.tween(text, {x: FlxG.width - text.width}, 1, {
+				ease: FlxEase.cubeOut,
+				startDelay: 2 + num * 0.2
+			});
+		}
+
+		for (num => text in bottomInfoTextGroup.members) {
 			text.x = FlxG.width;
 			FlxTween.tween(text, {x: FlxG.width - text.width}, 1, {
 				ease: FlxEase.cubeOut,

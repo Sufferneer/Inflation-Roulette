@@ -154,6 +154,13 @@ class Paths {
 		return file + '.$SOUND_EXT';
 	}
 
+	/**
+	 * Scans a folder, then returns its contents' names.
+	 * @param path The folder to be scanned.
+	 * @param listPath A list txt file for organizing the contents.
+	 * @param fileFormat The file format to check for the scanned items. (the period is excluded)
+	 * @param addons Whether the function checks the addon folders as well.
+	 */
 	inline public static function readDirectories(path:String, listPath:String = '', fileFormat:String = '', addons:Bool = true) {
 		var pathsInFolder:Array<String> = Utils.textFileToArray(listPath);
 		#if sys
@@ -183,6 +190,44 @@ class Paths {
 		for (num => item in pathsInFolder) {
 			pathsInFolder[num] = item.replace('.$fileFormat', '');
 		}
+		#end
+		return pathsInFolder;
+	}
+
+	/**
+	 * Scans a folder, then returns its subfolder's names.
+	 * @param path The folder to be scanned.
+	 * @param listPath A list txt file for organizing the contents.
+	 * @param fileToCheck The relative path of the file to be checked for it to be included.
+	 * @param addons Whether the function checks the addon folders as well.
+	 */
+	inline public static function readFolderDirectories(path:String, listPath:String = '', fileToCheck:String = '', addons:Bool = true) {
+		var pathsInFolder:Array<String> = Utils.textFileToArray(listPath);
+		#if sys
+		// Main folder
+		if (FileSystem.exists(Paths.getPath(path))) {
+			for (i in FileSystem.readDirectory(Paths.getPath(path))) {
+				if (!pathsInFolder.contains(i)
+					&& FileSystem.isDirectory(Paths.getPath('$path/$i'))
+					&& FileSystem.exists(Paths.getPath('$path/$i/$fileToCheck')))
+					pathsInFolder.push(i);
+			}
+		}
+
+		#if _ALLOW_ADDONS
+		if (addons) {
+			for (addon in Addons.getGlobalAddons()) {
+				if (FileSystem.exists(Paths.addons('$addon/$path'))) {
+					for (i in FileSystem.readDirectory(Paths.addons('$addon/$path'))) {
+						if (!pathsInFolder.contains(item)
+							&& FileSystem.isDirectory(Paths.addons('$addon/$path/$i')
+								&& FileSystem.exists(Paths.getPath('$addon/$path/$i/$fileToCheck'))))
+							pathsInFolder.push(i);
+					}
+				}
+			}
+		}
+		#end
 		#end
 		return pathsInFolder;
 	}

@@ -43,6 +43,8 @@
 
 	<section if="_OFFICIAL_BUILD">
 		<define name="_ALLOW_VERSION_HANDLING"/>
+		<define name="_ALLOW_BUILD_HANDLING"/>
+		<define name="_CHECK_FOR_UPDATES"/>
 		<define name="_ALLOW_ADDONS" if="desktop" />
 	</section>
 
