@@ -43,6 +43,8 @@
 
 	<section if="_OFFICIAL_BUILD">
 		<define name="_ALLOW_VERSION_HANDLING"/>
+		<define name="_ALLOW_BUILD_HANDLING"/>
+		<define name="_CHECK_FOR_UPDATES"/>
 		<define name="_ALLOW_ADDONS" if="desktop" />
 	</section>
 
@@ -55,7 +57,7 @@
 	<assets path="assets/music" preload="true"/>
 	<assets path="assets/images" preload="true"/>
 	<section if="_ALLOW_ADDONS">
-		<assets path='addons'/>
+		<!-- <assets path='addons'/> -->
 	</section>
 	<section if="web">
 		<assets path='addons/Example Mod' exclude = '*/metadata' rename='assets' preload="true"/>

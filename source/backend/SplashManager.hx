@@ -9,6 +9,8 @@ class SplashManager {
 	public static var activeSplashes:Array<String> = [];
 	public static var activeColors:Array<FlxColor> = [];
 
+	public static var usesLunarCalendar:Bool = false;
+
     public function new() {
         // Constructor
     }
@@ -32,6 +34,7 @@ class SplashManager {
 		for (grp in collection.unique) {
 			var group:SplashGroupData = cast grp;
 			if (group.start != null && group.end != null) {
+				var potentiallyLunar:Bool = false;
 				var currentMonth:String = '0';
 				var currentDay:String = '0';
 				var currentYear:Int = 1;
@@ -40,6 +43,7 @@ class SplashManager {
 					currentMonth = StringTools.lpad(gregorianCurrentTime.getMonth() + 1 + '', '0', 2);
 					currentDay = StringTools.lpad(gregorianCurrentTime.getDate() + '', '0', 2);
 				} else {
+					potentiallyLunar = true;
 					currentYear = lunarCurrentTime.year;
 					currentMonth = StringTools.lpad(lunarCurrentTime.month + '', '0', 2);
 					currentDay = StringTools.lpad(lunarCurrentTime.day + '', '0', 2);
@@ -68,6 +72,8 @@ class SplashManager {
 				if (startTime.getTime() <= currentTime.getTime() && currentTime.getTime() <= endTime.getTime()) {
 					trace('${group.name} - $startTime - $currentTime - $endTime');
 					hasUnique = true;
+					if (potentiallyLunar)
+						usesLunarCalendar = true;
 					for (splash in group.splashes) {
 						activeSplashes.push(splash);
 					}
