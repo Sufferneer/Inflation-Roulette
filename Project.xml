@@ -57,7 +57,7 @@
 	<assets path="assets/music" preload="true"/>
 	<assets path="assets/images" preload="true"/>
 	<section if="_ALLOW_ADDONS">
-		<assets path='addons'/>
+		<!-- <assets path='addons'/> -->
 	</section>
 	<section if="web">
 		<assets path='addons/Example Mod' exclude = '*/metadata' rename='assets' preload="true"/>

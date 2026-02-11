@@ -121,28 +121,22 @@ class Paths {
 	 * Convert a relative directory to a directory in the `assets` folder.
 	 * 
 	 * @param file
-	 * @param library
 	 */
-	public static function getPath(file:String, ?library:Null<String> = null):String {
-		if (library != null)
-			return 'assets/$library/$file';
-
+	public static function getPath(file:String):String
 		return 'assets/$file';
-	}
 
 	/**
 	 * Convert a relative image directory to a directory in the `assets/images` folder.
 	 * 
 	 * @param file
-	 * @param library
 	 */
-	public static function getImagePath(file:String, ?library:Null<String> = null):String {
+	public static function getImagePath(file:String):String {
 		#if _ALLOW_ADDONS
 		var key = addonFolders('images/' + file + '.png');
 		if (key != null)
 			return key;
 		#end
-		return getPath('images/' + file + '.png', library);
+		return getPath('images/' + file + '.png');
 	}
 
 	/**
@@ -236,25 +230,23 @@ class Paths {
 	 * Find the XML file for a Sparrow v2 spritesheet.
 	 * 
 	 * @param file
-	 * @param library
 	 */
-	public static function getSparrowXmlPath(file:String, ?library:Null<String> = null):String {
+	public static function getSparrowXmlPath(file:String):String {
 		#if _ALLOW_ADDONS
 		var key = addonFolders('images/' + file + '.xml');
 		if (key != null)
 			return key;
 		#end
-		return getPath('images/' + file + '.xml', library);
+		return getPath('images/' + file + '.xml');
 	}
 
 	/**
 	 * Return a Sound in the `sounds/` folder.
 	 * 
 	 * @param key The filename of the sound.
-	 * @param library
 	 */
-	static public function sound(key:String, ?library:String):Sound {
-		var sound:Sound = returnSound('sounds', key, library);
+	static public function sound(key:String):Sound {
+		var sound:Sound = returnSound('sounds', key);
 		return sound;
 	}
 
@@ -264,20 +256,18 @@ class Paths {
 	 * @param key The base filename of the sound.
 	 * @param min The minimum suffix value.
 	 * @param max The maximum suffix value.
-	 * @param library
 	 */
-	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String) {
-		return sound(key + '_' + FlxG.random.int(min, max), library);
+	inline static public function soundRandom(key:String, min:Int, max:Int) {
+		return sound(key + '_' + FlxG.random.int(min, max));
 	}
 
 	/**
 	 * Return a Sound in the `music/` folder.
 	 * 
 	 * @param key The filename of the music.
-	 * @param library
 	 */
-	inline static public function music(key:String, ?library:String):Sound {
-		var file:Sound = returnSound('music', key, library);
+	inline static public function music(key:String):Sound {
+		var file:Sound = returnSound('music', key);
 		return file;
 	}
 
@@ -309,10 +299,9 @@ class Paths {
 	 * Returns a FlxGraphic in the `images/` folder.
 	 * 
 	 * @param key The directory of the image in the `images/` folder.
-	 * @param library
 	 * @param allowGPU Whether to allow VRAM to store this image or not.
 	 */
-	static public function image(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxGraphic {
+	static public function image(key:String, ?allowGPU:Bool = true):FlxGraphic {
 		var bitmap:BitmapData = null;
 		var file:String = null;
 
@@ -326,7 +315,7 @@ class Paths {
 		else
 		#end
 
-		file = getPath('images/$key.png', library);
+		file = getPath('images/$key.png');
 		#if sys
 		if (FileSystem.exists(file))
 			bitmap = BitmapData.fromFile(file);
@@ -414,8 +403,8 @@ class Paths {
 		return getPath('fonts/$key.ttf');
 	}
 
-	public static function fileExists(key:String, type:AssetType, ?library:String = null) {
-		var path = getPath(key, library);
+	public static function fileExists(key:String, type:AssetType) {
+		var path = getPath(key);
 		#if sys
 		if (FileSystem.exists(path)) {
 			return true;
@@ -431,11 +420,21 @@ class Paths {
 	 * Returns a Sparrow v2 Altas to be used for animations for sprites.
 	 * 
 	 * @param key The directory of both the image and XML file.
-	 * @param library
 	 * @param allowGPU Whether to allow VRAM to store the texture altas or not.
 	 */
-	inline static public function sparrowAtlas(key:String, ?library:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
-		return FlxAtlasFrames.fromSparrow(image(key, library, allowGPU), getSparrowXmlPath(key, library));
+	inline static public function sparrowAtlas(key:String, ?allowGPU:Bool = true):FlxAtlasFrames {
+		var imageLoaded:FlxGraphic = image(key, allowGPU);
+		#if _ALLOW_ADDONS
+		var xmlExists:Bool = false;
+
+		var xml:String = addonsXml(key);
+		if (FileSystem.exists(xml))
+			xmlExists = true;
+
+		return FlxAtlasFrames.fromSparrow(imageLoaded, (xmlExists ? File.getContent(xml) : getPath('images/$key.xml')));
+		#else
+		return FlxAtlasFrames.fromSparrow(imageLoaded, getPath('images/$key.xml'));
+		#end
 	}
 
 	/**
@@ -448,15 +447,12 @@ class Paths {
 	 * 
 	 * @param path The directory.
 	 * @param key The name to be assigned for the sound for quick access.
-	 * @param library
 	 */
-	public static function returnSound(path:String, key:String, ?library:String) {
-		var gottenPath:String = appendSoundExt(getPath('$path/$key', library));
+	public static function returnSound(path:String, key:String) {
+		var gottenPath:String = appendSoundExt(getPath('$path/$key'));
 
 		#if _ALLOW_ADDONS
 		var addonLibPath:String = '';
-		if (library != null)
-			addonLibPath = '$library/';
 		if (path != null)
 			addonLibPath += '$path';
 
@@ -504,6 +500,9 @@ class Paths {
 	inline static public function addonsImages(key:String) {
 		return addonFolders('images/' + key + '.png');
 	}
+
+	inline static public function addonsXml(key:String)
+		return addonFolders('images/' + key + '.xml');
 
 	static public function addonFolders(key:String) {
 		for (addon in Addons.getGlobalAddons()) {

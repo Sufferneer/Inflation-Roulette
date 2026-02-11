@@ -23,8 +23,13 @@ class AddonMenuItem extends SuffButton {
 		bg.alpha = 0.5;
 		add(bg);
 
+		var path:String = Paths.addons('$folder/metadata/pack.png');
+		if (!FileSystem.exists(path)) {
+			path = Paths.getImagePath('gui/menus/addons/defaultIcon');
+		}
+		var leIconImage = Paths.cacheBitmap(path);
 		var iconOffset:Float = (defaultHeight - iconSize) / 2;
-		icon = new FlxSprite(iconOffset, iconOffset).loadGraphic(Paths.addons(folder + '/metadata/pack.png'));
+		icon = new FlxSprite(iconOffset, iconOffset).loadGraphic(leIconImage);
 		icon.setGraphicSize(iconSize, iconSize);
 		icon.updateHitbox();
 		add(icon);

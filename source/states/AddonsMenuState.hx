@@ -8,6 +8,7 @@ import states.MainMenuState;
 import ui.objects.AddonMenuBG;
 import ui.objects.AddonMenuBG.AddonMenuBGTile;
 import ui.objects.AddonMenuItem;
+import ui.objects.GitHubButton;
 import ui.objects.SuffIconButton;
 import tjson.TJSON as Json;
 
@@ -30,6 +31,8 @@ class AddonsMenuState extends SuffState {
 	var modAuthorTitleText:FlxText;
 	var modAuthorsText:FlxText;
 	var modMetadataItemsScrollBar:FlxSprite;
+
+	var noAddonsInstalled:Bool = false;
 
 	public static final padding:Int = 20;
 	public static final itemCount:Int = 5;
@@ -54,7 +57,7 @@ class AddonsMenuState extends SuffState {
 			for (w in 0...Math.ceil(FlxG.width / size) + 1) {
 				var tile = new AddonMenuBG(w * size, h * size);
 				for (item in tile.members) {
-					item.alpha = 0.25;
+					item.alpha = 0.2;
 					item.blend = BlendMode.ADD;
 				}
 				icons.add(tile);
@@ -62,7 +65,44 @@ class AddonsMenuState extends SuffState {
 		}
 		icons.velocity.set(-40, -40);
 
+		var exitButton = new SuffIconButton(20, 20, 'buttons/exit', null, 2);
+		exitButton.x = FlxG.width - exitButton.width - 20;
+		exitButton.onClick = function() {
+			backToMainMenu();
+		};
+
+		SuffState.playMusic('options');
+		curCrochet = 60 / SuffState.currentMusicBPM * 1000;
+
 		var leAddons = Addons.getGlobalAddons();
+
+		if (leAddons.length <= 0) {
+			noAddonsInstalled = true;
+
+			var noModsDetected:FlxText = new FlxText(0, 0, 0, 'No Addons Detected');
+			noModsDetected.setFormat(Paths.font('default'), 64);
+
+			var noModsDetectedDesc:FlxText = new FlxText(0, 0, Std.int(noModsDetected.width * 1.5),
+				'No addons are detected within the addons folder. Please check whether you have included a metadata.json in the metadata folder in the addons.\nIf you think this is a mistake, please report your issue to our GitHub repository.');
+			noModsDetectedDesc.setFormat(Paths.font('default'), 32, 0xFFFFFFFF, CENTER);
+
+			noModsDetected.screenCenter(X);
+			noModsDetected.y = (FlxG.height - (noModsDetected.height + noModsDetectedDesc.height)) / 2;
+			noModsDetectedDesc.screenCenter(X);
+			noModsDetectedDesc.y = (FlxG.height - (noModsDetected.height + noModsDetectedDesc.height)) / 2 + noModsDetected.height;
+			add(noModsDetected);
+			add(noModsDetectedDesc);
+
+			var button:GitHubButton = new GitHubButton(0, 0, 'issues');
+			button.screenCenter(X);
+			button.y = noModsDetectedDesc.y + noModsDetectedDesc.height;
+			add(button);
+
+			bg.color = 0xFF404040;
+			add(exitButton);
+
+			return;
+		}
 
 		modBG = new FlxSprite(padding, 0).makeGraphic(Std.int(FlxG.width / 2 - padding - scrollBarWidth), Std.int(FlxG.height), 0xFF000000);
 		modBG.alpha = 0.5;
@@ -97,6 +137,7 @@ class AddonsMenuState extends SuffState {
 		modBanner = new FlxSprite();
 
 		modBannerVignette = new FlxSprite().loadGraphic(Paths.image('gui/menus/addons/bannerVignette'));
+		modBannerVignette.alpha = 0.5;
 		changeBanner('');
 
 		modBannerBG = new FlxSprite();
@@ -140,15 +181,7 @@ class AddonsMenuState extends SuffState {
 			changeDisplayedMetadata('', null);
 		}
 
-		var exitButton = new SuffIconButton(20, 20, 'buttons/exit', null, 2);
-		exitButton.x = FlxG.width - exitButton.width - 20;
-		exitButton.onClick = function() {
-			backToMainMenu();
-		};
 		add(exitButton);
-
-		SuffState.playMusic('options');
-		curCrochet = 60 / SuffState.currentMusicBPM * 1000;
 	}
 
 	function updateModItemsScrollBar() {
@@ -209,8 +242,9 @@ class AddonsMenuState extends SuffState {
 		if (!FileSystem.exists(path)) {
 			path = Paths.getImagePath('gui/menus/addons/defaultBanner');
 		}
+		var leImage = Paths.cacheBitmap(path);
 		var leWidth:Float = Std.int(FlxG.width / 2 - padding - scrollBarWidth);
-		modBanner.loadGraphic(path);
+		modBanner.loadGraphic(leImage);
 		modBanner.setGraphicSize(Std.int(leWidth), Std.int(leWidth / 16 * 9));
 		modBanner.updateHitbox();
 
@@ -238,6 +272,16 @@ class AddonsMenuState extends SuffState {
 		if (icons.y + icons.velocity.y * elapsed < AddonMenuBGTile.bgSize * -2) {
 			icons.y = 0;
 		}
+
+		curBeat = Std.int(FlxG.sound.music.time / curCrochet);
+		if (prevBeat != curBeat) {
+			prevBeat = curBeat;
+			if (curBeat % 2 == 0)
+				spin();
+		}
+
+		if (noAddonsInstalled)
+			return;
 
 		if (FlxG.mouse.wheel != 0) {
 			if (FlxG.mouse.overlaps(modBG)) {
@@ -271,13 +315,6 @@ class AddonsMenuState extends SuffState {
 
 		updateModItemsScrollBar();
 		updateModMetadataItemsScrollBar();
-
-		curBeat = Std.int(FlxG.sound.music.time / curCrochet);
-		if (prevBeat != curBeat) {
-			prevBeat = curBeat;
-			if (curBeat % 2 == 0)
-				spin();
-		}
 	}
 
 	function boundModMetadataItemsY() {
