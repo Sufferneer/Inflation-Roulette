@@ -108,9 +108,11 @@ class OptionsSubState extends SuffSubState {
 		// GRAPHICS SETTINGS
 		createSubheading('Graphics & Visuals');
 
+		#if desktop
 		createBooleanOption('Fullscreen', 'Self-explanatory, but are you that deprived?', function(value:Bool) {
 			Preferences.data.enableFullscreen = value;
 		}, Preferences.data.enableFullscreen);
+		#end
 
 		createBooleanOption('Photosensitive Mode',
 			'Dampen screen flashes and other flashing effects.\nStrongly recommended for people with photosensitive epilepsy.', function(value:Bool) {
