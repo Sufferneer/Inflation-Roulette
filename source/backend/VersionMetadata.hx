@@ -11,11 +11,14 @@ class VersionMetadata {
 
 	public static function getVersionName(version:String) {
 		var arr = version.split('.');
-		var major = majorVersionMap.get(arr[0]);
-		var minorText = '';
+		var text = majorVersionMap.get(arr[0]);
+		text += '(';
 		if (Std.parseInt(arr[1]) > 0)
-			minorText = ' (Pitstop ${arr[1]})';
-		return major + minorText;
+			text += ' Pitstop ${arr[1]}';
+		if (arr[2] != null && Std.int(arr[2]) > 0)
+			text += ' Hotfix ${arr[2]}';
+		text += ')';
+		return text;
 	}
 
 	public function new() {
