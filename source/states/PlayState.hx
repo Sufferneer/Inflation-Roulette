@@ -689,7 +689,7 @@ class PlayState extends SuffState {
 		FlxG.camera.shake(intensity * Preferences.data.cameraEffectIntensity, duration);
 	}
 
-	function screenFlash(color:FlxColor = 0xFFFFFFFF, duration:Float = 0.125) {
+	function screenFlash(color:FlxColor = 0xFFFFFFFF, duration:Float = 0.25) {
 		if (Preferences.data.enablePhotosensitiveMode)
 			return;
 		FlxG.camera.flash(color, duration, true);
