@@ -195,7 +195,7 @@ class BlueberryHeliumStartupState extends SuffState {
 			updateTextInTerminal(inputText.substring(0, Math.round(num)));
 
 			tobi.animation.play('type');
-			tobi.offset.set(FlxG.random.int(-1, 1) * 20, FlxG.random.int(-1, 0) * 10);
+			tobi.offset.set(FlxG.random.int(-1, 1) * 10, FlxG.random.int(-1, 0) * 5);
 		});
 
 		allowToSkip = false;

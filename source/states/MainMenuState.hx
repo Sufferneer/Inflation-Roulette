@@ -318,10 +318,11 @@ class MainMenuState extends SuffState {
 		if (FlxG.keys.firstJustPressed() != FlxKey.NONE) {
 			var keyPressed:FlxKey = FlxG.keys.firstJustPressed();
 			var keyName:String = Std.string(keyPressed);
-			if (Constants.ALPHABET_UPPERCASE.contains(keyName)) {
-				currentEasterEggInput += keyName;
+			if (Constants.ALPHABET_UPPERCASE.contains(keyName.toUpperCase())) {
+				currentEasterEggInput += keyName.toLowerCase();
 				if (currentEasterEggInput.length > 16)
 					currentEasterEggInput = currentEasterEggInput.substring(1);
+				//trace(currentEasterEggInput);
 
 				for (easterEgg in Constants.EASTER_EGG_INPUTS) {
 					var formattedInput = currentEasterEggInput.toLowerCase();
