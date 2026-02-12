@@ -1,7 +1,6 @@
 package backend;
 
 class PlatformMetadata {
-	#if _ALLOW_BUILD_HANDLING
 	public static final platformFormattedNames:Map<String, String> = [
 		'windows' => 'Windows',
 		'linux' => 'Linux',
@@ -33,7 +32,6 @@ class PlatformMetadata {
 	public static function getBuildName() {
 		return platformFormattedNames.get(getBuildID().toLowerCase());
 	}
-	#end
 
 	public function new() {}
 }

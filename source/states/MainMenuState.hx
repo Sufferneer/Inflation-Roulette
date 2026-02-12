@@ -2,18 +2,17 @@ package states;
 
 import backend.SplashManager;
 import backend.lunarDate.LunarDate;
-#if _ALLOW_BUILD_HANDLING
 import backend.PlatformMetadata;
-#end
-#if _ALLOW_VERSION_HANDLING
+#if _OFFICIAL_BUILD
 import backend.VersionMetadata;
 #end
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
-import states.CreditsState;
 #if _ALLOW_ADDONS
 import states.AddonsMenuState;
 #end
+import states.CreditsState;
+import states.InitStartupState;
 import substates.OptionsSubState;
 import substates.GamemodeSelectSubState;
 import ui.objects.GameLogo;
@@ -46,6 +45,8 @@ class MainMenuState extends SuffState {
 		#end
 		'Donate'
 	];
+
+	var currentEasterEggInput:String = '';
 
 	override public function create():Void {
 		// Paths.clearStoredMemory();
@@ -86,7 +87,10 @@ class MainMenuState extends SuffState {
 		add(splashText);
 		tweenSplashTextColor();
 
-		var topInfoTextList:Array<String> = [DateTools.format(Date.now(), '%B %d, %Y')];
+		var topInfoTextList:Array<String> = [];
+		if (SplashManager.isSpecialDay) {
+			topInfoTextList.push(DateTools.format(Date.now(), '%B %d, %Y'));
+		}
 		if (SplashManager.usesLunarCalendar) {
 			var date = LunarDate.now().toString().split('・');
 			topInfoTextList.push(date[0]);
@@ -103,12 +107,12 @@ class MainMenuState extends SuffState {
 
 		final bottomInfoTextList:Array<String> = [
 			Utils.getGameTitle(),
-			'${PlatformMetadata.getBuildName()} Build',
-			#if _ALLOW_VERSION_HANDLING
-			'Version ' + FlxG.stage.application.meta.get('version'), VersionMetadata.getVersionName(FlxG.stage.application.meta.get('version'))
+			#if _OFFICIAL_BUILD
+			VersionMetadata.getVersionName(FlxG.stage.application.meta.get('version')), 'Version ' + FlxG.stage.application.meta.get('version'),
 			#else
-			'Modded Version ' + FlxG.stage.application.meta.get('version')
+			'Modded Version ' + FlxG.stage.application.meta.get('version'),
 			#end
+			'${PlatformMetadata.getBuildName()} Build'
 		];
 		add(bottomInfoTextGroup);
 		for (i in 0...bottomInfoTextList.length) {
@@ -297,11 +301,43 @@ class MainMenuState extends SuffState {
 				SuffState.playUISound(Paths.sound('musicToastClick'));
 			}
 
+			if (FlxG.mouse.overlaps(bottomInfoTextGroup.members[bottomInfoTextGroup.members.length - 1])
+				&& FlxG.mouse.justPressed
+				&& (FlxG.save.data.easterEggStartup.length > 0 || currentEasterEggInput.length > 0)) {
+				currentEasterEggInput = '';
+				FlxG.save.data.easterEggStartup = '';
+				FlxG.save.flush();
+
+				SuffState.playUISound(Paths.sound('startup/transition'), 0.75, 3);
+			}
+
 			splashTextChangeTimer += elapsed;
 			if (splashTextChangeTimer >= 10) {
 				splashTextChangeTimer = 0;
 				fadeSplashText();
 			}
 		}
+
+		#if _ALLOW_EASTER_EGGS
+		if (FlxG.keys.firstJustPressed() != FlxKey.NONE) {
+			var keyPressed:FlxKey = FlxG.keys.firstJustPressed();
+			var keyName:String = Std.string(keyPressed);
+			if (Constants.ALPHABET_UPPERCASE.contains(keyName)) {
+				currentEasterEggInput += keyName;
+				if (currentEasterEggInput.length > 16)
+					currentEasterEggInput = currentEasterEggInput.substring(1);
+
+				for (easterEgg in Constants.EASTER_EGG_INPUTS) {
+					var formattedInput = currentEasterEggInput.toLowerCase();
+					if (currentEasterEggInput.toLowerCase() == easterEgg) {
+						FlxG.save.data.easterEggStartup = formattedInput;
+						FlxG.save.flush();
+						SuffState.switchState(new InitStartupState(), INTERMISSION);
+						break;
+					}
+				}
+			}
+		}
+		#end
 	}
 }

@@ -201,18 +201,29 @@ class OptionsSubState extends SuffSubState {
 			}, Preferences.data.cacheOnGPU);
 		#end
 
-		createBooleanOption('FPS Counter', 'Displays the FPS Counter.', function(value:Bool) {
-			Preferences.data.showFPS = value;
-		}, Preferences.data.showFPS);
+		// DEBUG TEXT SETTINGS
+		createSubheading('Debug Text');
+
+		createBooleanOption('Debug Text', 'Displays debug information on the top-left corner of the screen.', function(value:Bool) {
+			Preferences.data.showDebugText = value;
+			Main.fpsVar.updateText();
+		}, Preferences.data.showDebugText);
 
 		#if (openfl && !html5)
-		createBooleanOption('Memory Usage Counter', 'Displays the current amount of memory used on the FPS Counter.', function(value:Bool) {
-			Preferences.data.showMemoryUsage = value;
-		}, Preferences.data.showMemoryUsage);
+		createBooleanOption('Framerate', 'Displays the current FPS on the Debug Text.', function(value:Bool) {
+			Preferences.data.showFramerateOnDebugText = value;
+			Main.fpsVar.updateText();
+		}, Preferences.data.showFramerateOnDebugText);
 
-		createBooleanOption('State Tracker', 'Displays the current menu being navigated on the FPS Counter.', function(value:Bool) {
-			Preferences.data.showCurrentState = value;
-		}, Preferences.data.showCurrentState);
+		createBooleanOption('Memory Usage', 'Displays the current amount of memory used on the Debug Text.', function(value:Bool) {
+			Preferences.data.showMemoryUsageOnDebugText = value;
+			Main.fpsVar.updateText();
+		}, Preferences.data.showMemoryUsageOnDebugText);
+
+		createBooleanOption('Current State', 'Displays the current menu being navigated on the Debug Text.', function(value:Bool) {
+			Preferences.data.showCurrentStateOnDebugText = value;
+			Main.fpsVar.updateText();
+		}, Preferences.data.showCurrentStateOnDebugText);
 		#end
 
 		var lastItem = optionsGroup.members[optionsGroup.members.length - 1];
@@ -319,7 +330,7 @@ class OptionsSubState extends SuffSubState {
 			boundOptionMenuScroll();
 			updateScrollBar();
 		}
-		if (FlxG.mouse.pressed && allowMouseScrolling) {
+		if (allowMouseScrolling && FlxG.mouse.pressed && FlxG.mouse.getPositionInCameraView(this.camera).x >= scrollBar.x) {
 			optionsScroll = optionsScroll - (FlxG.mouse.deltaScreenY) * (FlxG.height / scrollBar.height);
 			boundOptionMenuScroll();
 			optionsScrollLerped = optionsScroll;

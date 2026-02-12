@@ -30,9 +30,10 @@ class SaveVariables {
 	public var allowBellyGurgles:Bool = false;
 	public var allowBellyCreaks:Bool = true;
 	public var cacheOnGPU:Bool = true;
-	public var showFPS:Bool = false;
-	public var showMemoryUsage:Bool = false;
-	public var showCurrentState:Bool = false;
+	public var showDebugText:Bool = false;
+	public var showFramerateOnDebugText:Bool = true;
+	public var showMemoryUsageOnDebugText:Bool = true;
+	public var showCurrentStateOnDebugText:Bool = false;
 
 	public function new() {
 	}
@@ -85,7 +86,7 @@ class Preferences {
 		}
 
 		if (Main.fpsVar != null) {
-			Main.fpsVar.visible = data.showFPS;
+			Main.fpsVar.updateText();
 		}
 
 		#if (!html5 && !switch)

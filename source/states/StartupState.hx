@@ -1,16 +1,10 @@
 package states;
 
-import lime.app.Application;
-
-class SplashScreenState extends SuffState {
+class StartupState extends SuffState {
 	override function create() {
 		super.create();
 
-		FlxTransitionableState.skipNextTransIn = true;
-
-		new FlxTimer().start(1.5, function(tmr:FlxTimer) {
-			startIntro();
-		});
+		startIntro();
 	}
 
 	var logo:FlxSprite;
@@ -21,6 +15,7 @@ class SplashScreenState extends SuffState {
 	var tileGroup:FlxTypedContainer<FlxSprite> = new FlxTypedContainer<FlxSprite>();
 	var curSquare:Int = 0;
 	var blockCount:Int = 0;
+
 	static final scale:Int = 8;
 
 	var introSound:FlxSound;
@@ -45,7 +40,7 @@ class SplashScreenState extends SuffState {
 			tileGroup.add(tile);
 		}
 
-		introSound = new FlxSound().loadEmbedded(Paths.sound('malletIndustriesIntro'));
+		introSound = new FlxSound().loadEmbedded(Paths.sound('startup/malletIndustriesIntro'));
 		introSound.volume = 0.7;
 		introSound.play();
 
@@ -66,9 +61,10 @@ class SplashScreenState extends SuffState {
 
 		if (introSound != null)
 			introSound.stop();
-		SuffState.playUISound(Paths.sound('transition'), 0.7);
+		SuffState.playUISound(Paths.sound('startup/transition'), 0.7);
 		removingBlocks = true;
 		new FlxTimer().start(1.5, function(tmr:FlxTimer) {
+			FlxTransitionableState.skipNextTransIn = true;
 			SuffState.switchState(new MainMenuState());
 		});
 	}

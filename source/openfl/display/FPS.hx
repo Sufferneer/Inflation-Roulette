@@ -78,26 +78,27 @@ class FPS extends TextField {
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
 
 		if (currentCount != cacheCount) {
-			text = "FPS: " + currentFPS
-			#if (openfl && !html5)
-			+ (Preferences.data.showMemoryUsage ? '\nMemory: ' + Utils.formatBytes(System.totalMemory,
-				1) : '') + (Preferences.data.showCurrentState ? '\nState: ' + Main.mainClassState : '')
-			#end;
+			updateText();
 
 			textColor = 0xFFFFFFFF;
 			if (currentFPS <= Preferences.data.framerate * 0.8) {
 				textColor = 0xFFFF0000;
 			}
-
-			#if (gl_stats && !disable_cffi && (!html5 || !canvas))
-			text += "\ntotalDC: " + Context3DStats.totalDrawCalls();
-			text += "\nstageDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
-			text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
-			#end
-
-			text += "\n";
 		}
 
 		cacheCount = currentCount;
+	}
+
+	public function updateText() {
+		visible = Preferences.data.showDebugText;
+		text = '';
+		if (Preferences.data.showFramerateOnDebugText)
+			text += 'FPS: $currentFPS\n';
+		#if (openfl && !html5)
+		if (Preferences.data.showMemoryUsageOnDebugText)
+			text += 'Memory: ${Utils.formatBytes(System.totalMemory, 1)}\n';
+		if (Preferences.data.showCurrentStateOnDebugText)
+			text += 'State: ${Main.mainClassState}\n';
+		#end
 	}
 }

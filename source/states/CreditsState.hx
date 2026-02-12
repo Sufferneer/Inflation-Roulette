@@ -30,11 +30,8 @@ class CreditsState extends SuffState {
 		['PixelCarnage (OpenNSFW Sound Pack)', 'opennsfw', 'default'],
 		['SPECIAL THANKS', '', 'HEADING'],
 		['SqirraRNG - Crash Handler', '', 'default'],
-		[
-			'changedinflation.de - Linux Port',
-			'',
-			'default'
-		],
+		['changedinflation.de - Linux Port', '', 'default'],
+		['bugzforbreakfast', '', 'default'],
 		['DEVELOPED USING', '', 'HEADING'],
 		['HaxeFlixel', 'haxeflixel', 'LOGO'],
 		['Haxe', 'haxe', 'LOGO'],

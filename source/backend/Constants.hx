@@ -41,7 +41,7 @@ class Constants {
 	 * 0 means the camera does not move at all.
 	 * 1 means the camera moves instantly.
 	 */
-	public static var DEFAULT_CAMERA_FOLLOW_LERP:Float = 0.1;
+	public static final DEFAULT_CAMERA_FOLLOW_LERP:Float = 0.1;
 
 	/**
 	 * The representative color of a player. First item is for Player 1, second is for Player 2, and so on.
@@ -66,21 +66,28 @@ class Constants {
 	 */
 	public static final CHARACTER_CARD_DIMENSIONS:Array<Int> = [150, 200];
 
+	#if _ALLOW_EASTER_EGGS
+	public static final EASTER_EGG_INPUTS:Array<String> = ['imhighoncrack', 'blueberryhelium', 'roomoneoone', 'ibeesbees'];
+	#end
+	public static final ALPHABET_UPPERCASE:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
 	// AUDIO CONSTANTS
 
 	/**
 	 * How many gurgling sound samples to use.
-	 * Note: For some strange reason, if it's set higher than 20, the game crashes and I do not know why.
 	 */
 	public static final GURGLES_SAMPLE_COUNT:Int = 20;
+
 	/**
 	 * How many creaking sound samples to use.
 	 */
 	public static final CREAKS_SAMPLE_COUNT:Int = 9;
+
 	/**
 	 * How many fwoomping sound samples to use.
 	 */
 	public static final FWOOMPS_SAMPLE_COUNT:Int = 4;
+
 	/**
 	 * How many belching sound samples to use.
 	 */

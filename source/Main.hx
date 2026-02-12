@@ -14,7 +14,7 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.app.Application;
-import states.SplashScreenState;
+import states.InitStartupState;
 // crash handler stuff
 #if _ALLOW_CRASH_HANDLER
 import openfl.events.UncaughtErrorEvent;
@@ -29,7 +29,7 @@ class Main extends Sprite {
 	var game = {
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height
-		initialState: SplashScreenState, // initial game state
+		initialState: InitStartupState, // initial game state
 		zoom: -1.0, // game state bounds
 		framerate: 60, // default framerate
 		skipSplash: true, // if the default flixel splash screen should be skipped
@@ -38,7 +38,7 @@ class Main extends Sprite {
 
 	public static var fpsVar:FPS;
 
-	public static var mainClassState:Class<FlxState> = SplashScreenState;
+	public static var mainClassState:Class<FlxState> = InitStartupState;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -85,7 +85,7 @@ class Main extends Sprite {
 		fpsVar = new FPS(0, 0, 0xFFFFFF);
 		addChild(fpsVar);
 		Lib.current.stage.align = "tl";
-		fpsVar.visible = Preferences.data.showFPS;
+
 		fpsVar.alpha = 0.5;
 		#end
 
@@ -130,7 +130,6 @@ class Main extends Sprite {
 		}
 	}
 
-	// Code entirely made by sqirra-rng
 	#if _ALLOW_CRASH_HANDLER
 	function onCrash(e:UncaughtErrorEvent):Void {
 		var errMsg:String = "";
@@ -139,8 +138,8 @@ class Main extends Sprite {
 		var dateNow:String = Date.now().toString();
 		var errMsgTitle:Array<String> = [
 			"don't feel bad; you have a fine job tossing your little balls around",
+			"this is very sad gold <:(",
 			"bro are you trying to make them bigger or something",
-			"stop trying to exploit the game cuz it won't work",
 			"kusmek??? is that you???",
 			"bro there's kids around youtube stop recording",
 			"WAIT!! THAT'S NOT AN INTENDED FEATURE!! :broken_heart: :skull:"
@@ -161,6 +160,9 @@ class Main extends Sprite {
 		}
 
 		errMsg += "\nUncaught Error: " + e.error;
+		#if _OFFICIAL_BUILD
+		errMsg += "\n\nPlease report this error to the GitHub page: https://github.com/Sufferneer/Inflation-Roulette";
+		#end
 
 		if (!FileSystem.exists("./crash/"))
 			FileSystem.createDirectory("./crash/");
@@ -170,7 +172,7 @@ class Main extends Sprite {
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
-		Application.current.window.alert(errMsg, errMsgTitle[FlxG.random.int(0, errMsgTitle.length - 1)]);
+		Application.current.window.alert(errMsg + '\n\n', errMsgTitle[FlxG.random.int(0, errMsgTitle.length - 1)]);
 		Sys.exit(1);
 	}
 	#end

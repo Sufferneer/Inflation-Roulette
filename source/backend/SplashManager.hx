@@ -10,10 +10,11 @@ class SplashManager {
 	public static var activeColors:Array<FlxColor> = [];
 
 	public static var usesLunarCalendar:Bool = false;
+	public static var isSpecialDay:Bool = false;
 
-    public function new() {
-        // Constructor
-    }
+	public function new() {
+		// Constructor
+	}
 
 	public static function parseSplashes() {
 		activeSplashes = [];
@@ -30,7 +31,7 @@ class SplashManager {
 			activeSplashes.push(splash);
 		}
 
-		var hasUnique:Bool = false;
+		isSpecialDay = false;
 		for (grp in collection.unique) {
 			var group:SplashGroupData = cast grp;
 			if (group.start != null && group.end != null) {
@@ -71,7 +72,7 @@ class SplashManager {
 
 				if (startTime.getTime() <= currentTime.getTime() && currentTime.getTime() <= endTime.getTime()) {
 					trace('${group.name} - $startTime - $currentTime - $endTime');
-					hasUnique = true;
+					isSpecialDay = true;
 					if (potentiallyLunar)
 						usesLunarCalendar = true;
 					for (splash in group.splashes) {
@@ -84,7 +85,7 @@ class SplashManager {
 			}
 		}
 
-		if (!hasUnique) {
+		if (!isSpecialDay) {
 			for (splash in collection.fallback) {
 				activeSplashes.push(splash);
 			}

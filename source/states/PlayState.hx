@@ -6,8 +6,8 @@ import backend.GameplayManager;
 import backend.enums.RoundRandomStatus;
 import backend.enums.SuffTransitionStyle;
 import objects.Character;
-import objects.particles.Confetti;
-import objects.particles.Scraps;
+import objects.particleEmitters.ConfettiEmitter;
+import objects.particleEmitters.ScrapEmitter;
 import objects.Skill;
 import substates.PauseSubState;
 import ui.objects.SkillCard;
@@ -723,7 +723,7 @@ class PlayState extends SuffState {
 		pumpGun.visible = true;
 		if (currentSessionAllowPopping && !getPlayer(playerIndex).disablePopping) { // Pop player instead
 			getPlayer(playerIndex).playAnim('popped', false);
-			members.insert(members.indexOf(tableTop) - 1, new Scraps(getPlayer(playerIndex)));
+			members.insert(members.indexOf(tableTop) - 1, new ScrapEmitter(getPlayer(playerIndex)));
 			SuffState.playSound(Paths.sound('belly/burst'));
 			getPlayer(playerIndex).disableBellySounds = true;
 			screenShake(0.03, 0.5);
@@ -766,9 +766,9 @@ class PlayState extends SuffState {
 			getPlayer(winnerIndex).playAnim('preWin', false);
 			SuffState.playSound(Paths.sound('confetti'));
 			members.insert(members.indexOf(tableTop) - 1,
-				new Confetti(getPlayer(winnerIndex).x - FlxG.width / 2.5, getPlayer(winnerIndex).y - getPlayer(winnerIndex).height, 30));
+				new ConfettiEmitter(getPlayer(winnerIndex).x - FlxG.width / 2.5, getPlayer(winnerIndex).y - getPlayer(winnerIndex).height, 30));
 			members.insert(members.indexOf(tableTop) - 1,
-				new Confetti(getPlayer(winnerIndex).x + FlxG.width / 2.5, getPlayer(winnerIndex).y - getPlayer(winnerIndex).height, 150));
+				new ConfettiEmitter(getPlayer(winnerIndex).x + FlxG.width / 2.5, getPlayer(winnerIndex).y - getPlayer(winnerIndex).height, 150));
 			doTimer('winAnim', new FlxTimer().start(0.5 + getPlayer(winnerIndex).getCurAnimLength(), function(_:FlxTimer) {
 				SuffState.playMusic('win', 1);
 				getPlayer(winnerIndex).playAnim('win', false);

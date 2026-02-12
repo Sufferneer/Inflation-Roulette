@@ -2,33 +2,9 @@ package objects.particles;
 
 import flixel.graphics.FlxGraphic;
 import flixel.effects.particles.FlxParticle;
-import flixel.effects.particles.FlxEmitter;
-import flixel.effects.particles.FlxEmitter.FlxEmitterMode;
-import flixel.util.FlxDirectionFlags;
 import states.PlayState;
 
-class Confetti extends FlxTypedEmitter<ConfettiPiece> {
-	public function new(x:Float, y:Float, angle:Float) {
-		super(x, y);
-		particleClass = ConfettiPiece;
-
-		var leImage:FlxGraphic = Paths.image('game/bgParticles/confetti');
-		loadParticles(leImage, 30, 0, true);
-
-		launchAngle.set(angle - 45, angle + 45);
-		angularVelocity.set(-90, 90);
-		speed.set(250, 500);
-		lifespan.set(30, 30);
-
-		start(true, 0.1, 0);
-	}
-
-	override function update(elapsed:Float) {
-		super.update(elapsed);
-	}
-}
-
-class ConfettiPiece extends FlxParticle {
+class Confetti extends FlxParticle {
 	var _swaySpeed:Float = 3;
 	var _swayDist:Float = 90;
 

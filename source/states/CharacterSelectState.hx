@@ -87,7 +87,7 @@ class CharacterSelectState extends SuffState {
 		CharacterSelectBanner.precacheBanners();
 		CharacterManager.playerControlled[0] = true;
 
-		grid = new FlxBackdrop(FlxGridOverlay.createGrid(80, 80, 160, 160, true, 0x33FFFFFF, 0x0));
+		grid = new FlxBackdrop(FlxGridOverlay.createGrid(80, 80, 160, 160, true, 0x20FFFFFF, 0x0));
 		grid.velocity.set(160, 160);
 		add(grid);
 
@@ -399,7 +399,10 @@ class CharacterSelectState extends SuffState {
 		leftButton.alpha = 0;
 		rightButton.alpha = 0;
 		description.alpha = 0;
-		grid.velocity.set(640, 640);
+		if (Preferences.data.enablePhotosensitiveMode)
+			grid.velocity.set(640, 640);
+		else
+			grid.velocity.set(1280, 1280);
 		playerPages[curPlayer] = curPage;
 		bannerGroup.members[curPlayer].setCharacter(character);
 		for (card in cardGroup) {

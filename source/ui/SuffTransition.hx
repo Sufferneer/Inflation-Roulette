@@ -23,6 +23,11 @@ class SuffTransition extends SuffSubState {
 	var durationPerBlock:Float = 0;
 	var curBlock:Int = 0;
 
+	// Intermission
+	final bandCount:Int = 12;
+	final bandDecayDuration:Float = 60 / 140 / 4 * 6;
+	var curBand:Int = 0;
+
 	static final blockSize:Int = 160;
 
 	static final randomLoadingLines:Array<String> = [
@@ -81,6 +86,23 @@ class SuffTransition extends SuffSubState {
 						tran.visible = isTransIn;
 						trans.add(tran);
 					}
+				}
+			case INTERMISSION:
+				if (FlxG.sound.music != null) {
+					SuffState.playMusic('null');
+					FlxG.sound.music.stop();
+					FlxG.sound.music = null;
+				}
+				var what:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xFFFF0040);
+				what.alpha = 0.25;
+				what.visible = !isTransIn;
+				members.insert(members.indexOf(trans) - 1, what);
+
+				for (i in 0...bandCount) {
+					var band:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, Std.int(FlxG.height / bandCount), 0xFF000000);
+					band.y += band.height * i;
+					band.visible = isTransIn;
+					trans.add(band);
 				}
 		}
 
@@ -144,6 +166,21 @@ class SuffTransition extends SuffSubState {
 						transitionProgess = value;
 					});
 				}
+			case INTERMISSION:
+				if (!transIn) {
+					SuffState.playUISound(Paths.sound('easterEgg'));
+					new FlxTimer().start(0.625, function(_) {
+						FlxTween.num(0, 1, bandDecayDuration, {
+							onComplete: function(_) {
+								startLoading(false);
+							}
+						}, function(value:Float) {
+							transitionProgess = value;
+						});
+					});
+				} else {
+					close();
+				}
 		}
 	}
 
@@ -163,13 +200,17 @@ class SuffTransition extends SuffSubState {
 					}
 					blockDuration = 0;
 				}
+			case INTERMISSION:
+				for (num => item in trans.members) {
+					item.visible = transitionProgess > num / bandCount;
+				}
 		}
 	}
 
-	function startLoading() {
+	function startLoading(showText:Bool = true) {
 		FlxG.mouse.visible = false;
 		if (finishCallback != null) {
-			loadingTxt.visible = true;
+			loadingTxt.visible = showText;
 			finishCallback();
 		}
 	}
