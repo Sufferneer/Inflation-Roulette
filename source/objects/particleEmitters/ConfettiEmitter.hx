@@ -12,7 +12,7 @@ class ConfettiEmitter extends FlxTypedEmitter<Confetti> {
 		super(x, y);
 		particleClass = Confetti;
 
-		var leImage:FlxGraphic = Paths.image('game/bgParticles/confetti');
+		var leImage:FlxGraphic = Paths.image('game/particles/confetti');
 		loadParticles(leImage, 30, 0, true);
 
 		launchAngle.set(angle - 45, angle + 45);

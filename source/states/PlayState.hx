@@ -522,6 +522,7 @@ class PlayState extends SuffState {
 			return;
 		}
 		getPlayer(playerIndex).currentConfidence -= skill.cost;
+		getPlayer(playerIndex).skillUseCount++;
 
 		if (GameplayManager.currentGamemode.skillsExhaustible) {
 			getPlayer(playerIndex).currentSkills.remove(skill);

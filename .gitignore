@@ -1,5 +1,5 @@
 export/
-**/*Private.hx
+private/
 **/*.zip
 .vscode
 .idea

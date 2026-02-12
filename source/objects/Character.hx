@@ -37,6 +37,7 @@ class Character extends FlxSprite {
 	public var currentConfidence:Int = 0;
 	public var maxConfidence:Int = 4;
 	public var currentSkills:Array<Skill> = [];
+	public var skillUseCount:Int = 0;
 
 	public var modifiers:Array<Modifier> = [];
 	public var skills:Array<Skill> = [];
