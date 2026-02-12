@@ -12,9 +12,9 @@ class VersionMetadata {
 	public static function getVersionName(version:String) {
 		var arr = version.split('.');
 		var text = majorVersionMap.get(arr[0]);
-		text += '(';
+		text += ' (';
 		if (Std.parseInt(arr[1]) > 0)
-			text += ' Pitstop ${arr[1]}';
+			text += 'Pitstop ${arr[1]}';
 		if (arr[2] != null && Std.parseInt(arr[2]) > 0)
 			text += ' Hotfix ${arr[2]}';
 		text += ')';
