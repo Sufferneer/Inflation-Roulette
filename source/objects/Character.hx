@@ -58,7 +58,7 @@ class Character extends FlxSprite {
 		super(x, y);
 
 		this.id = character;
-		var rawJson = Paths.getTextFromFile('data/characters/' + id + '/gameplay.json');
+		var rawJson = Paths.getTextFromFile('data/characters/' + id + '/stats.json');
 		var json:CharacterData = cast Json.parse(rawJson);
 
 		var rawJson2 = Paths.getTextFromFile('data/characters/' + id + '/cosmetic.json');

@@ -11,7 +11,7 @@ class CharacterManager {
 	}
 
 	public static function initialize() {
-		globalCharacterList = Paths.readFolderDirectories('data/characters', 'data/characterList.txt', 'gameplay.json');
+		globalCharacterList = Paths.readFolderDirectories('data/characters', 'data/characterList.txt', 'stats.json');
 	}
 
 	public static function parseRandomCharacters() {
