@@ -12,10 +12,11 @@ import lime.system.DisplayMode;
  */
 class SaveVariables {
 	public var framerate:Int = 60;
+	public var enableFullscreen:Bool = false;
 	public var pauseOnUnfocus:Bool = false;
 	public var allowPopping:Bool = true;
 	public var ignoreEliminatedPlayers:Bool = false;
-	public var enableDebugMode:Bool = false;
+	public var enableDebugKeybinds:Bool = false;
 	public var enablePhotosensitiveMode:Bool = false;
 	public var enableForceAliasing:Bool = false;
 	public var alwaysPlayMainMenuAnims:Bool = false;
@@ -65,6 +66,7 @@ class Preferences {
 		FlxG.save.flush();
 
 		trace("Preferences saved!");
+		FlxG.save.bind('game', Utils.getSavePath());
 	}
 
 	/**
@@ -85,13 +87,17 @@ class Preferences {
 			}
 		}
 
+		FlxG.save.bind('game', Utils.getSavePath());
+
 		if (Main.fpsVar != null) {
 			Main.fpsVar.updateText();
 		}
 
-		#if (!html5 && !switch)
+		#if !html5
 		FlxG.autoPause = data.pauseOnUnfocus;
 		#end
+
+		FlxG.fullscreen = data.enableFullscreen;
 
 		if (data.framerate > FlxG.drawFramerate) {
 			FlxG.updateFramerate = data.framerate;

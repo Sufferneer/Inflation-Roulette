@@ -151,10 +151,6 @@ class MainMenuState extends SuffState {
 		if (!initialized || Preferences.data.alwaysPlayMainMenuAnims)
 			runFirstStartupTweens();
 		if (!initialized) {
-			if (FlxG.save.data != null && FlxG.save.data.fullscreen) {
-				FlxG.fullscreen = FlxG.save.data.fullscreen;
-				// trace('LOADED FULLSCREEN SETTING!!');
-			}
 			persistentDraw = true;
 			initialized = true;
 		}

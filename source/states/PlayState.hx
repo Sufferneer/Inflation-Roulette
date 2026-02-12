@@ -690,10 +690,9 @@ class PlayState extends SuffState {
 	}
 
 	function screenFlash(color:FlxColor = 0xFFFFFFFF, duration:Float = 0.125) {
-		var usedColor = color;
 		if (Preferences.data.enablePhotosensitiveMode)
-			usedColor.alpha = 32;
-		FlxG.camera.flash(usedColor, duration, true);
+			return;
+		FlxG.camera.flash(color, duration, true);
 	}
 
 	function giveSkillsToAllPlayers(count:Int = 1) {
@@ -994,7 +993,7 @@ class PlayState extends SuffState {
 				deployGun(currentTurnIndex, function() return getPlayer(currentTurnIndex).calculatePressurePercentage());
 			}
 
-			if (Preferences.data.enableDebugMode) {
+			if (Preferences.data.enableDebugKeybinds) {
 				if (FlxG.keys.justPressed.Z) {
 					getPlayer(currentTurnIndex).currentConfidence += 1;
 					updateSkillAvailability(currentTurnIndex);

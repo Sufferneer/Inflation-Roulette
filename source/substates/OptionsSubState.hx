@@ -87,7 +87,7 @@ class OptionsSubState extends SuffSubState {
 			return '' + Math.round(value);
 		}, Preferences.data.framerate);
 
-		#if (!html5 && !switch)
+		#if !html5
 		createBooleanOption('Unfocus Pausing', 'Automatically pauses the game when out of focus.', function(value:Bool) {
 			Preferences.data.pauseOnUnfocus = value;
 		}, Preferences.data.pauseOnUnfocus);
@@ -105,14 +105,12 @@ class OptionsSubState extends SuffSubState {
 				Preferences.data.ignoreEliminatedPlayers = value;
 			}, Preferences.data.ignoreEliminatedPlayers);
 
-		#if (!mobile && !switch)
-		createBooleanOption('Debug Mode', "Enable debug keybinds on PC. (If you're on mobile, too bad lmao)", function(value:Bool) {
-			Preferences.data.enableDebugMode = value;
-		}, Preferences.data.enableDebugMode);
-		#end
-
 		// GRAPHICS SETTINGS
 		createSubheading('Graphics & Visuals');
+
+		createBooleanOption('Fullscreen', 'Self-explanatory, but are you that deprived?', function(value:Bool) {
+			Preferences.data.enableFullscreen = value;
+		}, Preferences.data.enableFullscreen);
 
 		createBooleanOption('Photosensitive Mode',
 			'Dampen screen flashes and other flashing effects.\nStrongly recommended for people with photosensitive epilepsy.', function(value:Bool) {
@@ -124,7 +122,7 @@ class OptionsSubState extends SuffSubState {
 				Preferences.data.enableForceAliasing = value;
 		}, Preferences.data.enableForceAliasing);
 
-		createBooleanOption('Main Menu Animations', 'Always play first startup animations in the Main Menu.', function(value:Bool) {
+		createBooleanOption('Animated Main Menu', 'Always play first startup animations in the Main Menu.', function(value:Bool) {
 			Preferences.data.alwaysPlayMainMenuAnims = value;
 		}, Preferences.data.alwaysPlayMainMenuAnims);
 
@@ -200,6 +198,10 @@ class OptionsSubState extends SuffSubState {
 				Preferences.data.cacheOnGPU = value;
 			}, Preferences.data.cacheOnGPU);
 		#end
+
+		createBooleanOption('Debug Keybinds', "Enable debug keybinds on PC. (If you're on mobile, too bad lmao)", function(value:Bool) {
+			Preferences.data.enableDebugKeybinds = value;
+		}, Preferences.data.enableDebugKeybinds);
 
 		// DEBUG TEXT SETTINGS
 		createSubheading('Debug Text');
@@ -333,7 +335,6 @@ class OptionsSubState extends SuffSubState {
 		if (allowMouseScrolling && FlxG.mouse.pressed && FlxG.mouse.getPositionInCameraView(this.camera).x >= scrollBar.x) {
 			optionsScroll = optionsScroll - (FlxG.mouse.deltaScreenY) * (FlxG.height / scrollBar.height);
 			boundOptionMenuScroll();
-			optionsScrollLerped = optionsScroll;
 			updateScrollBar();
 		}
 
