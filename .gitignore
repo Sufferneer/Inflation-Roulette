@@ -1,5 +1,5 @@
 export/
-source/backend/VersionMetadataPrivate.hx
+**/*Private.hx
 **/*.zip
 .vscode
 .idea
