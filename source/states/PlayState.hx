@@ -515,7 +515,7 @@ class PlayState extends SuffState {
 		return characterGroup.members[index];
 	}
 
-	function activateSkill(playerIndex:Int, skillIndex:Int) {
+	public function activateSkill(playerIndex:Int, skillIndex:Int) {
 		var skill = getPlayer(playerIndex).currentSkills[skillIndex];
 		if (getPlayer(playerIndex).currentConfidence < skill.cost) {
 			trace('Not enough confidence for Player ${playerIndex + 1}');
@@ -590,7 +590,7 @@ class PlayState extends SuffState {
 		}));
 	}
 
-	function shoot(playerIndex:Int) {
+	public  function shoot(playerIndex:Int) {
 		var dealDamage:Bool = false;
 		if (!GameplayManager.currentGamemode.cylinderTrueRandomness)
 			dealDamage = cylinderContent[0];

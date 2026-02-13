@@ -22,8 +22,10 @@ class RoomOneOOneStartupState extends SuffState {
 		super.create();
 
 		explodeSound = new FlxSound().loadEmbedded(Paths.sound('explosionLoud'));
+		explodeSound.volume = Preferences.data.uiSoundVolume;
 
 		ambientSound = new FlxSound().loadEmbedded(Paths.sound('startup/roomoneoone/vibRibbon'));
+		ambientSound.volume = Preferences.data.musicVolume;
 		ambientSound.play();
 
 		bg = new FlxBackdrop(Paths.image('gui/menus/easterEggStartups/roomoneoone/bg'));
