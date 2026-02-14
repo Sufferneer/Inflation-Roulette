@@ -11,39 +11,32 @@ import ui.objects.SuffIconButton;
 class CreditsState extends SuffState {
 	var creditsTxt:Array<Array<Dynamic>> = [
 		['', '', 'GAME_LOGO', Std.int(FlxG.height / 4)],
-		['MALLET INDUSTRIES', '', 'HEADING'],
+		['Design, Code, Art, Sound, Music', '', 'HEADING'],
 		['NicklySuffer', 'nicklysuffer', 'LOGO'],
-		['ORIGINAL CONCEPT & DESIGN', '', 'HEADING'],
+		['Original Concept, Music, Additional Art', '', 'HEADING'],
 		['Snowyboi', 'snowyboi', 'LOGO'],
-		['PRODUCER', '', 'HEADING'],
-		['NicklySuffer', 'nicklysuffer', 'LOGO'],
-		['PROGRAMMER', '', 'HEADING'],
-		['NicklySuffer', 'nicklysuffer', 'LOGO'],
-		['GRAPHICS', '', 'HEADING'],
-		['NicklySuffer', 'nicklysuffer', 'LOGO'],
-		['Snowyboi', 'snowyboi', 'LOGO'],
-		['MUSIC', '', 'HEADING'],
-		['NicklySuffer', 'nicklysuffer', 'LOGO'],
-		['Snowyboi', 'snowyboi', 'LOGO'],
-		['SOUND DESIGN', '', 'HEADING'],
-		['NicklySuffer', 'nicklysuffer', 'LOGO'],
-		['PixelCarnage (OpenNSFW Sound Pack)', 'opennsfw', 'default'],
-		['SPECIAL THANKS', '', 'HEADING'],
-		['SqirraRNG - Crash Handler', '', 'default'],
-		['changedinflation.de - Linux Port', '', 'default'],
+		['Sound Source', '', 'HEADING'],
+		['PixelCarnagee\n(OpenNSFW Sound Pack)', 'opennsfw', 'default'],
+		['Linux Port', '', 'HEADING'],
+		['changedinflation.de', '', 'default'],
+		['Crash Handler', '', 'HEADING'],
+		['SqirraRNG', '', 'default'],
+		['?\'? ???? ?? ?????', '', 'HEADING'],
 		['bugzforbreakfast', '', 'default'],
-		['DEVELOPED USING', '', 'HEADING'],
-		['HaxeFlixel', 'haxeflixel', 'LOGO'],
-		['Haxe', 'haxe', 'LOGO'],
-		['OpenFL', 'openfl', 'LOGO'],
-		['Lime', 'lime', 'default'],
+		['Developed With', '', 'HEADING'],
+		['HaxeFlixel', 'haxeflixel', 'LOGO', Std.int(FlxG.height / 4)],
 		[
 			'This game is made in 72 hours (correction: 2,048 hours) as a joke. I would like to thank my fans for their support throughout this game, as well as Discord members who provided feedback and ideas.',
 			'',
 			'default',
 			Std.int(FlxG.height / 2)
 		],
-		['', '', 'MALLET_INDUSTRIES']
+		[
+			'Thanks For Playing',
+			'',
+			'default',
+			-Std.int(FlxG.height / 2)
+		]
 	];
 	var creditsTxtGroup:FlxSpriteGroup = new FlxSpriteGroup();
 	var leLineSpace:Int = 0;
@@ -63,12 +56,19 @@ class CreditsState extends SuffState {
 		grid.velocity.set(64, 64);
 		add(grid);
 
+		var overlay = new FlxBackdrop(Paths.image('gui/transitions/horizontal'), Y);
+		overlay.x = -overlay.width / 2 + 80;
+		overlay.velocity.set(0, 32);
+		overlay.color = 0xFF0000FF;
+		overlay.alpha = 0.25;
+		add(overlay);
+
 		SuffState.playMusic('credits');
 
 		for (line in creditsTxt) {
 			var leText:FlxSpriteGroup = new FlxSpriteGroup();
 
-			var leCharSpace:Int = 0;
+			var leCharSpace:Int = 32;
 			var size:Int = 48;
 			leText.x = 16;
 			if (creditsTxt.indexOf(line) != 0) {
@@ -83,11 +83,11 @@ class CreditsState extends SuffState {
 			}
 
 			var leLogo = new FlxSprite(leCharSpace, 0);
-			if (line[1] != '' || line[2] == 'GAME_LOGO' || line[2] == 'MALLET_INDUSTRIES') {
+			if (line[1] != '' || line[2] == 'GAME_LOGO' || line[2] == 'NICKLY_SUFFER') {
 				var texturePath:String = 'gui/menus/credits/logos/${line[1]}';
-				if (line[2] == 'MALLET_INDUSTRIES') {
-					texturePath = 'gui/menus/malletIndustriesLogo';
-					leLogo.scale.set(6, 6);
+				if (line[2] == 'NICKLY_SUFFER') {
+					texturePath = 'gui/menus/nicklySufferLogo';
+					leLogo.scale.set(8, 8);
 				}
 				if (line[2] == 'GAME_LOGO') {
 					leLogo = new GameLogo(leCharSpace, 0);
@@ -100,15 +100,16 @@ class CreditsState extends SuffState {
 				leText.add(leLogo);
 			}
 
-			var leChar:FlxText = new FlxText(leCharSpace, 0, Std.int(FlxG.width * 0.75));
+			var leChar:FlxText = new FlxText(leCharSpace, 0, Std.int(FlxG.width * 0.5));
 			if (line[2] != 'LOGO') {
 				leChar.text = line[0];
 				var leFont:String = line[2];
 				var leSize:Int = size;
 				var leColor:Int = FlxColor.WHITE;
+				if (line[2] == 'HEADING' || line[0].length > 50)
+					leSize = 32;
 				if (line[2] == 'HEADING') {
 					leFont = 'default';
-					leSize = Std.int(size * 2);
 					leColor = FlxColor.YELLOW;
 				}
 				leChar.setFormat(Paths.font(leFont), leSize, leColor);
@@ -143,6 +144,7 @@ class CreditsState extends SuffState {
 	}
 
 	var spawnSketchTime:Float = 0;
+	var creditScrollSpeed:Float = 1;
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
@@ -154,8 +156,16 @@ class CreditsState extends SuffState {
 			spawnSketchTime -= elapsed;
 		}
 
-		creditScrollValue -= elapsed * (50 +
-			(FlxG.mouse.pressed || FlxG.keys.pressed.SPACE ? 450 : 0)) * (FlxG.mouse.pressedRight ? -1 : 1) * (FlxG.keys.pressed.SHIFT ? 2 : 1) * (FlxG.keys.pressed.CONTROL ? 2 : 1);
+		if (FlxG.mouse.wheel != 0) {
+			creditScrollSpeed = FlxG.mouse.wheel * -30;
+		} else if (FlxG.mouse.pressed && FlxG.mouse.x < FlxG.width / 2) {
+			creditScrollValue = creditScrollValue + FlxG.mouse.deltaY;
+		} else if (FlxG.mouse.justReleased) {
+			creditScrollSpeed = FlxG.mouse.deltaY / -2;
+		} else {
+			creditScrollValue -= elapsed * 50 * creditScrollSpeed;
+		}
+		creditScrollSpeed = FlxMath.lerp(creditScrollSpeed, 1, elapsed * 5);
 		if (creditScrollValue > creditScrollValueUpperLimit) {
 			creditScrollValue = creditScrollValueUpperLimit;
 		} else if (creditScrollValue < creditScrollValueLowerLimit) {

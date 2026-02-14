@@ -16,7 +16,7 @@ class VersionMetadata {
 		if (Std.parseInt(arr[1]) > 0)
 			text += 'Pitstop ${arr[1]}';
 		if (arr[2] != null && Std.parseInt(arr[2]) > 0)
-			text += ' Hotfix ${arr[2]}';
+			text += ' Amendment ${arr[2]}';
 		text += ')';
 		return text;
 	}

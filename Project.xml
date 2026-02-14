@@ -3,7 +3,7 @@
 	<!-- _________________________ Application Settings _________________________ -->
 	<set name="title" value="Inflation Roulette: Reloaded" />
 	<meta title="${title}" />
-	<app file="Inflation-Roulette" version="1.2.1" package="com.malletindustries.inflationroulette" packageName="com.malletindustries.inflationroulette" main="Main" company="MalletIndustries" />
+	<app file="Inflation-Roulette" version="1.2.2" package="com.nicklysuffer.inflationroulette" packageName="com.nicklysuffer.inflationroulette" main="Main" company="NicklySuffer" />
 
 	<haxedef name="title" value="${title}" />
 
@@ -68,7 +68,7 @@
 	<assets path="assets/embed" exclude="*.ogg" rename='assets' if="web" preload="true" embed="true"/>
 	<assets path="assets/embed" exclude="*.mp3" rename='assets' unless="web" preload="true" embed="true"/>
 
-    <assets path='art/readme.txt' rename="readme.txt"/>
+    <assets path='dev/readme.txt' rename="readme.txt"/>
 
 	<!-- _______________________________ Libraries ______________________________ -->
 

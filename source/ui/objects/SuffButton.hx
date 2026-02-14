@@ -189,13 +189,13 @@ class SuffButton extends FlxSpriteGroup {
 
 	override function update(elapsed:Float) {
 		if (FlxG.mouse.overlaps(btnBG, this.camera) && visible) {
-			if (!disabled && !hovered) {
+			if (!hovered) {
 				hoverButton();
 				if (onHover != null)
 					onHover();
 				hovered = true;
 			}
-			if (!disabled && hovered) {
+			if (hovered) {
 				if (Tooltip.text == '')
 					Tooltip.text = tooltipText;
 				if (FlxG.mouse.pressed) {
@@ -205,17 +205,23 @@ class SuffButton extends FlxSpriteGroup {
 				}
 			}
 			if (FlxG.mouse.justReleased && clicked) {
-				if (!disabled && onClick != null)
-					onClick();
-				if (releaseSound != '')
-					SuffState.playUISound(Paths.sound(releaseSound));
-				idleButton();
-				clicked = false;
+				if (!disabled) {
+					if (onClick != null)
+						onClick();
+					if (releaseSound != '')
+						SuffState.playUISound(Paths.sound(releaseSound));
+					idleButton();
+					if (tooltipText != '')
+						Tooltip.text = '';
+					clicked = false;
+				}
 			}
 		} else {
 			if (hovered) {
 				clicked = false;
 				idleButton();
+				if (tooltipText != '')
+					Tooltip.text = '';
 				if (onIdle != null)
 					onIdle();
 				hovered = false;
@@ -258,14 +264,14 @@ class SuffButton extends FlxSpriteGroup {
 	}
 
 	function idleButton() {
+		if (disabled)
+			return;
 		scaleOut();
 		tweenColor(!disabled ? btnBGColor : btnBGColorDisabled);
 		if (btnText != null && !disabled)
 			btnText.color = btnTextColor;
 		if (btnIcon != null && !disabled)
 			switchIconImage(btnIconImage);
-		if (tooltipText != '')
-			Tooltip.text = '';
 	}
 
 	function scaleIn() {

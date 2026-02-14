@@ -16,14 +16,14 @@ class StartupState extends SuffState {
 	var curSquare:Int = 0;
 	var blockCount:Int = 0;
 
-	static final scale:Int = 8;
+	static final scale:Int = 5;
 
 	var introSound:FlxSound;
 
 	var skipIntroTimer:FlxTimer;
 
 	function startIntro() {
-		logo = new FlxSprite().loadGraphic(Paths.image('gui/menus/malletIndustriesLogo'));
+		logo = new FlxSprite().loadGraphic(Paths.image('gui/menus/nicklySufferLogo'));
 		blockCount = Std.int(logo.height);
 		logo.scale.set(scale, scale);
 		logo.updateHitbox();
@@ -40,7 +40,7 @@ class StartupState extends SuffState {
 			tileGroup.add(tile);
 		}
 
-		introSound = new FlxSound().loadEmbedded(Paths.sound('startup/malletIndustriesIntro'));
+		introSound = new FlxSound().loadEmbedded(Paths.sound('startup/nicklySufferIntro'));
 		introSound.volume = 0.7;
 		introSound.play();
 

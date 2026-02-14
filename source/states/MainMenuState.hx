@@ -123,8 +123,8 @@ class MainMenuState extends SuffState {
 			bottomInfoTextGroup.add(infoText);
 		}
 
-		var creditImage = Paths.image('gui/menus/malletIndustriesLogo');
-		var creditImageHovered = Paths.image('gui/menus/malletIndustriesLogoHighlighted');
+		var creditImage = Paths.image('gui/menus/nicklySufferLogo');
+		var creditImageHovered = Paths.image('gui/menus/nicklySufferLogoHighlighted');
 		creditsButton = new SuffButton(10, 0, '', creditImage, creditImageHovered, creditImage.width * 2, creditImage.height * 2, false);
 		creditsButton.btnTextColorHovered = 0xFFFFFF00;
 		creditsButton.y = FlxG.height - creditsButton.height - 10;
@@ -138,8 +138,10 @@ class MainMenuState extends SuffState {
 
 		for (i in 0...menuItems.length) {
 			var button = new SuffButton(0, 0, menuItems[i], null, null, 300, 100);
-			if (menuItems[i] == 'Donate')
-				button.tooltipText = 'Your generous donation directly supports the creator of the game!';
+			if (menuItems[i] == 'Donate') {
+				button.disabled = true;
+				button.tooltipText = 'Currently, donations are disabled due to developer circumstances.\nIf you want to support this game, please consider sharing it with others!';
+			}
 			button.x = (FlxG.width / 2 - button.width) / 2;
 			button.y = (FlxG.height - (100 + buttonSpacing) * menuItems.length) / 2 + (100 + buttonSpacing) * i;
 			button.onClick = function() {
@@ -322,7 +324,7 @@ class MainMenuState extends SuffState {
 				currentEasterEggInput += keyName.toLowerCase();
 				if (currentEasterEggInput.length > 16)
 					currentEasterEggInput = currentEasterEggInput.substring(1);
-				//trace(currentEasterEggInput);
+				// trace(currentEasterEggInput);
 
 				for (easterEgg in Constants.EASTER_EGG_INPUTS) {
 					var formattedInput = currentEasterEggInput.toLowerCase();
