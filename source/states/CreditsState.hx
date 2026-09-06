@@ -8,98 +8,26 @@ import ui.objects.CreditsSketch;
 import ui.objects.GameLogo;
 import ui.objects.SuffIconButton;
 import ui.objects.SuffScrollBar;
+import backend.typedefs.CreditsTextData;
+import haxe.Json;
+import substates.HyperlinkPrompt;
 
 class CreditsState extends SuffState {
-	var creditsTxt:Array<Array<Dynamic>> = [
-		['', '', 'GAME_LOGO', Std.int(FlxG.height / 4)],
-		['Design, Code, Art, Sound, Music', '', 'HEADING'],
-		['NicklySuffer', 'nicklysuffer', 'LOGO'],
-		['Additional UI Art', '', 'HEADING'],
-		['Globe-Freak', 'globe-freak', 'LOGO'],
-		['Bloom', 'bloom', 'LOGO'],
-		['Additional Music', '', 'HEADING'],
-		['Ninshot At Dawn', '', 'default'],
-		['Additional Character Design', '', 'HEADING'],
-		['Ninshot At Dawn', '', 'default'],
-		['LunarEclipse (CrashCassette)', '', 'default'],
-		['Linux Compilation & Testing', '', 'HEADING'],
-		['Luna Void', '', 'default'],
-		['Sound Source', '', 'HEADING'],
-		['PixelCarnagee\n(OpenNSFW Sound Pack)', '', 'default'],
-		['Runey\n(Balloonomatopoeia)', '', 'default'],
-		['Developed With', '', 'HEADING'],
-		['HaxeFlixel', 'haxeflixel', 'LOGO', Std.int(FlxG.height / 4)],
-		['Ko-Fi Backers', '', 'HEADING'],
-		[
-			'Trigger',
-			'',
-			'default'
-		],
-		[
-			'Hanz (highmon)',
-			'',
-			'default'
-		],
-		[
-			'Gunjack (wojcio85)',
-			'',
-			'default'
-		],
-		[
-			'chemical roach',
-			'',
-			'default'
-		],
-		[
-			'leboulangerie',
-			'',
-			'default'
-		],
-		[
-			'Shylizard47',
-			'',
-			'default'
-		],
-		[
-			'deyucca',
-			'',
-			'default'
-		],
-		[
-			'Ponderz!',
-			'',
-			'default'
-		],
-		[
-			'Target',
-			'',
-			'default'
-		],
-		['Original Concept', '', 'HEADING'],
-		['Snowyboi', '', 'default', Std.int(FlxG.height / 4)],
-		[
-			'Initially started as a joke, this project has been in continuous development for a while now. I would like to thank my fans for their support throughout the development of this game, as well as Discord members who provided feedback and ideas.',
-			'',
-			'default',
-			Std.int(FlxG.height / 2)
-		],
-		[
-			'Thanks For Playing!',
-			'',
-			'default',
-			-Std.int(FlxG.height / 2)
-		]
-	];
+	var creditsTxt:Array<CreditsTextData> = [];
 	var creditsTxtGroup:FlxSpriteGroup = new FlxSpriteGroup();
 	var leLineSpace:Int = 0;
 	var imageList:Array<String> = [];
 
 	var scrollBar:SuffScrollBar;
+	
+	var creditsArt:FlxSprite;
+	var creditsArtText:Map<Int, String> = [];
 
 	override public function create():Void {
 		Paths.clearUnusedMemory();
 		Paths.clearStoredMemory();
 
+		creditsTxt = Json.parse(Paths.getTextFromFile('data/credits.json'));
 		super.create();
 
 		WindowUtil.setTitle(Language.getPhrase('creditsMenu.windowDisplay'));
@@ -120,31 +48,32 @@ class CreditsState extends SuffState {
 
 		SuffState.playMusic('credits');
 
-		for (line in creditsTxt) {
+		for (index => line in creditsTxt) {
 			var leText:FlxSpriteGroup = new FlxSpriteGroup();
+
+			var lineText:String = line.text ?? '';
+			var lineGraphicPath:String = line.graphic ?? '';
+			var lineType:String = line.type ?? 'default';
+			var lineSpacing:Null<Int> = line.spacing;
+			var lineLink:String = line.link ?? '';
+			var lineArtId:String = line.artId ?? '';
 
 			var leCharSpace:Int = 32;
 			var size:Int = 48;
 			leText.x = 16;
-			if (creditsTxt.indexOf(line) != 0) {
-				if (line[2] == 'HEADING') {
+			if (index != 0) {
+				if (lineType == 'HEADING') {
 					leLineSpace += 64;
 					leCharSpace = 32;
 				}
 			}
 			leText.y = leLineSpace;
-			if (line[3] != null) {
-				leLineSpace += line[3];
-			}
+			leLineSpace += lineSpacing ?? 0;
 
 			var leLogo = new FlxSprite(leCharSpace, 0);
-			if (line[1] != '' || line[2] == 'GAME_LOGO' || line[2] == 'NICKLY_SUFFER') {
-				var texturePath:String = 'ui/menus/credits/logos/${line[1]}';
-				if (line[2] == 'NICKLY_SUFFER') {
-					texturePath = 'ui/menus/nicklySufferLogo';
-					leLogo.scale.set(8, 8);
-				}
-				if (line[2] == 'GAME_LOGO') {
+			if (lineGraphicPath != '' || lineType == 'GAME_LOGO') {
+				var texturePath:String = 'ui/menus/credits/logos/$lineGraphicPath';
+				if (lineType == 'GAME_LOGO') {
 					leLogo = new GameLogo(leCharSpace, 0);
 				} else {
 					leLogo.loadGraphic(Paths.getImage(texturePath));
@@ -154,19 +83,18 @@ class CreditsState extends SuffState {
 				leText.add(leLogo);
 			}
 
-			var leChar:FlxText = new FlxText(leCharSpace, 0, Std.int(FlxG.width * 0.5));
-			if (line[2] != 'LOGO') {
-				leChar.text = line[0];
-				var leFont:String = line[2];
+			var leChar:FlxText = new FlxText(leCharSpace, 0);
+			if (lineType != 'LOGO') {
+				leChar.text = lineText;
 				var leSize:Int = size;
 				var leColor:Int = FlxColor.WHITE;
-				if (line[2] == 'HEADING' || line[0].length > 50)
+				if (lineType == 'HEADING' || lineText.length > 50)
 					leSize = 32;
-				if (line[2] == 'HEADING') {
-					leFont = 'default';
+				if (lineType == 'HEADING')
 					leColor = FlxColor.YELLOW;
-				}
-				leChar.setFormat(Paths.getFont(leFont, false), leSize, leColor);
+				if (leChar.width > FlxG.width / 2 - 32)
+					leChar.fieldWidth = FlxG.width / 2 - 32;
+				leChar.setFormat(Paths.getFont('default', false), leSize, leColor);
 			}
 			if (leLogo.height > leChar.height) {
 				leChar.y = (leLogo.height - leChar.height) / 2;
@@ -175,6 +103,16 @@ class CreditsState extends SuffState {
 				leLineSpace += Std.int(leChar.height + 16);
 			}
 			leText.add(leChar);
+			if (lineArtId != '')
+				creditsArtText.set(Std.int(leText.y), lineArtId);
+			
+			if (lineLink != '') {
+				var leButton:SuffButton = new SuffButton(32, 0, leText.width, leText.height, false);
+				leButton.onClick = function() {
+					openSubState(new HyperlinkPrompt(lineLink));
+				}
+				leText.add(leButton);
+			}
 
 			creditsTxtGroup.add(leText);
 		}
@@ -187,10 +125,14 @@ class CreditsState extends SuffState {
 			creditsTxtGroup.y = FlxMath.lerp(creditsUpperLimit, FlxG.height - (creditsTxtGroup.height + FlxG.height / 2), percent);
 		}, FlxG.width / 2, creditsBounds);
 		scrollBar.scrollInBG = true;
-		scrollBar.scrollMultiplier = -FlxG.height / creditsBounds;
+		scrollBar.scrollMultiplier = -FlxG.height / creditsBounds * 0.5;
 		scrollBar.autoScrollVelocity = 10;
 		scrollBar.visible = false;
 		add(scrollBar);
+
+		creditsArt = new FlxSprite();
+		creditsArt.visible = false;
+		add(creditsArt);
 
 		add(creditsTxtGroup);
 
@@ -208,10 +150,22 @@ class CreditsState extends SuffState {
 		SuffState.playMusic('mainMenu');
 		SuffState.switchState(new MainMenuState());
 	}
+	
+	function loadCreditsArt(artId:String = 'nicklysuffer') {
+		creditsArt.loadGraphic(Paths.getImage('ui/menus/credits/art/$artId'));
+		creditsArt.x = FlxG.width / 2 + (FlxG.width / 2 - creditsArt.width) / 2;
+		creditsArt.y = FlxG.height - creditsArt.height + 50;
+		creditsArt.alpha = 0;
+		creditsArt.visible = true;
+		FlxTween.cancelTweensOf(creditsArt);
+		FlxTween.tween(creditsArt, {x: FlxG.height - creditsArt.height, alpha: 1}, 1, {
+			ease: FlxEase.cubeOut
+		});
+	}
 
 	var spawnSketchTime:Float = 0;
 
-	override function update(elapsed:Float) {
+	public override function update(elapsed:Float) {
 		super.update(elapsed);
 
 		if (spawnSketchTime <= 0) {

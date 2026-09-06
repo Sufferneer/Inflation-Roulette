@@ -2,7 +2,7 @@ package utilities.states;
 
 import utilities.substates.LoadFilePrompt;
 import utilities.substates.LoadDirectoryPrompt;
-import utilities.substates.ErrorPrompt;
+import substates.ErrorPrompt;
 import utilities.substates.NewSpriteProjectPrompt;
 import substates.GenericPrompt;
 import ui.objects.SuffIconButton;

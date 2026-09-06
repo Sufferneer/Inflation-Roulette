@@ -262,7 +262,7 @@
 	"option.enableGLSL.name": "Shaders GLSL",
 	"option.enableGLSL.description": "Ativa GLSL shaders de alta qualidade. Desativar essa opção mantém apenas shaders essenciais de baixa intensidade ativados, o que pode reduzir a carga em GPUs mais fracas.",
 	"option.alwaysPlayMenuAnims.name": "Animações do Menu",
-	"option.alwaysPlayMenuAnims.description": "Sempre executar animações de inicialização em todos os menus (se aplicaveis).",
+	"option.alwaysPlayMenuAnims.description": "Sempre executar animações de inicialização em todos os menus (se aplicáveis).",
 	"option.showMusicToast.name": "Notificação Visual da Música",
 	"option.showMusicToast.description": "Uma notificação contendo o nome and e autor da música tocando no plano de fundo será exibida sempre que uma faixa começar a tocar.",
 	"option.enableLetterbox.name": "Letterboxing",

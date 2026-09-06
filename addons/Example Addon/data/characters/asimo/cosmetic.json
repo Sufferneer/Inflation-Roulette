@@ -5,7 +5,8 @@
 		"2",
 		"3",
 		"skillPressurize",
-		"skillReload"
+		"skillReload",
+		"helpless"
 	],
 	"animations": [
 		{

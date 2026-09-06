@@ -1,9 +1,9 @@
-package utilities.substates;
+package substates;
 
 import ui.objects.SuffBox;
 
 class ChoicePrompt extends SuffSubState {
-	public function new(message:String, ?yesFunction:Void->Void = null, ?noFunction:Void->Void = null, boxWidth:Int = 640) {
+	public function new(message:String, ?yesFunction:Void->Void = null, ?noFunction:Void->Void = null, boxWidth:Float = 640, flipChoices:Bool = false) {
 		super();
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
@@ -28,7 +28,6 @@ class ChoicePrompt extends SuffSubState {
 				yesFunction();
 			close();
 		}
-		add(yesButton);
 
 		var noButton:SuffButton = new SuffButton(0, 0, Language.getPhrase('menu.no'), boxWidth / 2 - 32 - 16);
 		noButton.x = box.x + box.width - noButton.width - 32;
@@ -38,10 +37,16 @@ class ChoicePrompt extends SuffSubState {
 				noFunction();
 			close();
 		}
+		if (flipChoices) {
+			var tempX = noButton.x;
+			noButton.x = yesButton.x;
+			yesButton.x = tempX;
+		}
+		add(yesButton);
 		add(noButton);
 	}
 
-	override function update(elapsed:Float) {
+	public override function update(elapsed:Float) {
 		super.update(elapsed);
 	}
 }

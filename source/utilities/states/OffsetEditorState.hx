@@ -10,7 +10,7 @@ import openfl.display.BitmapData;
 import openfl.display.BitmapData.BitmapData.fromFile;
 import backend.FileDialogHandler;
 import backend.typedefs.CharacterOffsetsData;
-import utilities.substates.ChoicePrompt;
+import substates.ChoicePrompt;
 using StringTools;
 
 class OffsetEditorState extends UtilitiesBaseMenuState {

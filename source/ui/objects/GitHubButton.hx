@@ -1,5 +1,7 @@
 package ui.objects;
 
+import substates.HyperlinkPrompt;
+
 class GitHubButton extends SuffIconButton {
 	public function new(x:Float, y:Float, directory:String = '') {
 		super(x, y, 'buttons/github', 2);
@@ -14,7 +16,7 @@ class GitHubButton extends SuffIconButton {
 		this.btnTextColorDisabled = 0xFF96A199;
 
 		this.onClick = function() {
-			Utilities.browserLoad('https://github.com/Sufferneer/Inflation-Roulette-Reloaded/' + directory);
+			FlxG.state.openSubState(new HyperlinkPrompt('https://github.com/Sufferneer/Inflation-Roulette-Reloaded/' + directory));
 		};
 	}
 

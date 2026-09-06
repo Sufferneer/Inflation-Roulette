@@ -3,6 +3,7 @@ package utilities.substates;
 #if _ALLOW_UTILITIES
 import backend.FileDialogHandler;
 import openfl.net.FileFilter;
+import substates.ErrorPrompt;
 #end
 
 class LoadFilePrompt extends UtilitiesBaseMenuSubState {

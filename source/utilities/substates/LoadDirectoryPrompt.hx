@@ -1,5 +1,7 @@
 package utilities.substates;
 
+import substates.ErrorPrompt;
+
 #if _ALLOW_UTILITIES
 import backend.FileDialogHandler;
 #end

@@ -23,7 +23,7 @@ class ScrapEmitter extends FlxObject {
 			if (PlayState.instance != null)
 				PlayState.instance.particleGroup.add(scrap);
 			else
-				FlxG.state.add(scrap);
+				FlxG.state.members.insert(FlxG.state.members.indexOf(this), scrap);
 		}
 		FlxG.state.remove(this);
 		destroy();

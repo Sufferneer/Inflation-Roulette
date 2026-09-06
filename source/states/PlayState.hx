@@ -348,8 +348,8 @@ class PlayState extends SuffState {
 		skillCardsGroup.camera = camHUD;
 		add(skillCardsGroup);
 
-		var shootButtonImage = Paths.getImage('ui/icons/buttons/shoot');
-		var shootButtonHighlightedImage = Paths.getImage('ui/icons/buttons/shootHighlighted');
+		var shootButtonImage = Paths.getImage('ui/icons/game/shoot');
+		var shootButtonHighlightedImage = Paths.getImage('ui/icons/game/shootHighlighted');
 		shootButton = new SuffButton(0, 0, null, shootButtonImage, shootButtonHighlightedImage, shootButtonImage.width, shootButtonImage.height, false);
 		shootButton.y = FlxG.height - shootButton.height - ScreenSafeArea.Y;
 		shootButton.camera = camHUD;

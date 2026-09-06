@@ -1,5 +1,7 @@
 package states;
 
+import substates.HyperlinkPrompt;
+
 class OutdatedVersionState extends SuffState {
 	var exiting:Bool = false;
 	public static var latestVersion:String = '';
@@ -18,7 +20,7 @@ class OutdatedVersionState extends SuffState {
 		updateButton.btnOutlineColor = updateButton.btnOutlineColorHovered = updateButton.btnOutlineColorClicked = 0xFF00FF00;
 		updateButton.btnTextColor = updateButton.btnTextColorHovered = updateButton.btnTextColorClicked = 0xFF00FF00;
 		updateButton.onClick = function() {
-			Utilities.browserLoad('https://nicklysuffer-da.itch.io/inflation-roulette-reloaded');
+			openSubState(new HyperlinkPrompt('https://nicklysuffer-da.itch.io/inflation-roulette-reloaded'));
 		}
 		var dismissButton:SuffButton = new SuffButton(0, 0, Language.getPhrase('outdatedVersionMenu.dismiss'), 250, 100);
 		dismissButton.btnBGColor = dismissButton.btnBGColorHovered = dismissButton.btnBGColorClicked = 0xFF000000;

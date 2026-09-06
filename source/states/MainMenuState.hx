@@ -26,6 +26,9 @@ import states.debug.ReadySignTestState;
 import backend.ScoringUtil;
 import backend.ScoringUtil.ScoringUtil.judgeGame;
 import ui.SuffState;
+import ui.objects.SuffIconButton;
+import substates.ChoicePrompt;
+import substates.HyperlinkPrompt;
 
 class MainMenuState extends SuffState {
 	public static var initialized:Bool = false;
@@ -53,6 +56,7 @@ class MainMenuState extends SuffState {
 	// Y value is unused
 
 	var creditsButton:SuffButton;
+	var quitButton:SuffIconButton;
 
 	static final menuItems:Array<Array<String>> = [
 		['play'],
@@ -162,6 +166,15 @@ class MainMenuState extends SuffState {
 		creditsButton.tooltipText = Constants.COPYRIGHT;
 		add(creditsButton);
 
+		quitButton = new SuffIconButton(20, 20 + ScreenSafeArea.Y, 'buttons/quit', null, 2);
+		quitButton.x = FlxG.width - quitButton.width - 20 - ScreenSafeArea.X;
+		quitButton.onClick = function() {
+			openSubState(new ChoicePrompt('mainMenu.quit.prompt', function() {
+				Sys.exit(0);
+			}, true));
+		}
+		add(quitButton);
+
 		add(buttonGroup);
 
 		for (jIndex => j in menuItems) {
@@ -254,6 +267,13 @@ class MainMenuState extends SuffState {
 		splashText.y = FlxG.height * 1.25;
 		FlxTween.tween(splashText, {y: original_splashTextY}, 0.75, {
 			startDelay: 2.0,
+			ease: FlxEase.cubeOut
+		});
+		
+		var original_quitButtonX:Float = quitButton.x;
+		quitButton.x = FlxG.width;
+		FlxTween.tween(quitButton, {x: original_quitButtonX}, 0.75, {
+			startDelay: 2,
 			ease: FlxEase.cubeOut,
 			onComplete: function(_) {
 				finishedAnimation = true;
@@ -326,7 +346,7 @@ class MainMenuState extends SuffState {
 			case 'credits':
 				SuffState.switchState(new CreditsState());
 			case 'donate':
-                Utilities.browserLoad('https://ko-fi.com/nicklysuffer');
+				openSubState(new HyperlinkPrompt('https://ko-fi.com/nicklysuffer'));
 		}
 	}
 

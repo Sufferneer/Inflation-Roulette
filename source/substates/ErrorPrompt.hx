@@ -1,4 +1,4 @@
-package utilities.substates;
+package substates;
 
 import ui.objects.SuffBox;
 

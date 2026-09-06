@@ -1,0 +1,147 @@
+[
+	{
+		"text": "",
+		"graphic": "",
+		"type": "GAME_LOGO",
+		"spacing": 180
+	},
+	{
+		"text": "Design, Code, Art, Sound, Music",
+		"graphic": "",
+		"type": "HEADING"
+	},
+	{
+		"text": "NicklySuffer",
+		"graphic": "nicklysuffer",
+		"type": "LOGO",
+		"link": "https://bsky.app/profile/nicklysuffer.bsky.social",
+		"artId": "nicklysuffer"
+	},
+	{
+		"text": "Additional UI Art",
+		"graphic": "",
+		"type": "HEADING"
+	},
+	{
+		"text": "Globe-Freak",
+		"graphic": "globe-freak",
+		"type": "LOGO",
+		"link": "https://bsky.app/profile/globefreak.bsky.social",
+		"artId": "globe-freak"
+	},
+	{
+		"text": "Bloom",
+		"graphic": "bloom",
+		"type": "LOGO",
+		"artId": "bloom"
+	},
+	{
+		"text": "Additional Character Design",
+		"graphic": "",
+		"type": "HEADING"
+	},
+	{
+		"text": "Ninshot At Dawn",
+		"artId": "ninshotAtDawn"
+	},
+	{
+		"text": "LunarEclipse (CrashCassette)",
+		"link": "https://x.com/CrashCassette",
+		"artId": "lunarEclipse"
+	},
+	{
+		"text": "Additional Music",
+		"graphic": "",
+		"type": "HEADING"
+	},
+	{
+		"text": "Ninshot At Dawn",
+		"artId": "ninshotAtDawn"
+	},
+	{
+		"text": "Linux Compilation & Testing",
+		"graphic": "",
+		"type": "HEADING"
+	},
+	{
+		"text": "Luna Void",
+		"link": "https://bsky.app/profile/luna-trimbuli.bsky.social",
+		"artId": "lunaVoid"
+	},
+	{
+		"text": "Gameplay Sound Sources",
+		"graphic": "",
+		"type": "HEADING"
+	},
+	{
+		"text": "PixelCarnagee\n(OpenNSFW Sound Pack)",
+		"link": "https://x.com/OpenNSFWSP"
+	},
+	{
+		"text": "Runey\n(Balloonomatopoeia)",
+		"link": "https://www.furaffinity.net/view/51905256/"
+	},
+	{
+		"text": "V1sage\n(Bworps Pack)",
+		"link": "https://goldenvisage.itch.io/"
+	},
+	{
+		"text": "Original Concept",
+		"graphic": "",
+		"type": "HEADING"
+	},
+	{
+		"text": "Snowyboi"
+	},
+	{
+		"text": "Developed With",
+		"graphic": "",
+		"type": "HEADING"
+	},
+	{
+		"text": "HaxeFlixel",
+		"graphic": "haxeflixel",
+		"type": "LOGO",
+		"spacing": 180
+	},
+	{
+		"text": "Ko-Fi Donators",
+		"graphic": "",
+		"type": "HEADING"
+	},
+	{
+		"text": "Trigger"
+	},
+	{
+		"text": "Hanz (highmon)"
+	},
+	{
+		"text": "Gunjack (wojcio85)"
+	},
+	{
+		"text": "chemical roach"
+	},
+	{
+		"text": "leboulangerie"
+	},
+	{
+		"text": "Shylizard47"
+	},
+	{
+		"text": "deyucca"
+	},
+	{
+		"text": "Ponderz!"
+	},
+	{
+		"text": "Target",
+		"spacing": 180
+	},
+	{
+		"text": "Initially started as a joke, this project has been in continuous development for a while now. I would like to thank my fans for their support throughout the development of this game, as well as Discord members who provided feedback and ideas.",
+		"spacing": 360
+	},
+	{
+		"text": "Thanks For Playing!"
+	}
+]

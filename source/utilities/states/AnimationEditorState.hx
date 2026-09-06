@@ -10,12 +10,12 @@ import ui.addons.SuffUIButton;
 import utilities.typedefs.SpriteProjectAnimData;
 import openfl.display.PNGEncoderOptions;
 import ui.addons.SuffUINumericStepper;
-import utilities.substates.ChoicePrompt;
+import substates.ChoicePrompt;
 import utilities.states.CharacterCreatorState;
 import flixel.addons.ui.FlxUIInputText;
 import substates.GenericPrompt;
 import haxe.Exception;
-import utilities.substates.ErrorPrompt;
+import substates.ErrorPrompt;
 import flixel.addons.ui.FlxUINumericStepper;
 
 class AnimationEditorState extends UtilitiesBaseMenuState {

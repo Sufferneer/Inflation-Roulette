@@ -6,7 +6,7 @@ import objects.Character;
 import ui.objects.SuffIconButton;
 import ui.objects.SuffMarker;
 import ui.objects.SuffSlider;
-import utilities.substates.ChoicePrompt;
+import substates.ChoicePrompt;
 import backend.typedefs.CharacterHitboxData;
 import backend.typedefs.CharacterBoxData;
 import flixel.util.FlxSpriteUtil;

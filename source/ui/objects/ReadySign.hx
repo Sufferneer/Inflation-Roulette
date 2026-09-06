@@ -98,7 +98,8 @@ class ReadySign extends SuffButton {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		outlineShader.enabled = (!disabled && hovered);
+		if (outlineShader != null)
+			outlineShader.enabled = (!disabled && hovered);
 
 		currentFrame = FlxMath.bound(currentFrame + elapsed * frameRate * frameDirection, firstFrame, lastFrame);
 		animate(currentFrame);
